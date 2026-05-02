@@ -2,10 +2,7 @@ package com.velas.candil.entities.user;
 
 import com.velas.candil.models.user.RoleEnum;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -19,9 +16,11 @@ import java.util.Set;
  * determine whether an authenticated user has access to specific resources.
  */
 @Entity
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
+@ToString(exclude = "users")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)@AllArgsConstructor
 @Table(name = "roles")
 @Builder
 public class Role implements GrantedAuthority {

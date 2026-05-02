@@ -21,8 +21,16 @@ export class CandleService {
     return this.http.get<CandleResponse>(`${this.base}/${id}`);
   }
 
-  create(dto: CandleRequest): Observable<CandleResponse> {
-    return this.http.post<CandleResponse>(this.base, dto);
+  create(dto: CandleRequest, principalImage: File, images: File[] = []): Observable<CandleResponse> {
+    const formData = new FormData();
+    formData.append(
+      'data',
+      new Blob([JSON.stringify(dto)], { type: 'application/json' })
+    );
+    formData.append('principalImage', principalImage);
+    images.forEach((image) => formData.append('images', image));
+
+    return this.http.post<CandleResponse>(this.base, formData);
   }
 
   update(id: number, dto: CandleUpdateRequest): Observable<CandleResponse> {

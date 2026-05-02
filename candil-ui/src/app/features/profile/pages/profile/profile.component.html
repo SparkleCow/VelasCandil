@@ -4,7 +4,9 @@
       <mat-card class="auth-card profile-header-card">
         <div class="profile-hero">
           <div class="avatar-wrap" [class.is-editing]="isEditing()">
-            <img class="avatar" [src]="profileForm.controls.imageUrl.value" alt="Foto de perfil" />
+            <img class="avatar"
+            [src]="getImageUrl()"
+              alt="Foto de perfil" />            
             <label class="avatar-upload-overlay" [class.disabled]="!isEditing() || isUploadingImage()">
               <input
                 type="file"

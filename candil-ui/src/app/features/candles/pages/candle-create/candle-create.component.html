@@ -29,13 +29,19 @@
             </mat-error>
           </mat-form-field>
 
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Imagen principal (URL)</mat-label>
-            <input matInput formControlName="principalImage" />
-            <mat-error *ngIf="form.controls.principalImage.hasError('required')">
-              La imagen principal es obligatoria.
-            </mat-error>
-          </mat-form-field>
+          <section class="dynamic-section">
+            <h3>Imagen principal</h3>
+            <input
+              type="file"
+              accept="image/*"
+              (change)="onPrincipalImageChange($event)"
+            />
+            @if (principalImageFile(); as file) {
+              <p class="empty-text">Seleccionada: {{ file.name }}</p>
+            } @else {
+              <p class="empty-text">Debes seleccionar una imagen principal.</p>
+            }
+          </section>
 
           <div class="form-grid">
             <mat-form-field appearance="outline" class="full-width">
@@ -84,18 +90,19 @@
           <section class="dynamic-section">
             <h3>Imágenes adicionales</h3>
             <div class="inline-controls">
-              <mat-form-field appearance="outline" class="full-width">
-                <mat-label>URL de imagen</mat-label>
-                <input matInput [formControl]="imageUrlControl" />
-              </mat-form-field>
-              <button type="button" mat-stroked-button (click)="addImage()">Agregar</button>
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                (change)="onAdditionalImagesChange($event)"
+              />
             </div>
 
-            <div class="list-wrap" formArrayName="images">
-              @for (imgCtrl of imagesArray.controls; track imgCtrl; let i = $index) {
+            <div class="list-wrap">
+              @for (file of additionalImageFiles(); track file; let i = $index) {
                 <div class="list-row">
-                  <span>{{ imgCtrl.value }}</span>
-                  <button type="button" mat-icon-button (click)="removeImage(i)" aria-label="Eliminar imagen">
+                  <span>{{ file.name }}</span>
+                  <button type="button" mat-icon-button (click)="removeAdditionalImage(i)" aria-label="Eliminar imagen">
                     <mat-icon>delete</mat-icon>
                   </button>
                 </div>

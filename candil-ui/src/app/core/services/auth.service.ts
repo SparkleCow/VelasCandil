@@ -33,10 +33,6 @@ export class AuthService {
     return this.http.post<void>(`${this.baseUrl}/activate?token=${token}`, {});
   }
 
-  getUserInformation(): Observable<UserInformation> {
-    return this.http.get<UserInformation>(`${this.baseUrl}/me`);
-  }
-
   logout(): void {
     this.tokenService.remove();
   }

@@ -1,9 +1,6 @@
 package com.velas.candil.config.jwt;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
@@ -118,20 +115,11 @@ public class JwtUtils {
     }
 
     public Claims extractAllClaims(String token) {
-        try {
-            Claims claims = Jwts.parser()
-                    .setSigningKey(generateSignKey())
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
-
-            log.debug("JWT successfully parsed for subject='{}'", claims.getSubject());
-            return claims;
-
-        } catch (JwtException ex) {
-            log.warn("JWT parsing failed: {}", ex.getMessage());
-            throw ex;
-        }
+        return Jwts.parser()
+                .setSigningKey(generateSignKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     private Key generateSignKey() {

@@ -1,10 +1,8 @@
 package com.velas.candil.controllers;
 
-import com.velas.candil.entities.user.User;
 import com.velas.candil.models.user.AuthLoginDto;
 import com.velas.candil.models.user.AuthRegisterDto;
 import com.velas.candil.models.user.AuthResponseDto;
-import com.velas.candil.models.user.UserInformationDto;
 import com.velas.candil.services.auth.AuthenticationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -15,7 +13,6 @@ import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

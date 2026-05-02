@@ -30,6 +30,7 @@ public enum BusinessErrorCode {
     METHOD_NOT_ALLOWED(405, HttpStatus.METHOD_NOT_ALLOWED, "Method not allowed"),
     ILLEGAL_OPERATION(403, HttpStatus.FORBIDDEN, "Illegal operation"),
     INTERNAL_SERVER_ERROR(500, HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error"),
+    FILE_COMPRESSION_ERROR(500, HttpStatus.SERVICE_UNAVAILABLE, "File compression error"),
     EMAIL_SERVICE_UNAVAILABLE(503, HttpStatus.SERVICE_UNAVAILABLE, "Email service unavailable");
 
     private final int code;

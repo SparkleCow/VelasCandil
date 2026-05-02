@@ -67,11 +67,8 @@ export class CandleCreateComponent {
   readonly ingredientOptionsMock: IngredientsEnum[] = INGREDIENTS_ENUM_LIST;
 
   readonly creating = signal(false);
-
-  readonly imageUrlControl = new FormControl('', {
-    nonNullable: true,
-    validators: [Validators.required]
-  });
+  readonly principalImageFile = signal<File | null>(null);
+  readonly additionalImageFiles = signal<File[]>([]);
 
   readonly ingredientDraftForm = this.fb.nonNullable.group({
     name: this.fb.nonNullable.control<IngredientsEnum | ''>('', Validators.required),
@@ -84,40 +81,33 @@ export class CandleCreateComponent {
   readonly form = this.fb.nonNullable.group({
     name: this.fb.nonNullable.control('', [Validators.required, Validators.maxLength(120)]),
     description: this.fb.nonNullable.control('', [Validators.required, Validators.maxLength(900)]),
-    principalImage: this.fb.nonNullable.control('', [Validators.required]),
     stock: this.fb.nonNullable.control<number | null>(null, [Validators.required, Validators.min(0)]),
     materialEnums: this.fb.nonNullable.control<MaterialEnum[]>([], [Validators.required]),
     featureEnums: this.fb.nonNullable.control<FeatureEnum[]>([], [Validators.required]),
     categories: this.fb.nonNullable.control<CategoryEnum[]>([], [Validators.required]),
-    images: this.fb.array<FormControl<string>>([]),
     ingredients: this.fb.array<IngredientFormGroup>([])
   });
-
-  get imagesArray(): FormArray<FormControl<string>> {
-    return this.form.controls.images;
-  }
 
   get ingredientsArray(): FormArray<IngredientFormGroup> {
     return this.form.controls.ingredients;
   }
 
-  addImage(): void {
-    if (this.imageUrlControl.invalid) {
-      this.imageUrlControl.markAsTouched();
-      return;
-    }
-
-    const rawValue = this.imageUrlControl.value.trim();
-    if (!rawValue) return;
-
-    this.imagesArray.push(
-      this.fb.nonNullable.control(rawValue, [Validators.required])
-    );
-    this.imageUrlControl.reset();
+  onPrincipalImageChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0] ?? null;
+    this.principalImageFile.set(file);
   }
 
-  removeImage(index: number): void {
-    this.imagesArray.removeAt(index);
+  onAdditionalImagesChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const files = Array.from(input.files ?? []);
+    this.additionalImageFiles.set(files);
+  }
+
+  removeAdditionalImage(index: number): void {
+    const current = [...this.additionalImageFiles()];
+    current.splice(index, 1);
+    this.additionalImageFiles.set(current);
   }
 
   addIngredient(): void {
@@ -145,14 +135,24 @@ export class CandleCreateComponent {
       this.form.markAllAsTouched();
       return;
     }
+    if (!this.principalImageFile()) {
+      this.snackBar.open('La imagen principal es obligatoria.', 'Cerrar', { duration: 3000 });
+      return;
+    }
+
+    const principalImage = this.principalImageFile()!;
+    const additionalImages = this.additionalImageFiles();
+    const rawValue = this.form.getRawValue();
 
     const payload: CandleRequest = {
-      ...this.form.getRawValue(),
-      stock: this.form.getRawValue().stock ?? 0
+      ...rawValue,
+      principalImage: principalImage.name,
+      images: additionalImages.map((file) => file.name),
+      stock: rawValue.stock ?? 0
     };
 
     this.creating.set(true);
-    this.candleService.create(payload).subscribe({
+    this.candleService.create(payload, principalImage, additionalImages).subscribe({
       next: () => {
         this.creating.set(false);
         this.snackBar.open('Vela creada correctamente', 'Cerrar', { duration: 2500 });

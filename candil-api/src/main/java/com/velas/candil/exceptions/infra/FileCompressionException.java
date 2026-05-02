@@ -4,8 +4,9 @@ import com.velas.candil.exceptions.BusinessErrorCode;
 import com.velas.candil.exceptions.BusinessException;
 
 public class FileCompressionException extends BusinessException {
-    //TODO
     public FileCompressionException(String message) {
-        super(BusinessErrorCode.USER_ALREADY_EXIST,message);
+        super(BusinessErrorCode.FILE_COMPRESSION_ERROR,message);
     }
 }
+
+

@@ -116,4 +116,16 @@ export class CandleListComponent implements OnInit {
   formatLabel(value: string): string {
     return value.replace(/_/g, ' ');
   }
+
+  getImageUrl(path: string | null | undefined): string {
+    if (!path) return '';
+  
+    // (local backend)
+    if (path.startsWith('/images')) {
+      return 'http://localhost:8080' + path;
+    }
+  
+    // (S3 key)
+    return 'https://velas-candil-bucket-022374769637-us-east-2-an.s3.us-east-2.amazonaws.com/' + path;
+  }
 }

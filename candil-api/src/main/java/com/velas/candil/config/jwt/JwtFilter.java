@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,6 +21,7 @@ import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtUtils jwtUtils;
@@ -28,7 +30,8 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
-                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
+                                    @NonNull FilterChain filterChain)
+            throws ServletException, IOException {
 
         final String authHeader = request.getHeader("Authorization");
 
@@ -38,41 +41,46 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         final String token = authHeader.substring(7);
-        final String username;
 
-        try{
-            username = jwtUtils.extractUsername(token);
-        }catch(Exception e){
-            filterChain.doFilter(request, response);
-            return;
-        }
+        try {
+            final String username = jwtUtils.extractUsername(token);
 
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-            UserDetails user = null;
+                UserDetails user;
 
-            try {
-                user = userDetailsService.loadUserByUsername(username);
-            } catch (UserNotFoundException | UsernameNotFoundException e) {
-                filterChain.doFilter(request, response);
-                return;
+                try {
+                    user = userDetailsService.loadUserByUsername(username);
+                } catch (UserNotFoundException | UsernameNotFoundException e) {
+                    log.warn("User not found for username extracted from JWT");
+                    filterChain.doFilter(request, response);
+                    return;
+                }
+
+                if (jwtUtils.validateToken(token, user)) {
+
+                    UsernamePasswordAuthenticationToken authentication =
+                            new UsernamePasswordAuthenticationToken(
+                                    user,
+                                    null,
+                                    user.getAuthorities()
+                            );
+
+                    authentication.setDetails(
+                            new WebAuthenticationDetailsSource().buildDetails(request)
+                    );
+
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
             }
 
-            if (jwtUtils.validateToken(token, user)) {
+        } catch (io.jsonwebtoken.ExpiredJwtException e) {
+            log.info("JWT expired");
+            SecurityContextHolder.clearContext();
 
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(
-                                user,
-                                null,
-                                user.getAuthorities()
-                        );
-
-                authentication.setDetails(
-                        new WebAuthenticationDetailsSource().buildDetails(request)
-                );
-
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
+        } catch (io.jsonwebtoken.JwtException e) {
+            log.warn("Invalid JWT: {}", e.getMessage());
+            SecurityContextHolder.clearContext();
         }
 
         filterChain.doFilter(request, response);

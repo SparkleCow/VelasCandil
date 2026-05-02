@@ -74,7 +74,7 @@
             <div class="card-image">
               @if (candle.principalImage) {
                 <img
-                  [src]="'http://localhost:8080' + candle.principalImage"
+                  [src]="getImageUrl(candle.principalImage)"
                   [alt]="candle.name"
                 />
               } @else {

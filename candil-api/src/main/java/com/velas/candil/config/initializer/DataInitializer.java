@@ -2,16 +2,19 @@ package com.velas.candil.config.initializer;
 
 import com.velas.candil.entities.candle.Candle;
 import com.velas.candil.entities.user.Role;
+import com.velas.candil.entities.user.User;
 import com.velas.candil.models.candle.CategoryEnum;
 import com.velas.candil.models.candle.FeatureEnum;
 import com.velas.candil.models.candle.MaterialEnum;
 import com.velas.candil.models.user.RoleEnum;
 import com.velas.candil.repositories.CandleRepository;
 import com.velas.candil.repositories.RoleRepository;
+import com.velas.candil.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -23,12 +26,15 @@ public class DataInitializer {
 
     private final RoleRepository roleRepository;
     private final CandleRepository candleRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Bean
     CommandLineRunner initData() {
         return args -> {
             createRoleIfNotExists(List.of(RoleEnum.USER, RoleEnum.ADMIN));
             createCandlesIfNotExists();
+            createAdminUserIfNotExists();
         };
     }
 
@@ -43,6 +49,33 @@ public class DataInitializer {
                                 )
                         )
         );
+    }
+
+    private void createAdminUserIfNotExists() {
+
+        String username = "SparkleAdmin";
+
+        if (userRepository.findByUsername(username).isPresent()) {
+            return;
+        }
+
+        Role adminRole = roleRepository.findByRole(RoleEnum.ADMIN)
+                .orElseThrow(() -> new RuntimeException("ADMIN role not found"));
+
+        Role userRole = roleRepository.findByRole(RoleEnum.USER)
+                .orElseThrow(() -> new RuntimeException("USER role not found"));
+
+        User admin = User.builder()
+                .firstName("Sparkle")
+                .lastName("Admin")
+                .username(username)
+                .email("sparkle@admin.com")
+                .password(passwordEncoder.encode("123456789"))
+                .enabled(true)
+                .roles(new java.util.HashSet<>(List.of(adminRole, userRole)))
+                .build();
+
+        userRepository.save(admin);
     }
 
     private void createCandlesIfNotExists() {
