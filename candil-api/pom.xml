@@ -185,6 +185,8 @@
 			<artifactId>s3</artifactId>
 			<version>2.35.9</version>
 			<scope>compile</scope>
+		</dependency>
+
 		<!-- Mercado Pago SDK -->
 		<!-- https://github.com/mercadopago/sdk-java -->
 		<dependency>

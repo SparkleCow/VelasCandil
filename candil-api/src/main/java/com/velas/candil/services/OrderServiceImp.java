@@ -42,10 +42,6 @@ public class OrderServiceImp implements OrderService {
     private final ShoppingCartRepository shoppingCartRepository;
     private final MercadoPagoProperties mpProperties;
 
-    // ─────────────────────────────────────────────
-    //  CHECKOUT: carrito → Order + preferencia MP
-    // ─────────────────────────────────────────────
-
     @Override
     @Transactional
     public OrderResponseDto checkout(Long userId) {
@@ -58,7 +54,6 @@ public class OrderServiceImp implements OrderService {
             throw new CartEmptyException("El carrito está vacío");
         }
 
-        // 1. Construir la Order con snapshot de los ítems
         Order orderEntity = Order.builder()
                 .user(user)
                 .total(cart.getSubTotal())
@@ -72,34 +67,31 @@ public class OrderServiceImp implements OrderService {
         orderEntity.setItems(orderItems);
         Order order = orderRepository.save(orderEntity);
 
-        // 2. Crear preferencia en Mercado Pago
         try {
             Preference preference = createMercadoPagoPreference(order);
-
-            // 3. Guardar el preference_id y la URL de pago sandbox
             order.setMercadoPagoPreferenceId(preference.getId());
-            // sandbox_init_point es para pruebas; init_point es para producción
             order.setCheckoutUrl(preference.getSandboxInitPoint());
             order = orderRepository.save(order);
 
-        } catch (MPException | MPApiException e) {
-            log.error("Error al crear preferencia en Mercado Pago: {}", e.getMessage(), e);
+        } catch (MPApiException e) {
+            String body = e.getApiResponse() != null ? e.getApiResponse().getContent() : "sin body";
+            log.error("MP API Error - Status: {} | Body: {}", e.getStatusCode(), body);
+            order.setStatus(OrderStatus.FAILED);
+            orderRepository.save(order);
+            throw new InternalServerErrorException("Error al procesar el pago con Mercado Pago");
+        } catch (MPException e) {
+            log.error("MP Error: {}", e.getMessage());
             order.setStatus(OrderStatus.FAILED);
             orderRepository.save(order);
             throw new InternalServerErrorException("Error al procesar el pago con Mercado Pago");
         }
 
-        // 4. Vaciar el carrito tras confirmar la orden
         cart.getCartItems().clear();
         cart.recalculateSubTotal();
         shoppingCartRepository.save(cart);
 
         return toDto(order);
     }
-
-    // ─────────────────────────────────────────────
-    //  WEBHOOK: MP notifica el resultado del pago
-    // ─────────────────────────────────────────────
 
     @Override
     @Transactional
@@ -156,14 +148,13 @@ public class OrderServiceImp implements OrderService {
 
             log.info("Orden {} actualizada a estado: {}", order.getId(), order.getStatus());
 
-        } catch (MPException | MPApiException e) {
-            log.error("Error al consultar pago {} en Mercado Pago: {}", paymentIdStr, e.getMessage(), e);
+        } catch (MPApiException e) {
+            String body = e.getApiResponse() != null ? e.getApiResponse().getContent() : "sin body";
+            log.error("MP API Error consultando pago {} - Status: {} | Body: {}", paymentIdStr, e.getStatusCode(), body);
+        } catch (MPException e) {
+            log.error("Error al consultar pago {} en Mercado Pago: {}", paymentIdStr, e.getMessage());
         }
     }
-
-    // ─────────────────────────────────────────────
-    //  CONSULTAS
-    // ─────────────────────────────────────────────
 
     @Override
     public List<OrderResponseDto> getMyOrders(Long userId) {
@@ -186,10 +177,6 @@ public class OrderServiceImp implements OrderService {
 
         return toDto(order);
     }
-
-    // ─────────────────────────────────────────────
-    //  HELPERS PRIVADOS
-    // ─────────────────────────────────────────────
 
     private Preference createMercadoPagoPreference(Order order) throws MPException, MPApiException {
         PreferenceClient client = new PreferenceClient();
@@ -215,7 +202,6 @@ public class OrderServiceImp implements OrderService {
                 .backUrls(backUrls)
                 .notificationUrl(mpProperties.getWebhookUrl())
                 .externalReference(order.getId().toString())
-                .autoReturn("approved")
                 .build();
 
         return client.create(request);
@@ -234,14 +220,14 @@ public class OrderServiceImp implements OrderService {
 
     private OrderStatus mapMpStatus(String mpStatus) {
         return switch (mpStatus) {
-            case "approved"   -> OrderStatus.PAID;
-            case "rejected"   -> OrderStatus.FAILED;
-            case "cancelled"  -> OrderStatus.CANCELLED;
-            case "refunded"   -> OrderStatus.REFUNDED;
+            case "approved"  -> OrderStatus.PAID;
+            case "rejected"  -> OrderStatus.FAILED;
+            case "cancelled" -> OrderStatus.CANCELLED;
+            case "refunded"  -> OrderStatus.REFUNDED;
             case "in_process",
                  "authorized",
-                 "pending"    -> OrderStatus.IN_PROCESS;
-            default           -> OrderStatus.IN_PROCESS;
+                 "pending"   -> OrderStatus.IN_PROCESS;
+            default          -> OrderStatus.IN_PROCESS;
         };
     }
 
