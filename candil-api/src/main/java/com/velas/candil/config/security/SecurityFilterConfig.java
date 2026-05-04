@@ -64,6 +64,9 @@ public class SecurityFilterConfig {
                                 .requestMatchers(HttpMethod.DELETE, "/v1/ingredients/**").hasRole("ADMIN")
                                 //Cart
                                 .requestMatchers("/v1/cart/**").authenticated()
+                                // Orders — el webhook de MP debe ser público (MP no manda JWT)
+                                .requestMatchers(HttpMethod.POST, "/v1/orders/webhook").permitAll()
+                                .requestMatchers("/v1/orders/**").authenticated()
                                 .anyRequest()
                                 .authenticated()
                 )

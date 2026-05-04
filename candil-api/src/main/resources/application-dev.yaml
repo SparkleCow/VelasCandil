@@ -76,3 +76,17 @@ logging:
     software:
       amazon:
         awssdk: DEBUG
+
+# ─────────────────────────────────────────────────────────
+#  Mercado Pago Sandbox
+#  Obtén tus credenciales en:
+#  https://www.mercadopago.com.co/developers/panel/credentials
+# ─────────────────────────────────────────────────────────
+mercadopago:
+  # Access token de prueba (empieza con TEST-)
+  access-token: APP_USR-2528297881957512-050211-7d6bfb165a5271779efa08c5dbe84a90-3373865814
+
+  success-url: http://localhost:4200/orders/success
+  failure-url: http://localhost:4200/orders/failure
+  pending-url: http://localhost:4200/orders/pending
+  webhook-url: http://localhost:8080/v1/orders/webhook
