@@ -10,9 +10,12 @@ import com.mercadopago.resources.preference.Preference;
 import com.mercadopago.client.payment.PaymentClient;
 import com.mercadopago.resources.payment.Payment;
 import com.velas.candil.config.mercadopago.MercadoPagoProperties;
+import com.velas.candil.entities.candle.Candle;
 import com.velas.candil.entities.cartItem.CartItem;
 import com.velas.candil.entities.order.Order;
-import com.velas.candil.entities.order.OrderStatus;
+import com.velas.candil.exceptions.cart.CartNotFoundException;
+import com.velas.candil.exceptions.users.UserNotFoundException;
+import com.velas.candil.models.order.OrderStatus;
 import com.velas.candil.entities.orderItem.OrderItem;
 import com.velas.candil.entities.shoppingCart.ShoppingCart;
 import com.velas.candil.entities.user.User;
@@ -21,6 +24,7 @@ import com.velas.candil.exceptions.cart.OrderNotFoundException;
 import com.velas.candil.exceptions.infra.InternalServerErrorException;
 import com.velas.candil.models.order.OrderItemResponseDto;
 import com.velas.candil.models.order.OrderResponseDto;
+import com.velas.candil.repositories.CandleRepository;
 import com.velas.candil.repositories.OrderRepository;
 import com.velas.candil.repositories.ShoppingCartRepository;
 import com.velas.candil.repositories.UserRepository;
@@ -31,6 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -41,6 +46,7 @@ public class OrderServiceImp implements OrderService {
     private final UserRepository userRepository;
     private final ShoppingCartRepository shoppingCartRepository;
     private final MercadoPagoProperties mpProperties;
+    private final CandleRepository candleRepository;
 
     @Override
     @Transactional
@@ -48,10 +54,10 @@ public class OrderServiceImp implements OrderService {
         User user = findUser(userId);
 
         ShoppingCart cart = shoppingCartRepository.findByUser(user)
-                .orElseThrow(() -> new RuntimeException("Carrito no encontrado para el usuario"));
+                .orElseThrow(() -> new CartNotFoundException("ShoppingCart not found for user "+user.getId()));
 
         if (cart.getCartItems().isEmpty()) {
-            throw new CartEmptyException("El carrito está vacío");
+            throw new CartEmptyException("Cart is empty");
         }
 
         Order orderEntity = Order.builder()
@@ -85,11 +91,6 @@ public class OrderServiceImp implements OrderService {
             orderRepository.save(order);
             throw new InternalServerErrorException("Error al procesar el pago con Mercado Pago");
         }
-
-        cart.getCartItems().clear();
-        cart.recalculateSubTotal();
-        shoppingCartRepository.save(cart);
-
         return toDto(order);
     }
 
@@ -142,11 +143,20 @@ public class OrderServiceImp implements OrderService {
                 return;
             }
 
+            OrderStatus previousStatus = order.getStatus();
+            OrderStatus newStatus = mapMpStatus(mpStatus);
+
             order.setMercadoPagoPaymentId(paymentIdStr);
-            order.setStatus(mapMpStatus(mpStatus));
+            order.setStatus(newStatus);
             orderRepository.save(order);
 
             log.info("Orden {} actualizada a estado: {}", order.getId(), order.getStatus());
+
+            if (newStatus == OrderStatus.PAID && previousStatus != OrderStatus.PAID) {
+                validateStock(order);
+                updateStock(order);
+                clearUserCart(order.getUser());
+            }
 
         } catch (MPApiException e) {
             String body = e.getApiResponse() != null ? e.getApiResponse().getContent() : "sin body";
@@ -231,9 +241,18 @@ public class OrderServiceImp implements OrderService {
         };
     }
 
+    private void clearUserCart(User user) {
+        shoppingCartRepository.findByUser(user).ifPresent(cart -> {
+            cart.getCartItems().clear();
+            cart.recalculateSubTotal();
+            shoppingCartRepository.save(cart);
+            log.info("ShoppingCart cleaned for user {}", user.getId());
+        });
+    }
+
     private User findUser(Long userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 
     private OrderResponseDto toDto(Order order) {
@@ -254,5 +273,60 @@ public class OrderServiceImp implements OrderService {
                 order.getMercadoPagoPreferenceId(),
                 itemDtos,
                 order.getCreatedAt());
+    }
+
+    //Batch
+    // This method updates stock using a batch fetch (single query).
+    // It relies on JPA dirty checking inside a @Transactional context,
+    // so no explicit save() is required.
+    private void updateStock(Order order) {
+        List<Long> candleIds = order.getItems().stream()
+                .map(OrderItem::getCandleId)
+                .toList();
+
+        Map<Long, Candle> candles = candleRepository.findAllById(candleIds)
+                .stream()
+                .collect(Collectors.toMap(Candle::getId, c -> c));
+
+        for (OrderItem item : order.getItems()) {
+            Candle candle = candles.get(item.getCandleId());
+
+            if (candle == null) {
+                throw new IllegalStateException("Candle no encontrada: " + item.getCandleId());
+            }
+
+            if (candle.getStock() < item.getQuantity()) {
+                log.error("Stock insuficiente para candle {}. Stock: {}, requerido: {}",
+                        candle.getId(), candle.getStock(), item.getQuantity());
+                throw new IllegalStateException("Stock insuficiente");
+            }
+
+            candle.removeStock(item.getQuantity());
+        }
+    }
+
+    private void validateStock(Order order) {
+        List<Long> candleIds = order.getItems().stream()
+                .map(OrderItem::getCandleId)
+                .toList();
+
+        Map<Long, Candle> candles = candleRepository.findAllById(candleIds)
+                .stream()
+                .collect(Collectors.toMap(Candle::getId, c -> c));
+
+        for (OrderItem item : order.getItems()) {
+            Candle candle = candles.get(item.getCandleId());
+
+            if (candle == null) {
+                throw new IllegalStateException("Candle not found: " + item.getCandleId());
+            }
+
+            if (candle.getStock() < item.getQuantity()) {
+                log.error("Stock mismatch at payment time. Candle {} | Stock: {} | Required: {}",
+                        candle.getId(), candle.getStock(), item.getQuantity());
+
+                throw new IllegalStateException("Stock no longer available");
+            }
+        }
     }
 }

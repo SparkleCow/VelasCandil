@@ -47,22 +47,49 @@ public class ShoppingCartServiceImp implements ShoppingCartService{
 
     @Override
     public ShoppingCartResponseDto addItem(Long userId, Long candleId) {
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        ShoppingCart shoppingCart = shoppingCartRepository.findByUser(user)
+        ShoppingCart cart = shoppingCartRepository.findByUser(user)
                 .orElseThrow(() -> new RuntimeException("Shopping cart not found"));
 
-        Candle candle = candleRepository.findById(candleId).orElseThrow(() ->  new RuntimeException("Candle not found"));
-        CartItem cartItem = new CartItem();
-        cartItem.setCandle(candle);
-        cartItem.setQuantity(1);
-        cartItem.setPriceSnapshot(candle.getPrice());
-        cartItem.recalculateSubtotal();
+        Candle candle = candleRepository.findById(candleId)
+                .orElseThrow(() -> new RuntimeException("Candle not found"));
 
-        shoppingCart.addItem(cartItem);
+        CartItem existingItem = cart.getCartItems().stream()
+                .filter(x -> Objects.equals(x.getCandle().getId(), candleId))
+                .findFirst()
+                .orElse(null);
 
-        return shoppingCartMapper.toDto(shoppingCartRepository.save(shoppingCart));
+        if (existingItem != null) {
+
+            int newQuantity = existingItem.getQuantity() + 1;
+
+            if (candle.getStock() < newQuantity) {
+                throw new RuntimeException("Not enough stock available");
+            }
+
+            existingItem.increaseQuantity(1);
+
+        } else {
+
+            if (candle.getStock() < 1) {
+                throw new RuntimeException("Out of stock");
+            }
+
+            CartItem cartItem = new CartItem();
+            cartItem.setCandle(candle);
+            cartItem.setQuantity(1);
+            cartItem.setPriceSnapshot(candle.getPrice());
+            cartItem.recalculateSubtotal();
+
+            cart.addItem(cartItem);
+        }
+
+        cart.recalculateSubTotal();
+
+        return shoppingCartMapper.toDto(shoppingCartRepository.save(cart));
     }
 
     @Override
@@ -84,10 +111,12 @@ public class ShoppingCartServiceImp implements ShoppingCartService{
 
     @Override
     public ShoppingCartResponseDto increaseItemQuantity(Long userId, Long candleId) {
-        User user = userRepository.findById(userId).orElseThrow(()->new RuntimeException("User not found"));
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         ShoppingCart cart = shoppingCartRepository.findByUser(user)
-                .orElseThrow(() ->  new RuntimeException("ShoppingCart not found"));
+                .orElseThrow(() -> new RuntimeException("ShoppingCart not found"));
 
         CartItem item = cart.getCartItems().stream()
                 .filter(x -> Objects.equals(x.getCandle().getId(), candleId))
@@ -95,10 +124,23 @@ public class ShoppingCartServiceImp implements ShoppingCartService{
                 .orElse(null);
 
         if (item != null) {
+
+            int newQuantity = item.getQuantity() + 1;
+
+            if (item.getCandle().getStock() < newQuantity) {
+                throw new RuntimeException("Not enough stock available");
+            }
+
             item.increaseQuantity(1);
+
         } else {
+
             Candle candle = candleRepository.findById(candleId)
                     .orElseThrow(() -> new RuntimeException("Candle not found"));
+
+            if (candle.getStock() < 1) {
+                throw new RuntimeException("Out of stock");
+            }
 
             CartItem cartItem = new CartItem();
             cartItem.setCandle(candle);

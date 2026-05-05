@@ -23,6 +23,7 @@ public enum BusinessErrorCode {
 
     // ORDERS
     CART_EMPTY(400, HttpStatus.BAD_REQUEST, "Cart is empty"),
+    CART_NOT_FOUND(400, HttpStatus.NOT_FOUND, "Cart not found"),
     ORDER_NOT_FOUND(404, HttpStatus.NOT_FOUND, "Order not found"),
 
     // GENERAL

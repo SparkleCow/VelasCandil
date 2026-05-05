@@ -1,4 +1,4 @@
-package com.velas.candil.entities.order;
+package com.velas.candil.models.order;
 
 public enum OrderStatus {
     /**

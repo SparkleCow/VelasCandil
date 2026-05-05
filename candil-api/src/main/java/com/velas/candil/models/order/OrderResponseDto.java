@@ -1,7 +1,5 @@
 package com.velas.candil.models.order;
 
-import com.velas.candil.entities.order.OrderStatus;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;

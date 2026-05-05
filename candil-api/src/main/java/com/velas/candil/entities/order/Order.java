@@ -2,6 +2,7 @@ package com.velas.candil.entities.order;
 
 import com.velas.candil.entities.orderItem.OrderItem;
 import com.velas.candil.entities.user.User;
+import com.velas.candil.models.order.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
