@@ -1,110 +1,104 @@
 <div class="cart-page">
-  <mat-card class="cart-card">
+ 
+  @if (loading()) {
+    <div class="cart-loading">
+      <mat-spinner diameter="48"></mat-spinner>
+      <p>Cargando carrito…</p>
+    </div>
+  } @else if (isEmpty) {
+    <div class="cart-empty">
+      <mat-icon class="cart-empty__icon">shopping_cart</mat-icon>
+      <h2>Tu carrito está vacío</h2>
+      <p>Explora nuestro catálogo y encuentra la vela perfecta para ti.</p>
+      <a routerLink="/candles" mat-raised-button class="btn-primary">Ver catálogo</a>
+    </div>
+  } @else {
     <div class="cart-layout">
-      <section class="cart-main">
+ 
+      <!-- ── ITEMS ── -->
+      <section class="cart-items">
         <div class="cart-header">
-          <div>
-            <p class="kicker">Tu seleccion</p>
-            <h1>Carrito de compras</h1>
-          </div>
-          @if (hasItems()) {
-            <button
-              mat-stroked-button
-              class="clear-cart-btn"
-              (click)="clearCart()"
-              [disabled]="loading() || actionLoading()"
-            >
-              <mat-icon>delete_sweep</mat-icon>
-              Vaciar carrito
-            </button>
+          <h2 class="cart-title">Mi Carrito</h2>
+          <button mat-stroked-button class="btn-clear" (click)="clearCart()">
+            <mat-icon>delete_sweep</mat-icon>
+            Vaciar
+          </button>
+        </div>
+ 
+        <div class="item-list">
+          @for (item of cart()!.items; track item.id) {
+            <div class="cart-item">
+              <div class="item-info">
+                <p class="item-name">{{ item.candleName }}</p>
+                <p class="item-price">{{ formatCOP(item.price) }} c/u</p>
+              </div>
+ 
+              <div class="item-controls">
+                <button mat-icon-button (click)="decrease(item)" aria-label="Disminuir">
+                  <mat-icon>remove</mat-icon>
+                </button>
+                <span class="item-qty">{{ item.quantity }}</span>
+                <button mat-icon-button (click)="increase(item)" aria-label="Aumentar">
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+ 
+              <p class="item-subtotal">{{ formatCOP(item.subtotal) }}</p>
+ 
+              <button mat-icon-button class="btn-remove" (click)="remove(item)" aria-label="Eliminar">
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
           }
         </div>
-
-        @if (loading()) {
-          <div class="state-block">
-            <mat-spinner diameter="42"></mat-spinner>
-            <p>Cargando carrito...</p>
-          </div>
-        } @else if (errorMessage()) {
-          <div class="state-block error">
-            <p>{{ errorMessage() }}</p>
-            <button mat-flat-button color="primary" (click)="loadCart()">Reintentar</button>
-          </div>
-        } @else if (!hasItems()) {
-          <div class="state-block">
-            <mat-icon class="state-icon">shopping_cart</mat-icon>
-            <p>Tu carrito esta vacio.</p>
-          </div>
-        } @else {
-          <div class="cart-list">
-            @for (item of cart()!.items; track item.id) {
-              <article class="cart-item">
-                <div class="item-main">
-                  <h3>{{ item.candleName }}</h3>
-                  <p class="muted">Precio unitario: ${{ item.price | number: '1.0-0' }}</p>
-                  <p class="subtotal">Subtotal: ${{ item.subtotal | number: '1.0-0' }}</p>
-                </div>
-
-                <div class="item-actions">
-                  <div class="quantity-actions">
-                    <button
-                      mat-mini-fab
-                      class="qty-btn"
-                      (click)="decreaseItem(item.candleId)"
-                      [disabled]="actionLoading()"
-                      aria-label="Disminuir cantidad"
-                    >
-                      <mat-icon>remove</mat-icon>
-                    </button>
-                    <span>{{ item.quantity }}</span>
-                    <button
-                      mat-mini-fab
-                      class="qty-btn"
-                      (click)="increaseItem(item.candleId)"
-                      [disabled]="actionLoading()"
-                      aria-label="Aumentar cantidad"
-                    >
-                      <mat-icon>add</mat-icon>
-                    </button>
-                  </div>
-
-                  <button
-                    mat-stroked-button
-                    class="remove-btn"
-                    (click)="removeItem(item.candleId)"
-                    [disabled]="actionLoading()"
-                  >
-                    Eliminar
-                  </button>
-                </div>
-              </article>
-            }
-          </div>
-
-          <div class="cart-footer">
-            <p class="cart-total">
-              Subtotal total
-              <strong>${{ cart()!.subTotal | number: '1.0-0' }}</strong>
-            </p>
-          </div>
-        }
       </section>
-
-      <aside class="cart-visual">
-        <div class="visual-hero">
-          <div class="visual-overlay"></div>
-          <div class="visual-content">
-            <p class="visual-kicker">Momentos Candil</p>
-            <h2>Tu compra huele a hogar</h2>
-            <p>Combina aromas y crea ambientes calidos para cada espacio.</p>
-          </div>
+ 
+      <!-- ── SUMMARY ── -->
+      <aside class="cart-summary">
+        <h3 class="summary-title">Resumen del pedido</h3>
+        <mat-divider></mat-divider>
+ 
+        <div class="summary-rows">
+          @for (item of cart()!.items; track item.id) {
+            <div class="summary-row">
+              <span>{{ item.candleName }} × {{ item.quantity }}</span>
+              <span>{{ formatCOP(item.subtotal) }}</span>
+            </div>
+          }
         </div>
-        <div class="visual-badges">
-          <span><mat-icon>local_fire_department</mat-icon> Artesanal</span>
-          <span><mat-icon>spa</mat-icon> Aromas suaves</span>
-          <span><mat-icon>redeem</mat-icon> Regalos especiales</span>
+ 
+        <mat-divider></mat-divider>
+ 
+        <div class="summary-total">
+          <span>Total</span>
+          <strong>{{ formatCOP(cart()!.subTotal ?? 0) }}</strong>
         </div>
+ 
+        @if (error()) {
+          <p class="checkout-error">{{ error() }}</p>
+        }
+ 
+        <button
+          mat-raised-button
+          class="btn-checkout"
+          (click)="checkout()"
+          [disabled]="checkingOut()">
+          @if (checkingOut()) {
+            <mat-spinner diameter="20" class="checkout-spinner"></mat-spinner>
+            Procesando…
+          } @else {
+            <mat-icon>lock</mat-icon>
+            Pagar con Mercado Pago
+          }
+        </button>
+ 
+        <a routerLink="/candles" class="link-continue">
+          ← Seguir comprando
+        </a>
       </aside>
+ 
     </div>
-  </mat-card>
+  }
+ 
 </div>
+ 
