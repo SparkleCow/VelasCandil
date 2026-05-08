@@ -1,0 +1,69 @@
+.result-page {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.result-card {
+  max-width: 520px;
+  width: 100%;
+  padding: 2.5rem;
+  text-align: center;
+}
+
+.state-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem 0;
+}
+
+.result-icon {
+  mat-icon {
+    font-size: 72px;
+    width: 72px;
+    height: 72px;
+  }
+  &.success mat-icon { color: #4caf50; }
+}
+
+h1 { margin: 1rem 0 0.5rem; font-size: 1.8rem; }
+
+.subtitle { color: #666; margin-bottom: 1.5rem; }
+
+.order-summary {
+  background: #f9f9f9;
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.order-id { font-size: 0.85rem; color: #888; margin-bottom: 0.75rem; }
+
+.items-list { display: flex; flex-direction: column; gap: 0.5rem; }
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.95rem;
+}
+
+.order-total {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #e0e0e0;
+  font-size: 1rem;
+}
+
+.result-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}

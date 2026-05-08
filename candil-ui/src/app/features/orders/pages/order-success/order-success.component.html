@@ -1,0 +1,48 @@
+<div class="result-page">
+  <mat-card class="result-card">
+
+    @if (loading()) {
+      <div class="state-block">
+        <mat-spinner diameter="48"></mat-spinner>
+        <p>Verificando tu pago...</p>
+      </div>
+    } @else {
+      <div class="result-icon success">
+        <mat-icon>check_circle</mat-icon>
+      </div>
+
+      <h1>¡Pago exitoso!</h1>
+      <p class="subtitle">Tu pedido ha sido confirmado. Pronto recibirás más detalles.</p>
+
+      @if (order()) {
+        <div class="order-summary">
+          <p class="order-id">Orden #{{ order()!.id }}</p>
+          <div class="items-list">
+            @for (item of order()!.items; track item.candleId) {
+              <div class="order-item">
+                <span>{{ item.candleName }} x{{ item.quantity }}</span>
+                <span>${{ item.subtotal | number: '1.0-0' }}</span>
+              </div>
+            }
+          </div>
+          <div class="order-total">
+            <strong>Total pagado</strong>
+            <strong>${{ order()!.total | number: '1.0-0' }}</strong>
+          </div>
+        </div>
+      }
+
+      <div class="result-actions">
+        <button mat-flat-button color="primary" (click)="goToOrders()">
+          <mat-icon>receipt_long</mat-icon>
+          Mis pedidos
+        </button>
+        <button mat-stroked-button (click)="goToHome()">
+          <mat-icon>store</mat-icon>
+          Seguir comprando
+        </button>
+      </div>
+    }
+
+  </mat-card>
+</div>

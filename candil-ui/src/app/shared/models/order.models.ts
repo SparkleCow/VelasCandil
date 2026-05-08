@@ -19,7 +19,7 @@ export interface OrderResponseDto {
     total: number;
     status: OrderStatus;
     checkoutUrl: string | null;
-    mecadoPagoPreferenceId: string | null;
+    mercadoPagoPreferenceId: string | null;
     items: OrderItemResponseDto[];
     createdAt: string;
 }

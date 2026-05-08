@@ -1,0 +1,26 @@
+<div class="result-page">
+  <mat-card class="result-card">
+
+    <div class="result-icon pending">
+      <mat-icon>schedule</mat-icon>
+    </div>
+
+    <h1>Pago en proceso</h1>
+    <p class="subtitle">
+      Tu pago está siendo procesado. Te notificaremos cuando se confirme.
+      Puedes revisar el estado en "Mis pedidos".
+    </p>
+
+    <div class="result-actions">
+      <button mat-flat-button color="primary" (click)="goToOrders()">
+        <mat-icon>receipt_long</mat-icon>
+        Mis pedidos
+      </button>
+      <button mat-stroked-button (click)="goToHome()">
+        <mat-icon>home</mat-icon>
+        Ir al inicio
+      </button>
+    </div>
+
+  </mat-card>
+</div>

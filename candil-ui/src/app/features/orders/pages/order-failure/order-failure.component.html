@@ -1,0 +1,23 @@
+<div class="result-page">
+  <mat-card class="result-card">
+
+    <div class="result-icon failure">
+      <mat-icon>cancel</mat-icon>
+    </div>
+
+    <h1>Pago rechazado</h1>
+    <p class="subtitle">Hubo un problema al procesar tu pago. Puedes intentarlo de nuevo.</p>
+
+    <div class="result-actions">
+      <button mat-flat-button color="warn" (click)="goToCart()">
+        <mat-icon>shopping_cart</mat-icon>
+        Volver al carrito
+      </button>
+      <button mat-stroked-button (click)="goToHome()">
+        <mat-icon>home</mat-icon>
+        Ir al inicio
+      </button>
+    </div>
+
+  </mat-card>
+</div>
