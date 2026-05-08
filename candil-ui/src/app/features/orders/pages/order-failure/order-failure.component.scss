@@ -1,0 +1,34 @@
+.result-page {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.result-card {
+  max-width: 520px;
+  width: 100%;
+  padding: 2.5rem;
+  text-align: center;
+}
+
+.result-icon {
+  mat-icon {
+    font-size: 72px;
+    width: 72px;
+    height: 72px;
+  }
+  &.failure mat-icon { color: #f44336; }
+}
+
+h1 { margin: 1rem 0 0.5rem; font-size: 1.8rem; }
+
+.subtitle { color: #666; margin-bottom: 2rem; }
+
+.result-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}

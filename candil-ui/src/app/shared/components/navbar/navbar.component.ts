@@ -104,7 +104,7 @@ export class NavbarComponent implements OnInit {
   }
 
   purchases(): void {
-    this.router.navigate(['/purchases']);
+    this.router.navigate(['/ordes']);
   }
 
   createCandle(): void {

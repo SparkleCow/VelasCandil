@@ -1,0 +1,54 @@
+<div class="orders-page">
+  <div class="orders-header">
+    <p class="kicker">Historial</p>
+    <h1>Mis pedidos</h1>
+  </div>
+
+  @if (loading()) {
+    <div class="state-block">
+      <mat-spinner diameter="48"></mat-spinner>
+      <p>Cargando pedidos...</p>
+    </div>
+  } @else if (error()) {
+    <div class="state-block error">
+      <mat-icon>error_outline</mat-icon>
+      <p>{{ error() }}</p>
+    </div>
+  } @else if (orders().length === 0) {
+    <div class="state-block">
+      <mat-icon class="state-icon">receipt_long</mat-icon>
+      <p>Aún no tienes pedidos.</p>
+      <button mat-flat-button color="primary" (click)="goToHome()">Ver velas</button>
+    </div>
+  } @else {
+    <div class="orders-list">
+      @for (order of orders(); track order.id) {
+        <mat-card class="order-card">
+          <div class="order-card-header">
+            <div>
+              <p class="order-id">Orden #{{ order.id }}</p>
+              <p class="order-date">{{ order.createdAt | date: 'dd/MM/yyyy HH:mm' }}</p>
+            </div>
+            <mat-chip [color]="statusColor(order.status)" highlighted>
+              {{ statusLabel(order.status) }}
+            </mat-chip>
+          </div>
+
+          <div class="order-items">
+            @for (item of order.items; track item.candleId) {
+              <div class="order-item">
+                <span>{{ item.candleName }} x{{ item.quantity }}</span>
+                <span>${{ item.subtotal | number: '1.0-0' }}</span>
+              </div>
+            }
+          </div>
+
+          <div class="order-total">
+            <strong>Total</strong>
+            <strong>${{ order.total | number: '1.0-0' }}</strong>
+          </div>
+        </mat-card>
+      }
+    </div>
+  }
+</div>
