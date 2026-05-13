@@ -213,3 +213,22 @@
     grid-template-columns: 1fr;
   }
 }
+
+:host ::ng-deep .mat-mdc-icon-button mat-icon {
+  color: #8a6a36 !important;
+}
+
+:host ::ng-deep .mat-mdc-icon-button:hover mat-icon {
+  color: #3f2f18 !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field-error-wrapper {
+  padding-top: 6px;
+}
+
+
+:host ::ng-deep .mat-mdc-form-field-error {
+  color: #b3261e !important;
+  font-weight: 600 !important;
+  opacity: 1 !important;
+}

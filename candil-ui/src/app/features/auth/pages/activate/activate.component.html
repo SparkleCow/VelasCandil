@@ -1,43 +1,58 @@
-<div class="auth-container">
-  <mat-card class="auth-card">
+<div class="auth-page">
+  <div class="auth-layout">
+    <section class="auth-form-panel">
+      <mat-card class="auth-card">
 
-    <h2 class="title">Activar Cuenta</h2>
+      <h2 class="title">Activar Cuenta</h2>
 
-    <form [formGroup]="form" (ngSubmit)="submit()">
+      <form [formGroup]="form" (ngSubmit)="submit()">
 
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Código de activación</mat-label>
-        <input matInput
-               formControlName="token"
-               maxlength="6"
-               inputmode="numeric">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Código de activación</mat-label>
 
-        <mat-error *ngIf="form.get('token')?.hasError('required')">
-          El código es obligatorio
-        </mat-error>
+          <input matInput
+                 formControlName="token"
+                 maxlength="6"
+                 inputmode="numeric">
 
-        <mat-error *ngIf="form.get('token')?.hasError('minlength')">
-          Debe tener 6 dígitos
-        </mat-error>
-      </mat-form-field>
+          <mat-error *ngIf="form.get('token')?.hasError('required')">
+            El código es obligatorio
+          </mat-error>
 
-      <button mat-raised-button
-              color="primary"
-              class="full-width"
-              type="submit"
-              [disabled]="form.invalid || loading()">
-        Activar
-      </button>
+          <mat-error *ngIf="form.get('token')?.hasError('minlength')">
+            Debe tener 6 dígitos
+          </mat-error>
+        </mat-form-field>
 
-    </form>
+        <button mat-raised-button
+                color="primary"
+                class="full-width"
+                type="submit"
+                [disabled]="form.invalid || loading()">
+          Activar
+        </button>
 
-    <div class="link">
-      <a routerLink="/login">Volver al login</a>
-    </div>
+      </form>
 
-    <p *ngIf="error()" style="color:red; text-align:center; margin-top:1rem;">
-      Código inválido o expirado
-    </p>
+      <div class="link">
+        <a routerLink="/login">Volver al login</a>
+      </div>
 
-  </mat-card>
+        </mat-card>
+    </section>
+
+    <aside class="auth-visual-panel" aria-hidden="true">
+      <img
+        class="visual-image"
+        src="https://ambientegourmet.vtexassets.com/arquivos/ids/238576-800-auto?v=638815289699930000&width=800&height=auto&aspect=true"
+        alt="Imagen de ambientación para la pantalla de inicio de sesión" />
+      <div class="visual-overlay">
+        <span class="visual-chip">Login</span>
+        <h3>Velas Candil</h3>
+        <p>Bienvenido <strong>src</strong> otra vez <code>img</code> Lorem ipsum dolor sit amet consecteturt. tio debitis iste ut..</p>
+      </div>
+    </aside>
+  </div>
 </div>
+
+    

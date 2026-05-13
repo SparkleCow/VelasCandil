@@ -115,7 +115,7 @@
 
 /* ── Info ── */
 .back-link {
-  color: #775729;
+  color: #775729 !important;
   font-size: 0.88rem;
   letter-spacing: 0.02em;
   padding-left: 0 !important;
