@@ -17,10 +17,12 @@ import com.velas.candil.repositories.ActivateTokenRepository;
 import com.velas.candil.repositories.RoleRepository;
 import com.velas.candil.repositories.UserRepository;
 import jakarta.mail.MessagingException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.mail.MailException;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -77,7 +79,8 @@ public class AuthenticationServiceImp implements AuthenticationService {
     }
 
     @Override
-    public void register(AuthRegisterDto dto) throws MessagingException {
+    @Transactional
+    public void register(AuthRegisterDto dto) throws MessagingException, MailException {
 
         Optional<User> userOptional = userRepository.findByUsername(dto.username());
         if(userOptional.isPresent()){
@@ -99,12 +102,17 @@ public class AuthenticationServiceImp implements AuthenticationService {
             throw new UsernameAlreadyExistsException("Username already exists");
         }
 
+        //TODO put exceptions into ControllerAdvice
         try {
             sendValidationEmail(userSaved);
         } catch (MessagingException e) {
             log.error("Error sending validation email to user: {}", userSaved.getEmail(), e);
             throw new MessagingErrorException("Error sending validation email" + e.getMessage());
+        } catch (MailException e) {
+            log.error("Error sending validation email to user: {}", userSaved.getEmail(), e);
+            throw new MessagingErrorException("Error sending validation email");
         }
+
         log.info("User registered with username: {}", user.getUsername());
     }
 
