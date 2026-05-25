@@ -27,5 +27,11 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Build with Maven
+      - name: Start Docker Compose
+        run: docker compose up -d
+
+      - name: Wait for PostgreSQL
+        run: sleep 10
+
+      - name: Build project
         run: mvn clean install
