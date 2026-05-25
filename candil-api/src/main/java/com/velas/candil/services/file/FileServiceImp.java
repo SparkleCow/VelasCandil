@@ -18,15 +18,14 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
+import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +39,11 @@ public class FileServiceImp implements FileService{
 
     public byte[] compressProfileImage(byte[] inputBytes) throws IOException {
         ByteArrayInputStream bais = new ByteArrayInputStream(inputBytes);
+        try (InputStream test = new ByteArrayInputStream(inputBytes)) {
+            System.out.println("Readers available: " +
+                    ImageIO.getImageReaders(ImageIO.createImageInputStream(test)).hasNext()
+            );
+        }
         BufferedImage originalImage = ImageIO.read(bais);
 
         if (originalImage == null) {
@@ -188,6 +192,10 @@ public class FileServiceImp implements FileService{
 
     @Override
     public String uploadProfileImageToS3(MultipartFile data, String key, User user) throws IOException {
+
+        byte[] bytes = data.getBytes();
+        System.out.println("BYTES LENGTH: " + bytes.length);
+        System.out.println(Arrays.toString(Arrays.copyOf(bytes, 10)));
 
         Path path = Paths.get(destinationFolder);
         if (!Files.exists(path)) {

@@ -187,6 +187,18 @@
 			<scope>compile</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>com.twelvemonkeys.imageio</groupId>
+			<artifactId>imageio-webp</artifactId>
+			<version>3.10.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.twelvemonkeys.imageio</groupId>
+			<artifactId>imageio-core</artifactId>
+			<version>3.10.1</version>
+		</dependency>
+
 		<!-- Mercado Pago SDK -->
 		<!-- https://github.com/mercadopago/sdk-java -->
 		<dependency>
