@@ -7,6 +7,7 @@ import {
   AuthResponseDto,
 } from '../../shared/models/auth.models';
 import { TokenService } from './token.service';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,7 @@ import { TokenService } from './token.service';
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly tokenService = inject(TokenService);
-  private readonly baseUrl = 'http://localhost:8080/v1/auth';
+  private readonly baseUrl = `${environment.apiBaseUrl}/v1/auth`;
 
   logged = signal(this.tokenService.isLogged());
 

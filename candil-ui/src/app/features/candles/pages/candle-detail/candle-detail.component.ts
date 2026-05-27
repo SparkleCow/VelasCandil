@@ -8,6 +8,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CandleService } from '../../../../core/services/candle.service';
 import { CartService } from '../../../../core/services/cart.service';
 import { CandleResponse } from '../../../../shared/models/candle.models';
+import { environment } from '../../../../../environments/environment.development';
 
 @Component({
   selector: 'app-candle-detail',
@@ -29,6 +30,7 @@ export class CandleDetailComponent implements OnInit {
   private readonly candleService = inject(CandleService);
   private readonly cartService = inject(CartService);
   private readonly snackBar = inject(MatSnackBar);
+  readonly base = `${environment.apiBaseUrl}`;
 
   candle = signal<CandleResponse | null>(null);
   loading = signal(true);
@@ -106,13 +108,16 @@ export class CandleDetailComponent implements OnInit {
 
   getImageUrl(path: string | null | undefined): string {
     if (!path) return '';
-  
+
     // (local backend)
     if (path.startsWith('/images')) {
-      return 'http://localhost:8080' + path;
+      return this.base + path;
     }
-  
+
     // (S3 key)
-    return 'https://velas-candil-bucket-022374769637-us-east-2-an.s3.us-east-2.amazonaws.com/' + path;
+    return (
+      'https://velas-candil-bucket-022374769637-us-east-2-an.s3.us-east-2.amazonaws.com/' +
+      path
+    );
   }
 }

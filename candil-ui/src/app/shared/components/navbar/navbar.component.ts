@@ -39,7 +39,7 @@ export class NavbarComponent implements OnInit {
     private router: Router,
   ) {
     effect(() => {
-      if (this.authService.logged()) {
+      if (this.isLogged()) {
         this.loadUser();
       } else {
         this.username = '';
@@ -50,7 +50,7 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.authService.logged()) {
+    if (this.isLogged()) {
       this.loadUser();
     }
 

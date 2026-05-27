@@ -11,10 +11,7 @@
       <div class="gallery">
         <div class="main-image">
           @if (selectedImage()) {
-            <img
-              [src]="getImageUrl(selectedImage()!)"
-              [alt]="candle()!.name"
-            />
+            <img [src]="getImageUrl(selectedImage()!)" [alt]="candle()!.name" />
           } @else {
             <div class="no-image">
               <mat-icon>local_fire_department</mat-icon>
@@ -30,9 +27,7 @@
                 [class.active]="selectedImage() === img"
                 (click)="selectImage(img)"
               >
-                <img [src]="'http://localhost:8080' + img" alt="imagen" 
-                [src]="getImageUrl(img)"
-                />
+                <img [src]="base + img" alt="imagen" [src]="getImageUrl(img)" />
               </button>
             }
           </div>

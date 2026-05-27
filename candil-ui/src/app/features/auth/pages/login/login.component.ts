@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterModule,  } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
 
 import { MatCardModule } from '@angular/material/card';
@@ -21,13 +21,12 @@ import { MatIconModule } from '@angular/material/icon';
     MatInputModule,
     MatButtonModule,
     MatIconModule,
-    RouterModule
+    RouterModule,
   ],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
-
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
@@ -56,10 +55,14 @@ export class LoginComponent {
       return;
     }
 
-    this.authService.login(this.form.getRawValue())
-      .subscribe({
-        next: () => this.router.navigate(['/']),
-        error: () => this.loginError.set('Credenciales incorrectas. Verifica tus datos e intenta de nuevo.')
-      });
+    this.authService.login(this.form.getRawValue()).subscribe({
+      next: () => {
+        this.router.navigate(['/']);
+      },
+      error: () =>
+        this.loginError.set(
+          'Credenciales incorrectas. Verifica tus datos e intenta de nuevo.',
+        ),
+    });
   }
 }
