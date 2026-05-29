@@ -11,7 +11,7 @@
 
 /* ── Header ── */
 .page-header {
-  margin-bottom: 36px;
+  margin-bottom: 24px;
   border: 1px solid #eae3d7;
   border-radius: 18px;
   padding: 1.1rem 1.35rem;
@@ -32,7 +32,27 @@
   font-size: 0.88rem;
   color: #696158;
   margin: 0;
-  letter-spacing: 0.01em;
+}
+
+/* ── Toggle filtros ── */
+.mobile-filter-toggle {
+  display: none;
+  margin-bottom: 16px;
+}
+
+.mobile-filter-toggle button {
+  width: 100%;
+  height: 48px;
+  border-radius: 14px;
+  border-color: #d2bea0 !important;
+  color: #6f5228 !important;
+  background: #fff;
+}
+
+/* ── Wrapper filtros ── */
+.filters-wrapper {
+  margin-bottom: 34px;
+  transition: all 0.3s ease;
 }
 
 /* ── Filtros ── */
@@ -41,7 +61,6 @@
   flex-wrap: wrap;
   gap: 12px;
   align-items: flex-start;
-  margin-bottom: 34px;
   padding: 0.95rem;
   border: 1px solid #ece5da;
   border-radius: 16px;
@@ -49,12 +68,18 @@
   box-shadow: 0 8px 20px rgb(66 54 37 / 5%);
 }
 
-.filter-search { flex: 2; min-width: 220px; }
-.filter-select { flex: 1; min-width: 150px; }
+.filter-search {
+  flex: 2;
+  min-width: 220px;
+}
+
+.filter-select {
+  flex: 1;
+  min-width: 150px;
+}
 
 .clear-btn {
   height: 56px;
-  align-self: flex-start;
   border-color: #cdb384 !important;
   color: #705327 !important;
 }
@@ -106,7 +131,10 @@
   border-radius: 16px;
   overflow: hidden;
   cursor: pointer;
-  transition: transform 0.25s ease, border-color 0.2s ease, box-shadow 0.25s ease;
+  transition:
+    transform 0.25s ease,
+    border-color 0.2s ease,
+    box-shadow 0.25s ease;
   display: flex;
   flex-direction: column;
   box-shadow: 0 10px 20px rgb(65 54 38 / 6%);
@@ -161,13 +189,12 @@
   font-size: 0.7rem;
   padding: 4px 10px;
   border-radius: 999px;
-  letter-spacing: 0.5px;
   text-transform: uppercase;
 }
 
-/* Cuerpo */
+/* Body */
 .card-body {
-  padding: 18px 18px 16px;
+  padding: 18px;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -175,11 +202,8 @@
 
 .card-name {
   font-size: 1rem;
-  font-weight: 400;
   margin: 0 0 10px;
   color: #2f2a25;
-  letter-spacing: 0.015em;
-  line-height: 1.25;
 }
 
 .card-desc {
@@ -187,6 +211,7 @@
   color: #666057;
   line-height: 1.55;
   margin: 0 0 12px;
+
   display: -webkit-box;
   -webkit-line-clamp: 2;
   line-clamp: 2;
@@ -208,19 +233,16 @@
   padding: 3px 9px;
   border-radius: 999px;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
 
 .tag-category {
   background: #f0e5d0;
   color: #6a5229;
-  border: 1px solid #dbc39a;
 }
 
 .tag-material {
   background: #f8f1e4;
   color: #7a6440;
-  border: 1px solid #e4d4b7;
 }
 
 /* Footer */
@@ -235,27 +257,72 @@
 
 .card-price {
   font-size: 1.1rem;
-  font-weight: 400;
   color: #312c26;
 }
 
+/* Paginator */
 mat-paginator {
   background: #fff;
   border: 1px solid #e8e0d3;
   border-radius: 14px;
   box-shadow: 0 6px 16px rgb(65 54 38 / 6%);
   padding-top: 0.45rem;
-  margin-top: 0.35rem;
 }
 
-@media (max-width: 600px) {
-  .page-container { padding: 24px 16px 60px; }
-  .filters-bar { flex-direction: column; }
-  .filter-search, .filter-select { width: 100%; }
-  .candles-grid { grid-template-columns: 1fr; gap: 20px; }
-  .page-header { padding: 0.95rem 1rem; }
+/* ── Mobile ── */
+@media (max-width: 768px) {
+  .page-container {
+    padding: 24px 16px 60px;
+  }
+
+  .mobile-filter-toggle {
+    display: block;
+  }
+
+  .filters-wrapper {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-6px);
+    margin-bottom: 0;
+  }
+
+  .filters-wrapper.open {
+    max-height: 900px;
+    opacity: 1;
+    transform: translateY(0);
+    margin-bottom: 20px;
+  }
+
+  .filters-bar {
+    flex-direction: column;
+    gap: 8px;
+    padding: 14px;
+    border-radius: 18px;
+  }
+
+  .filter-search,
+  .filter-select {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .clear-btn {
+    width: 100%;
+    height: 48px;
+  }
+
+  .candles-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .page-header {
+    padding: 0.95rem 1rem;
+  }
 }
 
+/* Angular Material overrides */
 :host ::ng-deep .mat-mdc-form-field .mdc-notched-outline__leading,
 :host ::ng-deep .mat-mdc-form-field .mdc-notched-outline__notch,
 :host ::ng-deep .mat-mdc-form-field .mdc-notched-outline__trailing {
@@ -274,33 +341,6 @@ mat-paginator {
   color: #5b4725 !important;
 }
 
-:host ::ng-deep .mat-mdc-icon-button {
-  color: #8a6a36 !important;
-}
-
-:host ::ng-deep .mat-mdc-paginator,
-:host ::ng-deep .mat-mdc-paginator .mat-mdc-select-value,
-:host ::ng-deep .mat-mdc-paginator .mat-mdc-paginator-range-label {
-  color: #5f4724 !important;
-}
-
-:host ::ng-deep .mat-mdc-select-arrow {
-  color: #8a6a36 !important;
-}
-
-:host ::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-select-arrow {
-  color: #8a6a36 !important;
-}
-
-:host ::ng-deep .mat-mdc-select-placeholder,
-:host ::ng-deep .mat-mdc-select-value {
-  color: #5b4725 !important;
-}
-
 :host ::ng-deep .mat-icon {
-  color: #8a6a36 !important;
-}
-
-:host ::ng-deep .mat-mdc-form-field.mat-focused .mat-icon {
   color: #8a6a36 !important;
 }

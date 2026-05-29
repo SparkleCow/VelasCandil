@@ -1,31 +1,58 @@
-<header class="header-container">
-  <div class="header-container__top">
-    <div class="header-container__title">
-      <h1 (click)="home()"><b>Velas Candil</b></h1>
+<header class="header">
+  <div class="header__container">
+    <!-- LOGO -->
+    <div class="header__brand" (click)="home()">
+      <img class="header__logo" src="/logo.webp" alt="Logo Velas Candil" />
+
+      <div class="header__brand-text">
+        <h1>Velas Candil</h1>
+        <span>Iluminando momentos</span>
+      </div>
     </div>
 
-    <div class="header-container__auth">
-      @if (!isLogged()) {
-        <a class="header-container__link" (click)="login()">Login</a>
-        <a class="header-container__link" (click)="register()">Registrarse</a>
-      } @else {
-        <p>Bienvenido, {{ username }}</p>
+    <!-- NAV -->
+    <nav class="header__nav">
+      <a class="header__link" (click)="home()">
+        <mat-icon>home</mat-icon>
+        Inicio
+      </a>
 
+      <a class="header__link" (click)="catalog()">
+        <mat-icon>storefront</mat-icon>
+        Catálogo
+      </a>
+
+      <a class="header__link" (click)="contact()">
+        <mat-icon>mail</mat-icon>
+        Contacto
+      </a>
+    </nav>
+
+    <!-- ACTIONS -->
+    <div class="header__actions">
+      <button class="header__icon-btn" (click)="cart()">
+        <mat-icon>shopping_cart</mat-icon>
+      </button>
+
+      @if (!isLogged()) {
+        <button class="header__auth-btn" (click)="login()">Login</button>
+
+        <button
+          class="header__auth-btn header__auth-btn--primary"
+          (click)="register()"
+        >
+          Registro
+        </button>
+      } @else {
         @if (isAdmin) {
-          <button
-            class="header-container__dashboard-btn"
-            (click)="createCandle()"
-          >
+          <button class="header__dashboard-btn" (click)="createCandle()">
             Dashboard
           </button>
         }
 
-        <button
-          class="header-container__profile-btn"
-          [matMenuTriggerFor]="menuUsuario"
-        >
+        <button class="header__profile-btn" [matMenuTriggerFor]="menuUsuario">
           <img
-            class="header-container__avatar"
+            class="header__avatar"
             [src]="
               imageUrl ||
               'data:image/png;base64,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'
@@ -35,8 +62,8 @@
         </button>
 
         <mat-menu #menuUsuario="matMenu">
-          <div class="header-container__menu-header">
-            <p class="header-container__username">{{ username }}</p>
+          <div class="header__menu-header">
+            <p class="header__username">{{ username }}</p>
           </div>
 
           <button mat-menu-item (click)="profile()">
@@ -46,20 +73,13 @@
 
           <button mat-menu-item (click)="purchases()">
             <mat-icon>receipt_long</mat-icon>
-            Ver compras realizadas
+            Compras
           </button>
 
           <button mat-menu-item (click)="cart()">
             <mat-icon>shopping_cart</mat-icon>
             Carrito
           </button>
-
-          @if (isAdmin) {
-            <button mat-menu-item (click)="createCandle()">
-              <mat-icon>local_fire_department</mat-icon>
-              Crear vela
-            </button>
-          }
 
           <button mat-menu-item (click)="logout()">
             <mat-icon>logout</mat-icon>
@@ -69,32 +89,4 @@
       }
     </div>
   </div>
-
-  <nav class="header-container__navigation">
-    <div class="header-container__logo">
-      <img src="/logo.webp" alt="imagen logotipo de la página web" />
-    </div>
-
-    <div class="header-container__menu">
-      <a class="header-container__link" (click)="home()">
-        <mat-icon>home</mat-icon>
-        Inicio
-      </a>
-
-      <a class="header-container__link" (click)="catalog()">
-        <mat-icon>storefront</mat-icon>
-        Catálogo
-      </a>
-
-      <a class="header-container__link" (click)="contact()">
-        <mat-icon>mail</mat-icon>
-        Contacto
-      </a>
-
-      <a class="header-container__link" (click)="cart()">
-        <mat-icon>shopping_cart</mat-icon>
-        Carrito
-      </a>
-    </div>
-  </nav>
 </header>

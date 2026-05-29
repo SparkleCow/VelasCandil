@@ -5,49 +5,71 @@
     <p class="total">{{ totalElements() }} productos disponibles</p>
   </div>
 
+  <!-- Botón filtros mobile -->
+  <div class="mobile-filter-toggle">
+    <button mat-stroked-button (click)="showFilters = !showFilters">
+      <mat-icon>tune</mat-icon>
+      Filtros
+    </button>
+  </div>
+
   <!-- Filtros -->
-  <div class="filters-bar">
-    <mat-form-field appearance="outline" class="filter-search">
-      <mat-label>Buscar por nombre</mat-label>
-      <input matInput [formControl]="searchCtrl" />
-      <mat-icon matSuffix>search</mat-icon>
-    </mat-form-field>
+  <div class="filters-wrapper" [class.open]="showFilters">
+    <div class="filters-bar">
+      <mat-form-field appearance="outline" class="filter-search">
+        <mat-label>Buscar por nombre</mat-label>
+        <input matInput [formControl]="searchCtrl" />
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
 
-    <mat-form-field appearance="outline" class="filter-select">
-      <mat-label>Categoría</mat-label>
-      <mat-select [formControl]="categoryCtrl">
-        <mat-option value="">Todas</mat-option>
-        @for (c of categories; track c) {
-          <mat-option [value]="c">{{ formatLabel(c) }}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
+      <mat-form-field appearance="outline" class="filter-select">
+        <mat-label>Categoría</mat-label>
+        <mat-select [formControl]="categoryCtrl">
+          <mat-option value="">Todas</mat-option>
 
-    <mat-form-field appearance="outline" class="filter-select">
-      <mat-label>Material</mat-label>
-      <mat-select [formControl]="materialCtrl">
-        <mat-option value="">Todos</mat-option>
-        @for (m of materials; track m) {
-          <mat-option [value]="m">{{ formatLabel(m) }}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
+          @for (c of categories; track c) {
+            <mat-option [value]="c">
+              {{ formatLabel(c) }}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
 
-    <mat-form-field appearance="outline" class="filter-select">
-      <mat-label>Característica</mat-label>
-      <mat-select [formControl]="featureCtrl">
-        <mat-option value="">Todas</mat-option>
-        @for (f of features; track f) {
-          <mat-option [value]="f">{{ formatLabel(f) }}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
+      <mat-form-field appearance="outline" class="filter-select">
+        <mat-label>Material</mat-label>
 
-    @if (hasFilters()) {
-      <button mat-stroked-button (click)="clearFilters()" class="clear-btn">
-        <mat-icon>close</mat-icon> Limpiar
-      </button>
-    }
+        <mat-select [formControl]="materialCtrl">
+          <mat-option value="">Todos</mat-option>
+
+          @for (m of materials; track m) {
+            <mat-option [value]="m">
+              {{ formatLabel(m) }}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="filter-select">
+        <mat-label>Característica</mat-label>
+
+        <mat-select [formControl]="featureCtrl">
+          <mat-option value="">Todas</mat-option>
+
+          @for (f of features; track f) {
+            <mat-option [value]="f">
+              {{ formatLabel(f) }}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      @if (hasFilters()) {
+        <button mat-stroked-button (click)="clearFilters()" class="clear-btn">
+          <mat-icon>close</mat-icon>
+          Limpiar
+        </button>
+      }
+    </div>
   </div>
 
   <!-- Spinner -->
@@ -62,7 +84,9 @@
     @if (candles().length === 0) {
       <div class="empty">
         <mat-icon>search_off</mat-icon>
+
         <p>No se encontraron velas con los filtros aplicados.</p>
+
         @if (hasFilters()) {
           <button mat-stroked-button (click)="clearFilters()">Ver todas</button>
         }
@@ -71,6 +95,7 @@
       <div class="candles-grid">
         @for (candle of candles(); track candle.id) {
           <div class="candle-card" [routerLink]="['/candles', candle.id]">
+            <!-- Imagen -->
             <div class="card-image">
               @if (candle.principalImage) {
                 <img
@@ -82,28 +107,43 @@
                   <mat-icon>local_fire_department</mat-icon>
                 </div>
               }
+
               @if (candle.stock === 0) {
-                <span class="badge-stock">Sin stock</span>
+                <span class="badge-stock"> Sin stock </span>
               }
             </div>
 
+            <!-- Body -->
             <div class="card-body">
-              <h3 class="card-name">{{ candle.name }}</h3>
-              <p class="card-desc">{{ candle.description }}</p>
+              <h3 class="card-name">
+                {{ candle.name }}
+              </h3>
 
+              <p class="card-desc">
+                {{ candle.description }}
+              </p>
+
+              <!-- Tags -->
               <div class="card-tags">
                 @for (c of candle.categories.slice(0, 2); track c) {
-                  <span class="tag tag-category">{{ formatLabel(c) }}</span>
+                  <span class="tag tag-category">
+                    {{ formatLabel(c) }}
+                  </span>
                 }
+
                 @for (m of candle.materialEnums.slice(0, 1); track m) {
-                  <span class="tag tag-material">{{ formatLabel(m) }}</span>
+                  <span class="tag tag-material">
+                    {{ formatLabel(m) }}
+                  </span>
                 }
               </div>
 
+              <!-- Footer -->
               <div class="card-footer">
-                <span class="card-price"
-                  >${{ candle.price | number: "1.0-0" }}</span
-                >
+                <span class="card-price">
+                  ${{ candle.price | number: "1.0-0" }}
+                </span>
+
                 <button
                   mat-icon-button
                   color="primary"
@@ -118,6 +158,7 @@
         }
       </div>
 
+      <!-- Paginator -->
       <mat-paginator
         [length]="totalElements()"
         [pageSize]="pageSize"

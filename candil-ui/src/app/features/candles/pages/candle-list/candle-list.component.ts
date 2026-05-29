@@ -56,6 +56,7 @@ export class CandleListComponent implements OnInit {
   totalElements = signal(0);
   pageSize = 12;
   currentPage = 0;
+  showFilters = false;
 
   searchCtrl = new FormControl('');
   categoryCtrl = new FormControl<CategoryEnum | ''>('');
