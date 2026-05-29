@@ -80,17 +80,13 @@ export class CandleDetailComponent implements OnInit {
           },
           error: () => {
             this.addingToCart.set(false);
-            this.snackBar.open('Error al agregar al carrito', 'Cerrar', {
-              duration: 3000,
-            });
+            this.router.navigate(['/cart']);
           },
         });
       },
       error: () => {
         this.addingToCart.set(false);
-        this.snackBar.open('Error al conectar con el carrito', 'Cerrar', {
-          duration: 3000,
-        });
+        this.router.navigate(['/cart']);
       },
     });
   }

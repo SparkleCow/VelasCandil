@@ -4,14 +4,19 @@
       <mat-card class="auth-card">
         <p class="overline">Crea tu cuenta</p>
         <h2 class="title">Registro</h2>
-        <p class="subtitle">Completa los datos para empezar a gestionar tu información.</p>
+        <p class="subtitle">
+          Completa los datos para empezar a gestionar tu información.
+        </p>
 
         <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
-
           <div class="form-row">
             <mat-form-field appearance="outline">
               <mat-label>Nombre</mat-label>
-              <input matInput formControlName="firstName" autocomplete="given-name">
+              <input
+                matInput
+                formControlName="firstName"
+                autocomplete="given-name"
+              />
               <mat-error *ngIf="firstNameControl.hasError('required')">
                 El nombre es obligatorio.
               </mat-error>
@@ -19,10 +24,14 @@
                 Máximo 100 caracteres.
               </mat-error>
             </mat-form-field>
-          
+
             <mat-form-field appearance="outline">
               <mat-label>Apellido</mat-label>
-              <input matInput formControlName="lastName" autocomplete="family-name">
+              <input
+                matInput
+                formControlName="lastName"
+                autocomplete="family-name"
+              />
               <mat-error *ngIf="lastNameControl.hasError('required')">
                 El apellido es obligatorio.
               </mat-error>
@@ -34,7 +43,11 @@
 
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Usuario</mat-label>
-            <input matInput formControlName="username" autocomplete="username">
+            <input
+              matInput
+              formControlName="username"
+              autocomplete="username"
+            />
             <mat-error *ngIf="usernameControl.hasError('required')">
               El usuario es obligatorio.
             </mat-error>
@@ -45,7 +58,12 @@
 
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Email</mat-label>
-            <input matInput type="email" formControlName="email" autocomplete="email">
+            <input
+              matInput
+              type="email"
+              formControlName="email"
+              autocomplete="email"
+            />
             <mat-error *ngIf="emailControl.hasError('required')">
               El email es obligatorio.
             </mat-error>
@@ -59,18 +77,22 @@
 
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Contraseña</mat-label>
-            <input matInput
-                   [type]="hidePassword() ? 'password' : 'text'"
-                   formControlName="password"
-                   autocomplete="new-password">
+            <input
+              matInput
+              [type]="hidePassword() ? 'password' : 'text'"
+              formControlName="password"
+              autocomplete="new-password"
+            />
 
-            <button mat-icon-button
-                    matSuffix
-                    type="button"
-                    aria-label="Mostrar u ocultar contraseña"
-                    (click)="hidePassword.set(!hidePassword())">
+            <button
+              mat-icon-button
+              matSuffix
+              type="button"
+              aria-label="Mostrar u ocultar contraseña"
+              (click)="hidePassword.set(!hidePassword())"
+            >
               <mat-icon>
-                {{ hidePassword() ? 'visibility_off' : 'visibility' }}
+                {{ hidePassword() ? "visibility_off" : "visibility" }}
               </mat-icon>
             </button>
 
@@ -85,12 +107,16 @@
             </mat-error>
           </mat-form-field>
 
-          <p class="form-error" *ngIf="registerError()">{{ registerError() }}</p>
+          <p class="form-error" *ngIf="registerError()">
+            {{ registerError() }}
+          </p>
 
-          <button mat-raised-button
-                  color="primary"
-                  class="full-width"
-                  type="submit">
+          <button
+            mat-raised-button
+            color="primary"
+            class="full-width"
+            type="submit"
+          >
             Crear cuenta
           </button>
         </form>
@@ -105,11 +131,15 @@
       <img
         class="visual-image"
         src="https://ambientegourmet.vtexassets.com/arquivos/ids/238576-800-auto?v=638815289699930000&width=800&height=auto&aspect=true"
-        alt="Imagen de ambientación para la pantalla de registro" />
+        alt="Imagen de ambientación para la pantalla de registro"
+      />
       <div class="visual-overlay">
-        <span class="visual-chip">Personalizable</span>
-        <h3>Registro</h3>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.</p>
+        <span class="visual-chip">Registro</span>
+        <h3>Velas Candil</h3>
+        <p>
+          <strong>Crea tu cuenta</strong> en Velas Candil y descubre velas
+          artesanales, aromas únicos y una experiencia hecha para ti.
+        </p>
       </div>
     </aside>
   </div>

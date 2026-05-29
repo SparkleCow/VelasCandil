@@ -4,13 +4,18 @@
       <mat-card class="auth-card">
         <p class="overline">Bienvenido de nuevo</p>
         <h2 class="title">Iniciar sesión</h2>
-        <p class="subtitle">Ingresa tus credenciales para continuar con tu panel de velas.</p>
+        <p class="subtitle">
+          Ingresa tus credenciales para continuar con tu panel de velas.
+        </p>
 
         <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
-          
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Usuario o correo</mat-label>
-            <input matInput formControlName="username" autocomplete="username">
+            <input
+              matInput
+              formControlName="username"
+              autocomplete="username"
+            />
             <mat-error *ngIf="usernameControl.hasError('required')">
               El usuario es obligatorio.
             </mat-error>
@@ -21,18 +26,22 @@
 
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Contraseña</mat-label>
-            <input matInput
-                   [type]="hidePassword() ? 'password' : 'text'"
-                   formControlName="password"
-                   autocomplete="current-password">
+            <input
+              matInput
+              [type]="hidePassword() ? 'password' : 'text'"
+              formControlName="password"
+              autocomplete="current-password"
+            />
 
-            <button mat-icon-button
-                    matSuffix
-                    type="button"
-                    aria-label="Mostrar u ocultar contraseña"
-                    (click)="hidePassword.set(!hidePassword())">
+            <button
+              mat-icon-button
+              matSuffix
+              type="button"
+              aria-label="Mostrar u ocultar contraseña"
+              (click)="hidePassword.set(!hidePassword())"
+            >
               <mat-icon>
-                {{ hidePassword() ? 'visibility_off' : 'visibility' }}
+                {{ hidePassword() ? "visibility_off" : "visibility" }}
               </mat-icon>
             </button>
 
@@ -46,10 +55,12 @@
 
           <p class="form-error" *ngIf="loginError()">{{ loginError() }}</p>
 
-          <button mat-raised-button
-                  color="primary"
-                  class="full-width"
-                  type="submit">
+          <button
+            mat-raised-button
+            color="primary"
+            class="full-width"
+            type="submit"
+          >
             Ingresar
           </button>
         </form>
@@ -64,11 +75,16 @@
       <img
         class="visual-image"
         src="https://ambientegourmet.vtexassets.com/arquivos/ids/238576-800-auto?v=638815289699930000&width=800&height=auto&aspect=true"
-        alt="Imagen de ambientación para la pantalla de inicio de sesión" />
+        alt="Imagen de ambientación para la pantalla de inicio de sesión"
+      />
       <div class="visual-overlay">
         <span class="visual-chip">Login</span>
         <h3>Velas Candil</h3>
-        <p>Bienvenido <strong>src</strong> otra vez <code>img</code> Lorem ipsum dolor sit amet consecteturt. tio debitis iste ut..</p>
+        <p>
+          Bienvenido.<strong> Inicia sesión </strong>para acceder a tu cuenta,
+          gestionar tus pedidos y disfrutar de una experiencia personalizada en
+          Velas Candil.
+        </p>
       </div>
     </aside>
   </div>
