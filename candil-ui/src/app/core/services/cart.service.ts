@@ -14,19 +14,29 @@ export class CartService {
   }
 
   addItem(candleId: number): Observable<ShoppingCartResponseDto> {
-    return this.http.post<ShoppingCartResponseDto>(`${this.base}/items/${candleId}`, {});
+    return this.http.post<ShoppingCartResponseDto>(
+      `${this.base}/items/${candleId}`,
+      {},
+    );
   }
 
   increaseItem(candleId: number): Observable<ShoppingCartResponseDto> {
-    return this.http.post<ShoppingCartResponseDto>(`${this.base}/items/${candleId}/increase`, {});
+    return this.http.post<ShoppingCartResponseDto>(
+      `${this.base}/items/${candleId}/increase`,
+      {},
+    );
   }
 
   decreaseItem(candleId: number): Observable<ShoppingCartResponseDto> {
-    return this.http.delete<ShoppingCartResponseDto>(`${this.base}/items/${candleId}/decrease`);
+    return this.http.delete<ShoppingCartResponseDto>(
+      `${this.base}/items/${candleId}/decrease`,
+    );
   }
 
   removeItem(candleId: number): Observable<ShoppingCartResponseDto> {
-    return this.http.delete<ShoppingCartResponseDto>(`${this.base}/items/${candleId}`);
+    return this.http.delete<ShoppingCartResponseDto>(
+      `${this.base}/items/${candleId}`,
+    );
   }
 
   clearCart(): Observable<ShoppingCartResponseDto> {

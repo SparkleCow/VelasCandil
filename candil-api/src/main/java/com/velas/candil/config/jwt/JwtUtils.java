@@ -5,6 +5,8 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.Nullable;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -25,18 +28,19 @@ public class JwtUtils {
     private final JwtProperties jwtProperties;
 
     public String generateToken(UserDetails userDetails) {
-        return generateToken(userDetails, Map.of());
+        List<String> authorities = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
+        return generateToken(userDetails, Map.of("authorities", authorities));
     }
 
     public String generateToken(UserDetails userDetails, Map<String, Object> extraClaims) {
         Instant now = Instant.now();
         Instant expirationTime = now.plusMillis(jwtProperties.getExpiration());
 
-        String token = builder()
-                .setClaims(extraClaims)
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(Date.from(now))
-                .setExpiration(Date.from(expirationTime))
+
+        String token = builder().claims(extraClaims)
+                .subject(userDetails.getUsername())
+                .issuedAt(Date.from(now))
+                .expiration(Date.from(expirationTime))
                 .signWith(generateSignKey(), SignatureAlgorithm.HS256)
                 .compact();
 

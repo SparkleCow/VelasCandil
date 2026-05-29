@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, effect, inject, OnInit, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -26,30 +26,33 @@ import { UserService } from '../../../core/services/user.service';
   styleUrl: './navbar.component.css',
 })
 export class NavbarComponent implements OnInit {
+  private authService = inject(AuthService);
+
   auth: boolean = false;
   username: String = '';
   imageUrl: String = '';
   isAdmin = false;
+  isLogged = this.authService.logged;
 
   constructor(
-    private authService: AuthService,
     private userService: UserService,
     private router: Router,
-  ) {}
+  ) {
+    effect(() => {
+      if (this.isLogged()) {
+        this.loadUser();
+      } else {
+        this.username = '';
+        this.imageUrl = '';
+        this.isAdmin = false;
+      }
+    });
+  }
 
   ngOnInit(): void {
-    this.userService.getUserInformation().subscribe({
-      next: (response: UserInformation) => {
-        this.auth = true;
-        this.username = response.username;
-        this.imageUrl = response.imageUrl;
-        this.isAdmin = this.hasAdminRole(response.roles ?? []);
-      },
-      error: () => {
-        this.auth = false;
-        this.isAdmin = false;
-      },
-    });
+    if (this.isLogged()) {
+      this.loadUser();
+    }
 
     const saved = localStorage.getItem('theme');
     const prefersDark = window.matchMedia(
@@ -71,6 +74,19 @@ export class NavbarComponent implements OnInit {
     this.isDark.set(next);
     localStorage.setItem('theme', next ? 'dark' : 'light');
     this.applyTheme(next);
+  }
+
+  private loadUser(): void {
+    this.userService.getUserInformation().subscribe({
+      next: (response: UserInformation) => {
+        this.username = response.username;
+        this.imageUrl = response.imageUrl;
+        this.isAdmin = this.hasAdminRole(response.roles ?? []);
+      },
+      error: () => {
+        this.authService.setLogged(false);
+      },
+    });
   }
 
   private applyTheme(dark: boolean): void {
@@ -128,7 +144,7 @@ export class NavbarComponent implements OnInit {
   }
 
   private hasAdminRole(roles: Array<string | { authority?: string }>): boolean {
-    return roles.some(role => {
+    return roles.some((role) => {
       if (typeof role === 'string') {
         return role === 'ADMIN' || role === 'ROLE_ADMIN';
       }

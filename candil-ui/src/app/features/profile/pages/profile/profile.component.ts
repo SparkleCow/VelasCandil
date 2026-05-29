@@ -54,7 +54,9 @@ export class ProfileComponent implements OnInit {
       Validators.required,
       Validators.maxLength(80),
     ]),
-    imageUrl: this.fb.nonNullable.control('assets/default-avatar.png'),
+    imageUrl: this.fb.nonNullable.control(
+      'https://www.freeiconspng.com/uploads/camera-icon-21.png',
+    ),
   });
 
   private initialProfileSnapshot = this.profileForm.getRawValue();
@@ -203,7 +205,7 @@ export class ProfileComponent implements OnInit {
   }
 
   getImageUrl(): string {
-    const url = this.profileForm.get('imageUrl')?.value;
+    const url = this.user?.imageUrl;
 
     if (!url || url === 'null' || url === 'undefined') {
       return this.defaultImage;

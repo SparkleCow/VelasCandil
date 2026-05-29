@@ -64,7 +64,6 @@
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #fffef9;
 }
 
 .avatar-upload-overlay {
@@ -72,7 +71,6 @@
   inset: 4px;
   border-radius: 50%;
   background: rgb(0 0 0 / 58%);
-  color: #fff;
   display: flex;
   flex-direction: column;
   justify-content: center;

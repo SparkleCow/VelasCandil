@@ -157,6 +157,15 @@
   );
 }
 
+@media (max-width: 768px) {
+  .testimonios {
+    padding: 4rem 0;
+    background: #fffdf9;
+    overflow: hidden;
+    padding: 100px 0px;
+  }
+}
+
 @keyframes fadeUp {
   from {
     opacity: 0;

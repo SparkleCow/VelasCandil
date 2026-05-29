@@ -52,13 +52,13 @@
 </head>
 <body>
 <div class="container">
-    <h1>Account Activation</h1>
+    <h1>Activa tu cuenta</h1>
     <img class="banner" src="https://cdn.atrapalo.com/o/event/4893786/1652204.jpg?auto=avif&width=1280&quality=75">
-    <p class="greeting" th:text="'Hello ' + ${username} + ','"></p>
-    <p>Thank you for signing up! Please use the following activation code to activate your account:</p>
+    <p class="greeting" th:text="'Hola ' + ${username} + ','"></p>
+    <p>Gracias por registrarte! Por favor usa el siguiente codigo para activar tu cuenta:</p>
     <div class="activation-code"><span th:text="${activationCode}"></span></div>
     <div class="activation-link">
-        <a th:href="${confirmationUrl}" target="_blank">Activate your account</a>
+        <a th:href="${confirmationUrl}" target="_blank">Activa tu cuenta</a>
     </div>
 </div>
 </body>
