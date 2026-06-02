@@ -54,7 +54,7 @@ public class OrderServiceImp implements OrderService {
         User user = findUser(userId);
 
         ShoppingCart cart = shoppingCartRepository.findByUser(user)
-                .orElseThrow(() -> new CartNotFoundException("ShoppingCart not found for user "+user.getId()));
+                .orElseThrow(() -> new CartNotFoundException("ShoppingCart not found for user " + user.getId()));
 
         if (cart.getCartItems().isEmpty()) {
             throw new CartEmptyException("Cart is empty");
@@ -91,6 +91,7 @@ public class OrderServiceImp implements OrderService {
             orderRepository.save(order);
             throw new InternalServerErrorException("Error al procesar el pago con Mercado Pago");
         }
+
         return toDto(order);
     }
 
@@ -98,10 +99,8 @@ public class OrderServiceImp implements OrderService {
     @Transactional
     public void handleWebhook(Map<String, Object> payload) {
         String type = (String) payload.get("type");
-        log.info("Webhook recibido de Mercado Pago. Tipo: {}", type);
 
         if (!"payment".equals(type)) {
-            log.debug("Webhook ignorado (tipo no es 'payment'): {}", type);
             return;
         }
 
@@ -121,9 +120,6 @@ public class OrderServiceImp implements OrderService {
             String externalReference = payment.getExternalReference();
             String mpStatus = payment.getStatus();
 
-            log.info("Pago {} — estado MP: {} — externalReference: {}",
-                    paymentIdStr, mpStatus, externalReference);
-
             Order order = null;
 
             if (externalReference != null) {
@@ -138,7 +134,7 @@ public class OrderServiceImp implements OrderService {
             }
 
             if (order == null) {
-                log.warn("No se encontró orden para externalReference={} o paymentId={}",
+                log.warn("No se encontro orden para externalReference={} o paymentId={}",
                         externalReference, paymentIdStr);
                 return;
             }
@@ -149,8 +145,6 @@ public class OrderServiceImp implements OrderService {
             order.setMercadoPagoPaymentId(paymentIdStr);
             order.setStatus(newStatus);
             orderRepository.save(order);
-
-            log.info("Orden {} actualizada a estado: {}", order.getId(), order.getStatus());
 
             if (newStatus == OrderStatus.PAID && previousStatus != OrderStatus.PAID) {
                 validateStock(order);
@@ -191,6 +185,16 @@ public class OrderServiceImp implements OrderService {
     private Preference createMercadoPagoPreference(Order order) throws MPException, MPApiException {
         PreferenceClient client = new PreferenceClient();
 
+        String successUrl = mpProperties.getSuccessUrl() != null
+                ? mpProperties.getSuccessUrl()
+                : "http://localhost:4200/orders/success";
+        String failureUrl = mpProperties.getFailureUrl() != null
+                ? mpProperties.getFailureUrl()
+                : "http://localhost:4200/orders/failure";
+        String pendingUrl = mpProperties.getPendingUrl() != null
+                ? mpProperties.getPendingUrl()
+                : "http://localhost:4200/orders/pending";
+
         List<PreferenceItemRequest> items = order.getItems().stream()
                 .map(item -> PreferenceItemRequest.builder()
                         .id(item.getCandleId().toString())
@@ -202,14 +206,15 @@ public class OrderServiceImp implements OrderService {
                 .toList();
 
         PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
-                .success(mpProperties.getSuccessUrl() + "?orderId=" + order.getId())
-                .failure(mpProperties.getFailureUrl() + "?orderId=" + order.getId())
-                .pending(mpProperties.getPendingUrl() + "?orderId=" + order.getId())
+                .success(successUrl + "?orderId=" + order.getId())
+                .failure(failureUrl + "?orderId=" + order.getId())
+                .pending(pendingUrl + "?orderId=" + order.getId())
                 .build();
 
         PreferenceRequest request = PreferenceRequest.builder()
                 .items(items)
                 .backUrls(backUrls)
+                .autoReturn("approved")
                 .notificationUrl(mpProperties.getWebhookUrl())
                 .externalReference(order.getId().toString())
                 .build();
@@ -246,7 +251,6 @@ public class OrderServiceImp implements OrderService {
             cart.getCartItems().clear();
             cart.recalculateSubTotal();
             shoppingCartRepository.save(cart);
-            log.info("ShoppingCart cleaned for user {}", user.getId());
         });
     }
 
@@ -275,10 +279,6 @@ public class OrderServiceImp implements OrderService {
                 order.getCreatedAt());
     }
 
-    //Batch
-    // This method updates stock using a batch fetch (single query).
-    // It relies on JPA dirty checking inside a @Transactional context,
-    // so no explicit save() is required.
     private void updateStock(Order order) {
         List<Long> candleIds = order.getItems().stream()
                 .map(OrderItem::getCandleId)
@@ -296,7 +296,7 @@ public class OrderServiceImp implements OrderService {
             }
 
             if (candle.getStock() < item.getQuantity()) {
-                log.error("Stock insuficiente para candle {}. Stock: {}, requerido: {}",
+                log.error("Stock insuficiente - candle: {} | stock: {} | requerido: {}",
                         candle.getId(), candle.getStock(), item.getQuantity());
                 throw new IllegalStateException("Stock insuficiente");
             }
@@ -322,9 +322,8 @@ public class OrderServiceImp implements OrderService {
             }
 
             if (candle.getStock() < item.getQuantity()) {
-                log.error("Stock mismatch at payment time. Candle {} | Stock: {} | Required: {}",
+                log.error("Stock insuficiente al momento del pago - candle: {} | stock: {} | requerido: {}",
                         candle.getId(), candle.getStock(), item.getQuantity());
-
                 throw new IllegalStateException("Stock no longer available");
             }
         }

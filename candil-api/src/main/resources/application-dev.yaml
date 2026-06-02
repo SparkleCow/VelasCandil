@@ -45,7 +45,6 @@ spring:
       max-file-size: 10MB
       max-request-size: 50MB
 
-
   destination:
     folder: src/main/resources/static/
 
@@ -55,7 +54,7 @@ application:
       secret_key: "${SECRET_KEY:GRf9FCYUutfWqAuDWHPwdv1dQozLUYCVM0cBOstuEBA}"
       expiration: 8640000
   cors:
-    allowed-origins: ${ALLOWED_ORIGINS:*}
+    allowed-origins: ${ALLOWED_ORIGINS:http://localhost:4200}
   mailing:
     frontend:
       activation-url: http://localhost:4200/activate-account
@@ -75,18 +74,18 @@ logging:
   level:
     software:
       amazon:
-        awssdk: DEBUG
+        awssdk: WARN
 
 # ─────────────────────────────────────────────────────────
 #  Mercado Pago Sandbox
-#  Obtén tus credenciales en:
-#  https://www.mercadopago.com.co/developers/panel/credentials
+#  Credenciales en .env — nunca hardcodear aqui
 # ─────────────────────────────────────────────────────────
 mercadopago:
-  # Access token de prueba (empieza con TEST-)
-  access-token: APP_USR-2528297881957512-050211-7d6bfb165a5271779efa08c5dbe84a90-3373865814
-
-  success-url: http://localhost:4200/orders/success
-  failure-url: http://localhost:4200/orders/failure
-  pending-url: http://localhost:4200/orders/pending
-  webhook-url: http://localhost:8080/v1/orders/webhook
+  access-token: ${MP_ACCESS_TOKEN}
+  public-key: ${MP_PUBLIC_KEY:}
+  # Backend recibe el redirect de MP y reenvía al frontend
+  # Así evitamos necesitar dos túneles ngrok en plan gratuito
+  success-url: https://raisin-art-shorthand.ngrok-free.dev/v1/orders/redirect/success
+  failure-url: https://raisin-art-shorthand.ngrok-free.dev/v1/orders/redirect/failure
+  pending-url: https://raisin-art-shorthand.ngrok-free.dev/v1/orders/redirect/pending
+  webhook-url: ${MP_WEBHOOK_URL:https://raisin-art-shorthand.ngrok-free.dev/v1/orders/webhook}

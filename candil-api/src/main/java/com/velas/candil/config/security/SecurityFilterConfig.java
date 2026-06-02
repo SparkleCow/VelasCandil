@@ -46,40 +46,40 @@ public class SecurityFilterConfig {
                                         "/v1/auth/**",
                                         "/images/**")
                                 .permitAll()
-                                //Candles
-                                .requestMatchers(HttpMethod.GET, "/v1/candles/category/",
+                                // Candles
+                                .requestMatchers(HttpMethod.GET,
+                                        "/v1/candles/category/",
                                         "/v1/candles/feature",
                                         "/v1/candles/material",
                                         "/v1/candles/date",
                                         "/v1/candles/search",
                                         "/v1/candles/**",
                                         "/v1/candles").permitAll()
-
                                 .requestMatchers(HttpMethod.POST, "/v1/candles").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.PUT, "/v1/candles/**").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.DELETE, "/v1/candles/**").hasRole("ADMIN")
-                                //Ingredients
+                                // Ingredients
                                 .requestMatchers(HttpMethod.GET, "/v1/ingredients/**").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.POST, "/v1/ingredients").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.PUT, "/v1/ingredients/**").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.DELETE, "/v1/ingredients/**").hasRole("ADMIN")
-                                //Cart
+                                // Cart
                                 .requestMatchers("/v1/cart/**").authenticated()
-                                // Orders — el webhook de MP debe ser público (MP no manda JWT)
+                                // Orders — webhook y redirects de MP son publicos (MP no envia JWT)
                                 .requestMatchers(HttpMethod.POST, "/v1/orders/webhook").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/v1/orders/redirect/**").permitAll()
                                 .requestMatchers("/v1/orders/**").authenticated()
-                                .anyRequest()
-                                .authenticated()
+                                .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .authenticationProvider(authenticationProvider)
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint((request, response, authException) -> {
-                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                             response.getWriter().write("Unauthorized");
                         })
                         .accessDeniedHandler((request, response, accessDeniedException) -> {
-                            response.setStatus(HttpServletResponse.SC_FORBIDDEN); // 403
+                            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                             response.getWriter().write("Forbidden");
                         })
                 )
