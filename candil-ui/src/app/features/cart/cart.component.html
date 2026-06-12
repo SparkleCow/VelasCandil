@@ -71,7 +71,7 @@
  
         <div class="summary-total">
           <span>Total</span>
-          <strong>{{ formatCOP(cart()!.subTotal ?? 0) }}</strong>
+          <strong>{{ formatCOP(cart()!.subTotal) }}</strong>
         </div>
  
         @if (error()) {
@@ -83,13 +83,15 @@
           class="btn-checkout"
           (click)="checkout()"
           [disabled]="checkingOut()">
-          @if (checkingOut()) {
-            <mat-spinner diameter="20" class="checkout-spinner"></mat-spinner>
-            Procesando…
-          } @else {
-            <mat-icon>lock</mat-icon>
-            Pagar con Mercado Pago
-          }
+          <ng-container>
+            @if (checkingOut()) {
+              <mat-spinner diameter="20" class="checkout-spinner"></mat-spinner>
+              Procesando…
+            } @else {
+              <mat-icon>lock</mat-icon>
+              Pagar con Mercado Pago
+            }
+          </ng-container>
         </button>
  
         <a routerLink="/candles" class="link-continue">
@@ -101,4 +103,3 @@
   }
  
 </div>
- 

@@ -2,11 +2,11 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { OrderService } from '../../../../core/services/order.service';
 import { OrderResponseDto } from '../../../../shared/models/order.models';
+import { NavbarComponent } from '../../../../shared/components/navbar/navbar.component';
 
 @Component({
   selector: 'app-order-success',
@@ -15,7 +15,6 @@ import { OrderResponseDto } from '../../../../shared/models/order.models';
     CommonModule,
     RouterModule,
     MatButtonModule,
-    MatCardModule,
     MatIconModule,
     MatProgressSpinnerModule,
   ],
@@ -46,11 +45,6 @@ export class OrderSuccessComponent implements OnInit {
     });
   }
 
-  goToHome(): void {
-    this.router.navigate(['/home']);
-  }
-
-  goToOrders(): void {
-    this.router.navigate(['/orders']);
-  }
+  goToHome(): void { this.router.navigate(['/home']); }
+  goToOrders(): void { this.router.navigate(['/orders']); }
 }

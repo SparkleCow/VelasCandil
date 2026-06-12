@@ -1,5 +1,5 @@
 <div class="result-page">
-  <mat-card class="result-card">
+  <div class="result-card">
 
     <div class="result-icon pending">
       <mat-icon>schedule</mat-icon>
@@ -7,8 +7,8 @@
 
     <h1>Pago en proceso</h1>
     <p class="subtitle">
-      Tu pago está siendo procesado. Te notificaremos cuando se confirme.
-      Puedes revisar el estado en "Mis pedidos".
+      Tu pago está siendo verificado.<br>
+      Te notificaremos cuando se confirme. Puedes revisar el estado en "Mis pedidos".
     </p>
 
     <div class="result-actions">
@@ -17,10 +17,10 @@
         Mis pedidos
       </button>
       <button mat-stroked-button (click)="goToHome()">
-        <mat-icon>home</mat-icon>
-        Ir al inicio
+        <mat-icon>storefront</mat-icon>
+        Ver catálogo
       </button>
     </div>
 
-  </mat-card>
+  </div>
 </div>

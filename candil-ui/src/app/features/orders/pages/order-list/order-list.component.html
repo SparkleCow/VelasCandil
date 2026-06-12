@@ -1,6 +1,8 @@
+
 <div class="orders-page">
+
   <div class="orders-header">
-    <p class="kicker">Historial</p>
+    <p class="kicker">Tu cuenta</p>
     <h1>Mis pedidos</h1>
   </div>
 
@@ -18,27 +20,33 @@
     <div class="state-block">
       <mat-icon class="state-icon">receipt_long</mat-icon>
       <p>Aún no tienes pedidos.</p>
-      <button mat-flat-button color="primary" (click)="goToHome()">Ver velas</button>
+      <button mat-flat-button color="primary" (click)="goToHome()">
+        <mat-icon>storefront</mat-icon>
+        Ver velas
+      </button>
     </div>
   } @else {
     <div class="orders-list">
       @for (order of orders(); track order.id) {
         <mat-card class="order-card">
+
           <div class="order-card-header">
-            <div>
+            <div class="order-meta">
               <p class="order-id">Orden #{{ order.id }}</p>
-              <p class="order-date">{{ order.createdAt | date: 'dd/MM/yyyy HH:mm' }}</p>
+              <p class="order-date">{{ order.createdAt | date: 'dd MMM yyyy · HH:mm' }}</p>
             </div>
-            <mat-chip [color]="statusColor(order.status)" highlighted>
+            <span class="status-badge status-{{ order.status }}">
+              <mat-icon>{{ statusIcon(order.status) }}</mat-icon>
               {{ statusLabel(order.status) }}
-            </mat-chip>
+            </span>
           </div>
 
           <div class="order-items">
             @for (item of order.items; track item.candleId) {
               <div class="order-item">
-                <span>{{ item.candleName }} x{{ item.quantity }}</span>
-                <span>${{ item.subtotal | number: '1.0-0' }}</span>
+                <span class="item-name">{{ item.candleName }}</span>
+                <span class="item-qty">x{{ item.quantity }}</span>
+                <span class="item-price">${{ item.subtotal | number: '1.0-0' }}</span>
               </div>
             }
           </div>
@@ -47,8 +55,10 @@
             <strong>Total</strong>
             <strong>${{ order.total | number: '1.0-0' }}</strong>
           </div>
+
         </mat-card>
       }
     </div>
   }
+
 </div>

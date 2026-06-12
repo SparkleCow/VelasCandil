@@ -8,15 +8,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { UserService } from '../../../../core/services/user.service';
 import { UserInformation } from '../../../../shared/models/user-information.models';
+import { OrderService } from '../../../../core/services/order.service';
+import { OrderResponseDto } from '../../../../shared/models/order.models';
 import { finalize } from 'rxjs';
-
-interface PurchaseHistoryItem {
-  id: number;
-  candleName: string;
-  price: number;
-  quantity: number;
-  purchasedAt: string;
-}
 
 @Component({
   selector: 'app-profile',
@@ -35,6 +29,8 @@ interface PurchaseHistoryItem {
 })
 export class ProfileComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
+  private readonly orderService = inject(OrderService);
+
   user: UserInformation | null = null;
 
   readonly isEditing = signal(false);
@@ -47,6 +43,7 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadUserInformation();
+    this.loadOrders();
   }
 
   readonly profileForm = this.fb.nonNullable.group({
@@ -61,43 +58,7 @@ export class ProfileComponent implements OnInit {
 
   private initialProfileSnapshot = this.profileForm.getRawValue();
 
-  readonly purchaseHistory = signal<PurchaseHistoryItem[]>([
-    {
-      id: 1,
-      candleName: 'Vela Aromatica Lavanda',
-      price: 42000,
-      quantity: 2,
-      purchasedAt: '2026-04-20',
-    },
-    {
-      id: 2,
-      candleName: 'Vela Clasica Vainilla',
-      price: 31000,
-      quantity: 1,
-      purchasedAt: '2026-04-14',
-    },
-    {
-      id: 3,
-      candleName: 'Vela Decorativa Canela',
-      price: 39000,
-      quantity: 3,
-      purchasedAt: '2026-04-02',
-    },
-    {
-      id: 4,
-      candleName: 'Vela Romantic Rose',
-      price: 47000,
-      quantity: 1,
-      purchasedAt: '2026-03-27',
-    },
-    {
-      id: 5,
-      candleName: 'Vela Essential Balance',
-      price: 51000,
-      quantity: 2,
-      purchasedAt: '2026-03-15',
-    },
-  ]);
+  readonly orders = signal<OrderResponseDto[]>([]);
 
   readonly fullName = computed(() => {
     const { username } = this.profileForm.getRawValue();
@@ -105,10 +66,7 @@ export class ProfileComponent implements OnInit {
   });
 
   readonly totalSpent = computed(() =>
-    this.purchaseHistory().reduce(
-      (acc, item) => acc + item.price * item.quantity,
-      0,
-    ),
+    this.orders().reduce((acc, order) => acc + order.total, 0),
   );
 
   startEdit(): void {
@@ -167,8 +125,6 @@ export class ProfileComponent implements OnInit {
       )
       .subscribe({
         next: () => {
-          // The backend stores the key and returns text response,
-          // so we re-fetch user information to get a fresh presigned URL.
           this.loadUserInformation();
         },
         error: () => {},
@@ -181,6 +137,13 @@ export class ProfileComponent implements OnInit {
         this.user = response;
         this.patchProfileForm(response);
       },
+      error: () => {},
+    });
+  }
+
+  private loadOrders(): void {
+    this.orderService.getMyOrders().subscribe({
+      next: (orders) => this.orders.set(orders),
       error: () => {},
     });
   }

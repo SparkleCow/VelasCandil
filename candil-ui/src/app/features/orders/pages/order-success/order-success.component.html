@@ -1,5 +1,5 @@
 <div class="result-page">
-  <mat-card class="result-card">
+  <div class="result-card">
 
     @if (loading()) {
       <div class="state-block">
@@ -7,12 +7,16 @@
         <p>Verificando tu pago...</p>
       </div>
     } @else {
+
       <div class="result-icon success">
         <mat-icon>check_circle</mat-icon>
       </div>
 
       <h1>¡Pago exitoso!</h1>
-      <p class="subtitle">Tu pedido ha sido confirmado. Pronto recibirás más detalles.</p>
+      <p class="subtitle">
+        Tu pedido ha sido confirmado.<br>
+        Gracias por tu compra en Velas Candil.
+      </p>
 
       @if (order()) {
         <div class="order-summary">
@@ -26,8 +30,8 @@
             }
           </div>
           <div class="order-total">
-            <strong>Total pagado</strong>
-            <strong>${{ order()!.total | number: '1.0-0' }}</strong>
+            <span>Total pagado</span>
+            <span>${{ order()!.total | number: '1.0-0' }}</span>
           </div>
         </div>
       }
@@ -38,11 +42,12 @@
           Mis pedidos
         </button>
         <button mat-stroked-button (click)="goToHome()">
-          <mat-icon>store</mat-icon>
+          <mat-icon>storefront</mat-icon>
           Seguir comprando
         </button>
       </div>
+
     }
 
-  </mat-card>
+  </div>
 </div>

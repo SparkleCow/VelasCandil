@@ -9,7 +9,7 @@ import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-about',
-  imports: [MatIcon],
+  imports: [],
   templateUrl: './about.component.html',
   styleUrl: './about.component.css',
 })

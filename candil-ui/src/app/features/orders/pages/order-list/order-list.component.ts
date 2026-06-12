@@ -2,12 +2,11 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatChipsModule } from '@angular/material/chips';
 import { OrderService } from '../../../../core/services/order.service';
 import { OrderResponseDto, OrderStatus } from '../../../../shared/models/order.models';
+import { MatCardModule } from "@angular/material/card";
 
 @Component({
   selector: 'app-order-list',
@@ -16,11 +15,10 @@ import { OrderResponseDto, OrderStatus } from '../../../../shared/models/order.m
     CommonModule,
     RouterModule,
     MatButtonModule,
-    MatCardModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    MatChipsModule,
-  ],
+    MatCardModule
+],
   templateUrl: './order-list.component.html',
   styleUrl: './order-list.component.scss',
 })
@@ -57,16 +55,16 @@ export class OrderListComponent implements OnInit {
     return labels[status] ?? status;
   }
 
-  statusColor(status: OrderStatus): string {
-    const colors: Record<OrderStatus, string> = {
-      PENDING: 'default',
-      IN_PROCESS: 'accent',
-      PAID: 'primary',
-      FAILED: 'warn',
-      CANCELLED: 'warn',
-      REFUNDED: 'accent',
+  statusIcon(status: OrderStatus): string {
+    const icons: Record<OrderStatus, string> = {
+      PENDING: 'schedule',
+      IN_PROCESS: 'autorenew',
+      PAID: 'check_circle',
+      FAILED: 'cancel',
+      CANCELLED: 'block',
+      REFUNDED: 'undo',
     };
-    return colors[status] ?? 'default';
+    return icons[status] ?? 'help_outline';
   }
 
   goToHome(): void {

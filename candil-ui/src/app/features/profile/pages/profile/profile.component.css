@@ -1,3 +1,4 @@
+/* ─── Layout general ─────────────────────────────────────────── */
 .profile-page {
   min-height: 100vh;
   padding: clamp(1rem, 3vw, 2rem);
@@ -22,26 +23,19 @@
   gap: 1rem;
 }
 
+/* ─── Cards ──────────────────────────────────────────────────── */
 .auth-card {
-  border-radius: 20px;
-  border: 1px solid #eadfc8;
-  background: #fffefb;
-  box-shadow: 0 10px 28px rgb(99 76 38 / 10%);
+  border-radius: 20px !important;
+  border: 1px solid #eadfc8 !important;
+  background: #fffefb !important;
+  box-shadow: 0 10px 28px rgb(99 76 38 / 10%) !important;
 }
 
-.profile-header-card {
-  padding: 1rem 1.1rem;
-}
+.profile-header-card { padding: 1rem 1.1rem; }
+.profile-form-card   { padding: 1rem 1.1rem 1.1rem; }
+.purchase-card       { padding: 1.25rem; height: 100%; box-sizing: border-box; }
 
-.profile-form-card {
-  padding: 1rem 1.1rem 1.1rem;
-}
-
-.purchase-card {
-  padding: 1rem;
-  height: 100%;
-}
-
+/* ─── Hero del perfil ────────────────────────────────────────── */
 .profile-hero {
   display: grid;
   grid-template-columns: auto 1fr auto;
@@ -56,7 +50,7 @@
   border-radius: 50%;
   padding: 4px;
   background: linear-gradient(130deg, #c5a26a, #8f6e3a);
-  overflow: hidden;
+  flex-shrink: 0;
 }
 
 .avatar {
@@ -64,27 +58,29 @@
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
+  display: block;
+  background: #f4eddf;
 }
 
 .avatar-upload-overlay {
   position: absolute;
-  inset: 4px;
+  inset: 0;
   border-radius: 50%;
-  background: rgb(0 0 0 / 58%);
+  background: rgb(0 0 0 / 45%);
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   gap: 2px;
-  opacity: 0;
-  transition: opacity 0.2s ease;
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 600;
   cursor: pointer;
-  text-align: center;
-  padding: 0 8px;
-  font-size: 0.72rem;
+  opacity: 0;
+  transition: opacity 0.2s;
 }
 
-.avatar-wrap.is-editing:hover .avatar-upload-overlay {
+.avatar-wrap.is-editing .avatar-upload-overlay:not(.disabled) {
   opacity: 1;
 }
 
@@ -92,149 +88,175 @@
   display: none;
 }
 
-.avatar-upload-overlay.disabled {
-  pointer-events: none;
-}
-
 .overline {
-  margin: 0;
-  font-size: 0.74rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: #8a6a36;
+  font-size: 0.7rem;
   font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #a0835a;
+  margin: 0 0 2px;
 }
 
 .title {
-  margin: 0.35rem 0;
-  color: #4c3a1f;
-  font-size: clamp(1.35rem, 2.5vw, 1.9rem);
-  line-height: 1.2;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #3b2a14;
+  margin: 0 0 2px;
 }
 
 .subtitle {
+  font-size: 0.85rem;
+  color: #a0835a;
   margin: 0;
-  color: #6f5a39;
-  font-size: 0.93rem;
 }
 
-.profile-form-card h3,
-.purchase-header h3 {
-  margin: 0.35rem 0 1rem;
-  color: #4b3820;
-  font-size: 1.1rem;
+/* ─── Formulario ─────────────────────────────────────────────── */
+.profile-form-card h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #3b2a14;
+  margin: 0 0 0.75rem;
 }
 
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.full-width {
-  width: 100%;
-}
+.full-width { width: 100%; }
 
 .actions {
-  margin-top: 0.75rem;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
 }
 
+/* ─── Historial de compras ───────────────────────────────────── */
 .purchase-header {
   display: flex;
-  justify-content: space-between;
   align-items: flex-start;
-  gap: 0.8rem;
-  margin-bottom: 0.7rem;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  gap: 0.5rem;
+}
+
+.purchase-header h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #3b2a14;
+  margin: 2px 0 0;
 }
 
 .total {
-  margin: 0.45rem 0 0;
-  color: #5e4825;
+  font-size: 0.9rem;
   font-weight: 700;
+  color: #8f6e3a;
+  background: #fdf3e0;
+  border: 1px solid #e8d5b0;
+  border-radius: 999px;
+  padding: 4px 14px;
+  white-space: nowrap;
+  margin: 0;
 }
 
 .purchase-list {
-  max-height: 540px;
-  overflow: auto;
-  padding-right: 0.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 420px;
+  overflow-y: auto;
+  padding-right: 4px;
 }
+
+/* Scrollbar sutil */
+.purchase-list::-webkit-scrollbar        { width: 4px; }
+.purchase-list::-webkit-scrollbar-track  { background: transparent; }
+.purchase-list::-webkit-scrollbar-thumb  { background: #ddd0bb; border-radius: 999px; }
 
 .purchase-item {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 12px;
-  border: 1px solid #ebddc3;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
   border-radius: 12px;
-  padding: 0.75rem 0.85rem;
-  margin-bottom: 0.6rem;
-  background: #fff;
+  background: #fdf8f0;
+  border: 1px solid #ede6d6;
+  transition: box-shadow 0.15s;
+}
+
+.purchase-item:hover {
+  box-shadow: 0 4px 12px rgb(99 76 38 / 10%);
+}
+
+.purchase-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
 }
 
 .product {
-  margin: 0 0 0.2rem;
-  color: #4a3820;
-  font-weight: 700;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #3b2a14;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .date {
+  font-size: 0.72rem;
+  color: #a0835a;
   margin: 0;
-  color: #7a6747;
-  font-size: 0.86rem;
 }
 
 .purchase-meta {
-  text-align: right;
-  color: #634b27;
-}
-
-.purchase-meta span {
-  display: block;
-  font-size: 0.84rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
 }
 
 .purchase-meta strong {
-  font-size: 1rem;
+  font-size: 0.9rem;
+  color: #3b2a14;
 }
 
-:host ::ng-deep .mat-mdc-form-field .mdc-notched-outline__leading,
-:host ::ng-deep .mat-mdc-form-field .mdc-notched-outline__notch,
-:host ::ng-deep .mat-mdc-form-field .mdc-notched-outline__trailing {
-  border-color: #d9c7a3 !important;
+/* ─── Badge de estado ────────────────────────────────────────── */
+.status-badge {
+  font-size: 0.62rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-:host ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
-:host ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
-:host ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
-  border-color: #9a7843 !important;
-  border-width: 2px !important;
+.status-paid       { background: #d1fae5; color: #065f46; }
+.status-pending    { background: #fef9c3; color: #854d0e; }
+.status-in_process { background: #dbeafe; color: #1e40af; }
+.status-failed     { background: #fee2e2; color: #991b1b; }
+.status-cancelled  { background: #f3f4f6; color: #374151; }
+.status-refunded   { background: #ede9fe; color: #5b21b6; }
+
+/* ─── Estado vacío ───────────────────────────────────────────── */
+.empty-state {
+  text-align: center;
+  color: #a0835a;
+  padding: 2.5rem 0;
+  font-size: 0.875rem;
 }
 
-:host ::ng-deep .mat-mdc-form-field .mdc-floating-label,
-:host ::ng-deep .mat-mdc-form-field .mat-mdc-input-element {
-  color: #5b4725 !important;
-}
-
-:host ::ng-deep .mat-mdc-raised-button.mat-primary {
-  background-color: #8a6a36 !important;
-  color: #fffdf8 !important;
-}
-
-@media (max-width: 960px) {
+/* ─── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 768px) {
   .profile-layout {
     grid-template-columns: 1fr;
   }
 
   .profile-hero {
-    grid-template-columns: 1fr;
-    justify-items: start;
+    grid-template-columns: auto 1fr;
   }
 
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .purchase-list {
-    max-height: none;
+  .profile-hero button {
+    grid-column: 1 / -1;
+    justify-self: end;
   }
 }
