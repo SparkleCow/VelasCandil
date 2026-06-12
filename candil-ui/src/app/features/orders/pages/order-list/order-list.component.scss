@@ -1,68 +1,186 @@
 .orders-page {
-  max-width: 760px;
-  margin: 2rem auto;
-  padding: 0 1rem;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
 }
 
 .orders-header {
-  margin-bottom: 2rem;
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+
   .kicker {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
-    letter-spacing: 2px;
-    color: #888;
+    letter-spacing: 3px;
+    color: var(--mat-sys-on-surface-variant);
+    margin: 0 0 8px;
   }
-  h1 { margin: 0.25rem 0 0; }
+
+  h1 {
+    font-size: 1.6rem;
+    font-weight: 300;
+    margin: 0;
+    color: var(--mat-sys-on-surface);
+    letter-spacing: 0.5px;
+  }
 }
 
+/* ── Estados vacío / error / carga ── */
 .state-block {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
-  padding: 3rem 0;
-  color: #888;
-  .state-icon { font-size: 56px; width: 56px; height: 56px; }
+  gap: 16px;
+  padding: 80px 0;
+  color: var(--mat-sys-on-surface-variant);
+  text-align: center;
+
+  mat-icon {
+    font-size: 56px;
+    width: 56px;
+    height: 56px;
+    opacity: 0.4;
+  }
+
+  p { margin: 0; font-size: 0.95rem; }
 }
 
+/* ── Lista de órdenes ── */
 .orders-list {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 16px;
 }
 
+/* ── Tarjeta de orden ── */
 .order-card {
-  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 12px;
+  padding: 24px;
+  background: var(--mat-sys-surface-container);
+  transition: box-shadow 0.2s;
+
+  &:hover {
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  }
 }
 
 .order-card-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 1rem;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
-.order-id { font-weight: 600; margin: 0; }
-.order-date { font-size: 0.82rem; color: #888; margin: 0.2rem 0 0; }
+.order-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
 
+.order-id {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--mat-sys-on-surface);
+  margin: 0;
+}
+
+.order-date {
+  font-size: 0.8rem;
+  color: var(--mat-sys-on-surface-variant);
+  margin: 0;
+}
+
+/* ── Badge de estado ── */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+
+  mat-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+  }
+
+  &.status-PAID {
+    background: color-mix(in srgb, var(--mat-sys-primary) 15%, transparent);
+    color: var(--mat-sys-primary);
+  }
+
+  &.status-PENDING {
+    background: color-mix(in srgb, var(--mat-sys-on-surface-variant) 12%, transparent);
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  &.status-IN_PROCESS {
+    background: color-mix(in srgb, var(--mat-sys-tertiary) 15%, transparent);
+    color: var(--mat-sys-tertiary);
+  }
+
+  &.status-FAILED,
+  &.status-CANCELLED {
+    background: color-mix(in srgb, var(--mat-sys-error) 12%, transparent);
+    color: var(--mat-sys-error);
+  }
+
+  &.status-REFUNDED {
+    background: color-mix(in srgb, var(--mat-sys-secondary) 15%, transparent);
+    color: var(--mat-sys-secondary);
+  }
+}
+
+/* ── Items de la orden ── */
 .order-items {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
-  margin-bottom: 0.75rem;
+  gap: 8px;
+  margin-bottom: 16px;
 }
 
 .order-item {
   display: flex;
   justify-content: space-between;
-  font-size: 0.92rem;
-  color: #555;
+  align-items: center;
+  font-size: 0.88rem;
+  color: var(--mat-sys-on-surface-variant);
+
+  .item-name { flex: 1; }
+
+  .item-qty {
+    font-size: 0.78rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--mat-sys-primary) 10%, transparent);
+    color: var(--mat-sys-primary);
+    margin: 0 12px;
+  }
+
+  .item-price { font-weight: 500; color: var(--mat-sys-on-surface); }
 }
 
+/* ── Total ── */
 .order-total {
   display: flex;
   justify-content: space-between;
-  padding-top: 0.75rem;
-  border-top: 1px solid #e0e0e0;
+  align-items: center;
+  padding-top: 16px;
+  border-top: 1px solid var(--mat-sys-outline-variant);
   font-size: 1rem;
+  font-weight: 600;
+  color: var(--mat-sys-on-surface);
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .orders-page { padding: 24px 16px 60px; }
+  .order-card { padding: 16px; }
 }

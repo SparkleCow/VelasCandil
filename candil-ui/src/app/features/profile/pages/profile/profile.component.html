@@ -1,85 +1,38 @@
-<div class="profile-page">
-  <div class="profile-layout">
-    <section class="left-column">
-      <mat-card class="auth-card profile-header-card">
-        <div class="profile-hero">
-          <div class="avatar-wrap" [class.is-editing]="isEditing()">
-            <img class="avatar"
-            [src]="getImageUrl()"
-              alt="Foto de perfil" />            
-            <label class="avatar-upload-overlay" [class.disabled]="!isEditing() || isUploadingImage()">
-              <input
-                type="file"
-                accept="image/*"
-                (change)="onImageSelected($event)"
-                [disabled]="!isEditing() || isUploadingImage()"
-              />
-              <mat-icon>photo_camera</mat-icon>
-              <span>{{ isUploadingImage() ? 'Subiendo...' : 'Cambiar foto' }}</span>
-            </label>
+<section class="right-column">
+  <mat-card class="auth-card purchase-card">
+    <div class="purchase-header">
+      <div>
+        <p class="overline">Actividad</p>
+        <h3>Historial de compras</h3>
+      </div>
+      <p class="total">Total: ${{ totalSpent() | number: '1.0-0' }}</p>
+    </div>
+
+    <div class="purchase-list">
+      @if (orders().length === 0) {
+        <p class="empty-state">No tienes compras registradas aún.</p>
+      }
+
+      @for (order of orders(); track order.id) {
+        <article class="purchase-item">
+          <div class="purchase-main">
+            <!-- Si una orden tiene varios items, los lista todos -->
+            <p class="product">
+              @for (item of order.items; track item.candleId) {
+                {{ item.candleName }} x{{ item.quantity }}
+                @if (!$last) { · }
+              }
+            </p>
+            <p class="date">{{ order.createdAt | date: 'mediumDate' }}</p>
           </div>
-
-          <div class="hero-info">
-            <p class="overline">Perfil de usuario</p>
-            <h2 class="title">{{ fullName() }}</h2>
-            <p class="subtitle">@{{ profileForm.controls.username.value }}</p>
+          <div class="purchase-meta">
+            <span class="status-badge status-{{ order.status | lowercase }}">
+              {{ order.status }}
+            </span>
+            <strong>${{ order.total | number: '1.0-0' }}</strong>
           </div>
-
-          <button mat-stroked-button type="button" (click)="isEditing() ? cancelEdit() : startEdit()">
-            <mat-icon>{{ isEditing() ? 'close' : 'edit' }}</mat-icon>
-            {{ isEditing() ? 'Cancelar edición' : 'Editar perfil' }}
-          </button>
-        </div>
-      </mat-card>
-
-      <mat-card class="auth-card profile-form-card">
-        <h3>Información personal</h3>
-
-        <form [formGroup]="profileForm" novalidate>
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Username</mat-label>
-            <input matInput formControlName="username" [readonly]="!isEditing()" />
-            <mat-error *ngIf="profileForm.controls.username.hasError('required')">
-              El username es obligatorio.
-            </mat-error>
-          </mat-form-field>
-
-          @if (isEditing()) {
-            <div class="actions">
-              <button mat-raised-button color="primary" type="button" (click)="saveChanges()" [disabled]="isSaving()">
-                Guardar cambios
-              </button>
-            </div>
-          }
-        </form>
-      </mat-card>
-    </section>
-
-    <section class="right-column">
-      <mat-card class="auth-card purchase-card">
-        <div class="purchase-header">
-          <div>
-            <p class="overline">Actividad</p>
-            <h3>Historial de compras</h3>
-          </div>
-          <p class="total">Total: ${{ totalSpent() | number: '1.0-0' }}</p>
-        </div>
-
-        <div class="purchase-list">
-          @for (item of purchaseHistory(); track item.id) {
-            <article class="purchase-item">
-              <div class="purchase-main">
-                <p class="product">{{ item.candleName }}</p>
-                <p class="date">{{ item.purchasedAt | date: 'mediumDate' }}</p>
-              </div>
-              <div class="purchase-meta">
-                <span>x{{ item.quantity }}</span>
-                <strong>${{ item.price | number: '1.0-0' }}</strong>
-              </div>
-            </article>
-          }
-        </div>
-      </mat-card>
-    </section>
-  </div>
-</div>
+        </article>
+      }
+    </div>
+  </mat-card>
+</section>
