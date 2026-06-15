@@ -6,11 +6,13 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { UserService } from '../../../../core/services/user.service';
-import { UserInformation } from '../../../../shared/models/user-information.models';
-import { OrderService } from '../../../../core/services/order.service';
-import { OrderResponseDto } from '../../../../shared/models/order.models';
 import { finalize } from 'rxjs';
+
+import { UserService } from '../../../../core/services/user.service';
+import { OrderService } from '../../../../core/services/order.service';
+
+import { UserInformation } from '../../../../shared/models/user-information.models';
+import { OrderResponseDto } from '../../../../shared/models/order.models';
 
 @Component({
   selector: 'app-profile',
@@ -31,43 +33,99 @@ export class ProfileComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly orderService = inject(OrderService);
 
+  constructor(private userService: UserService) {}
+
+  // ────────────────────────────────
+  // STATE
+  // ────────────────────────────────
+
   user: UserInformation | null = null;
+
+  readonly totalOrders = computed(() => this.orders().length);
 
   readonly isEditing = signal(false);
   readonly isSaving = signal(false);
   readonly isUploadingImage = signal(false);
 
+  readonly orders = signal<OrderResponseDto[]>([]);
+
   defaultImage = 'https://www.freeiconspng.com/uploads/camera-icon-21.png';
 
-  constructor(private userService: UserService) {}
-
-  ngOnInit(): void {
-    this.loadUserInformation();
-    this.loadOrders();
-  }
+  private initialProfileSnapshot: any;
+  // ────────────────────────────────
+  // FORM
+  // ────────────────────────────────
 
   readonly profileForm = this.fb.nonNullable.group({
     username: this.fb.nonNullable.control('', [
       Validators.required,
       Validators.maxLength(80),
     ]),
-    imageUrl: this.fb.nonNullable.control(
-      'https://www.freeiconspng.com/uploads/camera-icon-21.png',
-    ),
+    imageUrl: this.fb.nonNullable.control(this.defaultImage),
   });
 
-  private initialProfileSnapshot = this.profileForm.getRawValue();
+  get userRoles(): string {
+    const roles = this.user?.roles ?? [];
 
-  readonly orders = signal<OrderResponseDto[]>([]);
+    return (
+      roles
+        .map((r) => (typeof r === 'string' ? r : r.authority))
+        .filter(Boolean)
+        .join(', ') || 'USER'
+    );
+  }
+
+  get orderCount(): number {
+    return this.orders().length;
+  }
+  // ────────────────────────────────
+  // INIT
+  // ────────────────────────────────
+
+  ngOnInit(): void {
+    this.loadUserInformation();
+    this.loadOrders();
+  }
+
+  // ────────────────────────────────
+  // COMPUTED
+  // ────────────────────────────────
 
   readonly fullName = computed(() => {
-    const { username } = this.profileForm.getRawValue();
-    return username.trim();
+    return this.profileForm.controls.username.value.trim();
   });
 
   readonly totalSpent = computed(() =>
-    this.orders().reduce((acc, order) => acc + order.total, 0),
+    this.orders().reduce((acc, order) => acc + (order.total ?? 0), 0),
   );
+
+  // ────────────────────────────────
+  // USER
+  // ────────────────────────────────
+
+  private loadUserInformation(): void {
+    this.userService.getUserInformation().subscribe({
+      next: (response) => {
+        this.user = response;
+        this.patchProfileForm(response);
+        this.userRoles; // Trigger computed for roles
+      },
+      error: () => {},
+    });
+  }
+
+  private patchProfileForm(user: UserInformation): void {
+    this.profileForm.patchValue({
+      username: user.username ?? '',
+      imageUrl: user.imageUrl || this.defaultImage,
+    });
+
+    this.initialProfileSnapshot = this.profileForm.getRawValue();
+  }
+
+  // ────────────────────────────────
+  // EDIT MODE
+  // ────────────────────────────────
 
   startEdit(): void {
     this.isEditing.set(true);
@@ -91,20 +149,23 @@ export class ProfileComponent implements OnInit {
     }
 
     this.isSaving.set(true);
+
     this.userService
       .updateUsername(username)
       .pipe(finalize(() => this.isSaving.set(false)))
       .subscribe({
-        next: (response: UserInformation) => {
+        next: (response) => {
           this.user = response;
           this.patchProfileForm(response);
           this.isEditing.set(false);
         },
-        error: () => {
-          this.profileForm.controls.username.markAsTouched();
-        },
+        error: () => {},
       });
   }
+
+  // ────────────────────────────────
+  // IMAGE UPLOAD (S3 RESTORED)
+  // ────────────────────────────────
 
   onImageSelected(event: Event): void {
     if (!this.isEditing()) return;
@@ -114,7 +175,9 @@ export class ProfileComponent implements OnInit {
     if (!file) return;
 
     const key = this.buildProfileImageKey(file);
+
     this.isUploadingImage.set(true);
+
     this.userService
       .updateProfileImage(file, key)
       .pipe(
@@ -131,39 +194,16 @@ export class ProfileComponent implements OnInit {
       });
   }
 
-  private loadUserInformation(): void {
-    this.userService.getUserInformation().subscribe({
-      next: (response: UserInformation) => {
-        this.user = response;
-        this.patchProfileForm(response);
-      },
-      error: () => {},
-    });
-  }
-
-  private loadOrders(): void {
-    this.orderService.getMyOrders().subscribe({
-      next: (orders) => this.orders.set(orders),
-      error: () => {},
-    });
-  }
-
-  private patchProfileForm(user: UserInformation): void {
-    this.profileForm.patchValue({
-      username: user.username ?? '',
-      imageUrl: user.imageUrl || 'assets/default-avatar.png',
-    });
-    this.initialProfileSnapshot = this.profileForm.getRawValue();
-  }
-
   private buildProfileImageKey(file: File): string {
     const extension = file.name.includes('.')
       ? file.name.split('.').pop()
       : 'jpg';
+
     const safeUsername = (this.profileForm.controls.username.value || 'user')
       .trim()
       .toLowerCase()
       .replace(/[^a-z0-9-_]/g, '-');
+
     return `profiles/${safeUsername}-${Date.now()}.${extension}`;
   }
 
@@ -175,5 +215,16 @@ export class ProfileComponent implements OnInit {
     }
 
     return url;
+  }
+
+  // ────────────────────────────────
+  // ORDERS
+  // ────────────────────────────────
+
+  private loadOrders(): void {
+    this.orderService.getMyOrders().subscribe({
+      next: (orders) => this.orders.set(orders),
+      error: () => {},
+    });
   }
 }

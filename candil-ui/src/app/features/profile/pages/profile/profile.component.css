@@ -1,4 +1,3 @@
-/* ─── Layout general ─────────────────────────────────────────── */
 .profile-page {
   min-height: 100vh;
   padding: clamp(1rem, 3vw, 2rem);
@@ -23,7 +22,7 @@
   gap: 1rem;
 }
 
-/* ─── Cards ──────────────────────────────────────────────────── */
+/* ───────── CARDS ───────── */
 .auth-card {
   border-radius: 20px !important;
   border: 1px solid #eadfc8 !important;
@@ -31,11 +30,21 @@
   box-shadow: 0 10px 28px rgb(99 76 38 / 10%) !important;
 }
 
-.profile-header-card { padding: 1rem 1.1rem; }
-.profile-form-card   { padding: 1rem 1.1rem 1.1rem; }
-.purchase-card       { padding: 1.25rem; height: 100%; box-sizing: border-box; }
+.profile-header-card {
+  padding: 1rem 1.1rem;
+}
 
-/* ─── Hero del perfil ────────────────────────────────────────── */
+.profile-form-card {
+  padding: 1rem 1.1rem;
+}
+
+.purchase-card {
+  padding: 1.25rem;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+/* ───────── HERO ───────── */
 .profile-hero {
   display: grid;
   grid-template-columns: auto 1fr auto;
@@ -88,6 +97,7 @@
   display: none;
 }
 
+/* ───────── TEXT ───────── */
 .overline {
   font-size: 0.7rem;
   font-weight: 700;
@@ -106,11 +116,12 @@
 
 .subtitle {
   font-size: 0.85rem;
-  color: #a0835a;
+  color: #6b4a1f; /* más oscuro y legible */
   margin: 0;
+  font-weight: 500;
 }
 
-/* ─── Formulario ─────────────────────────────────────────────── */
+/* ───────── FORM ───────── */
 .profile-form-card h3 {
   font-size: 0.95rem;
   font-weight: 700;
@@ -118,7 +129,9 @@
   margin: 0 0 0.75rem;
 }
 
-.full-width { width: 100%; }
+.full-width {
+  width: 100%;
+}
 
 .actions {
   display: flex;
@@ -126,7 +139,7 @@
   margin-top: 0.5rem;
 }
 
-/* ─── Historial de compras ───────────────────────────────────── */
+/* ───────── ORDERS ───────── */
 .purchase-header {
   display: flex;
   align-items: flex-start;
@@ -150,8 +163,8 @@
   border: 1px solid #e8d5b0;
   border-radius: 999px;
   padding: 4px 14px;
-  white-space: nowrap;
   margin: 0;
+  white-space: nowrap;
 }
 
 .purchase-list {
@@ -163,14 +176,17 @@
   padding-right: 4px;
 }
 
-/* Scrollbar sutil */
-.purchase-list::-webkit-scrollbar        { width: 4px; }
-.purchase-list::-webkit-scrollbar-track  { background: transparent; }
-.purchase-list::-webkit-scrollbar-thumb  { background: #ddd0bb; border-radius: 999px; }
+/* scrollbar */
+.purchase-list::-webkit-scrollbar {
+  width: 4px;
+}
+.purchase-list::-webkit-scrollbar-thumb {
+  background: #ddd0bb;
+  border-radius: 999px;
+}
 
 .purchase-item {
   display: flex;
-  align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
   padding: 0.75rem 1rem;
@@ -212,40 +228,51 @@
   flex-direction: column;
   align-items: flex-end;
   gap: 4px;
-  flex-shrink: 0;
 }
 
-.purchase-meta strong {
-  font-size: 0.9rem;
-  color: #3b2a14;
-}
-
-/* ─── Badge de estado ────────────────────────────────────────── */
+/* ───────── STATUS ───────── */
 .status-badge {
   font-size: 0.62rem;
   padding: 2px 8px;
   border-radius: 999px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
 }
 
-.status-paid       { background: #d1fae5; color: #065f46; }
-.status-pending    { background: #fef9c3; color: #854d0e; }
-.status-in_process { background: #dbeafe; color: #1e40af; }
-.status-failed     { background: #fee2e2; color: #991b1b; }
-.status-cancelled  { background: #f3f4f6; color: #374151; }
-.status-refunded   { background: #ede9fe; color: #5b21b6; }
+.status-paid {
+  background: #d1fae5;
+  color: #065f46;
+}
+.status-pending {
+  background: #fef9c3;
+  color: #854d0e;
+}
+.status-in_process {
+  background: #dbeafe;
+  color: #1e40af;
+}
+.status-failed {
+  background: #fee2e2;
+  color: #991b1b;
+}
+.status-cancelled {
+  background: #f3f4f6;
+  color: #374151;
+}
+.status-refunded {
+  background: #ede9fe;
+  color: #5b21b6;
+}
 
-/* ─── Estado vacío ───────────────────────────────────────────── */
+/* ───────── EMPTY ───────── */
 .empty-state {
   text-align: center;
+  padding: 2rem 0;
   color: #a0835a;
-  padding: 2.5rem 0;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
 }
 
-/* ─── Responsive ─────────────────────────────────────────────── */
+/* ───────── RESPONSIVE ───────── */
 @media (max-width: 768px) {
   .profile-layout {
     grid-template-columns: 1fr;
@@ -259,4 +286,21 @@
     grid-column: 1 / -1;
     justify-self: end;
   }
+}
+
+.role-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: black;
+}
+
+.role-badge {
+  background: #e8d5b0;
+  color: #3b2a14;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
 }

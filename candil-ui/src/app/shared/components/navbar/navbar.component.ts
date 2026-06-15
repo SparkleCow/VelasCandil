@@ -152,4 +152,11 @@ export class NavbarComponent implements OnInit {
       return role.authority === 'ADMIN' || role.authority === 'ROLE_ADMIN';
     });
   }
+
+  scrollToContact() {
+    document.getElementById('contacto-footer')?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    });
+  }
 }
