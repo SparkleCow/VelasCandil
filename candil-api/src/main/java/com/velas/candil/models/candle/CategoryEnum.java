@@ -8,9 +8,8 @@ package com.velas.candil.models.candle;
 public enum CategoryEnum {
 
     AROMATIC,
-    CLASSIC,
     DECORATIVE,
     RELIGIOUS,
-    ROMANTIC,
-    OIL_LAMP
+    WAX_MELT,
+    WAX_WARMER
 }

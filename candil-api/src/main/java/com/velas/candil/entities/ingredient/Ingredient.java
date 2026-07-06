@@ -3,7 +3,6 @@ package com.velas.candil.entities.ingredient;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.velas.candil.entities.candle.Candle;
 import com.velas.candil.models.ingredient.IngredientType;
-import com.velas.candil.models.ingredient.IngredientsEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,9 +23,10 @@ public class Ingredient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Enumerated(EnumType.STRING)
-    private IngredientsEnum name;
-    private Double amount;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ingredient_catalog_id")
+    private IngredientCatalog ingredientCatalog;
+    private BigDecimal amount;
     private BigDecimal pricePerUnit;
     private BigDecimal price;
     @JsonIgnore
@@ -36,22 +36,21 @@ public class Ingredient {
     @Enumerated(EnumType.STRING)
     private IngredientType ingredientType;
 
-    public Ingredient(IngredientsEnum name, Double amount){
-        this.name = name;
+    public Ingredient(IngredientCatalog ingredientCatalog, BigDecimal amount){
         this.amount = amount;
-        this.ingredientType = name.getType();
-        this.pricePerUnit = name.getPricePerUnit();
+        this.ingredientType = ingredientCatalog.getType();
+        this.pricePerUnit = ingredientCatalog.getPricePerUnit();
         this.price = calculatePrice();
     }
 
     public BigDecimal calculatePrice(){
-        return pricePerUnit.multiply(BigDecimal.valueOf(amount));
+        return pricePerUnit.multiply(amount);
     }
+
     @Override
     public String toString() {
         return "Ingredient{" +
                 "id=" + id +
-                ", name=" + name +
                 ", amount=" + amount +
                 ", pricePerUnit=" + pricePerUnit +
                 ", price=" + price +

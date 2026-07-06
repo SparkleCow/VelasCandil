@@ -6,15 +6,20 @@ package com.velas.candil.models.candle;
  */
 public enum FeatureEnum {
 
-    SCENTED,
-    ORGANIC,
     HANDMADE,
-    VEGAN,
-    ECO_FRIENDLY,
-    LONG_LASTING,
-    CANNABIS_INFUSED,
-    ESSENTIAL_OIL_BASED,
-    RELAXATION_EFFECT,
-    MEDITATION_SUPPORT,
-    THERAPEUTIC_USE
+
+    // Functionality
+    SCENTED,
+    UNSCENTED,
+    REUSABLE,
+    REFILLABLE,
+
+    // Use
+    AROMATHERAPY,
+    MEDITATION,
+    RELAXATION,
+
+    // Decoration
+    DECORATIVE,
+    GIFTABLE
 }

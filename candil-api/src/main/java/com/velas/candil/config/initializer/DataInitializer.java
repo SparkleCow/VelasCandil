@@ -138,7 +138,7 @@ public class DataInitializer {
                 .price(new BigDecimal(34000))
                 .materialEnums(Set.of(MaterialEnum.BEESWAX))
                 .featureEnums(Set.of(FeatureEnum.SCENTED))
-                .categories(Set.of(CategoryEnum.ROMANTIC))
+                .categories(Set.of(CategoryEnum.DECORATIVE))
                 .images(List.of("/images/ocean.jpg", "/images/ocean.jpg"))
                 .build();
 

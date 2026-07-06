@@ -7,9 +7,9 @@ package com.velas.candil.models.candle;
 public enum MaterialEnum {
 
     SOY_WAX,
+    PALM_WAX,
     BEESWAX,
     PARAFFIN_WAX,
     COCONUT_WAX,
-    PALM_WAX,
     GEL_WAX
 }
