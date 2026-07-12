@@ -2,63 +2,143 @@
   <div class="auth-layout">
     <section class="auth-form-panel">
       <mat-card class="auth-card">
-        <p class="overline">Inventario</p>
-        <h2 class="title">Crear vela</h2>
-        <p class="subtitle">
-          Completa los datos base, imágenes e ingredientes para registrar un
-          nuevo producto.
-        </p>
+        <header class="page-header">
+          <p class="overline">Inventario</p>
+
+          <h1 class="title">Crear vela</h1>
+
+          <p class="subtitle">
+            Registra un nuevo producto para la tienda completando la
+            información, imágenes e ingredientes.
+          </p>
+        </header>
 
         <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
-          <div class="form-grid">
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Nombre</mat-label>
-              <input matInput formControlName="name" />
-              <mat-error *ngIf="form.controls.name.hasError('required')"
-                >El nombre es obligatorio.</mat-error
-              >
-            </mat-form-field>
+          <!-- ================= DATOS GENERALES ================= -->
+
+          <section class="section-card">
+            <div class="section-header">
+              <div>
+                <h2>Información general</h2>
+                <p>Información básica del producto.</p>
+              </div>
+            </div>
+
+            <div class="form-grid">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Nombre</mat-label>
+
+                <input matInput formControlName="name" />
+
+                <mat-error *ngIf="form.controls.name.hasError('required')">
+                  El nombre es obligatorio.
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Stock</mat-label>
+
+                <input matInput type="number" min="0" formControlName="stock" />
+
+                <mat-error *ngIf="form.controls.stock.hasError('required')">
+                  El stock es obligatorio.
+                </mat-error>
+              </mat-form-field>
+            </div>
 
             <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Stock</mat-label>
-              <input matInput type="number" min="0" formControlName="stock" />
-              <mat-error *ngIf="form.controls.stock.hasError('required')"
-                >El stock es obligatorio.</mat-error
-              >
+              <mat-label>Descripción</mat-label>
+
+              <textarea
+                matInput
+                rows="5"
+                formControlName="description"
+              ></textarea>
+
+              <mat-error *ngIf="form.controls.description.hasError('required')">
+                La descripción es obligatoria.
+              </mat-error>
             </mat-form-field>
-          </div>
-
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Descripción</mat-label>
-            <textarea
-              matInput
-              rows="4"
-              formControlName="description"
-            ></textarea>
-            <mat-error *ngIf="form.controls.description.hasError('required')">
-              La descripción es obligatoria.
-            </mat-error>
-          </mat-form-field>
-
-          <section class="dynamic-section">
-            <h3>Imagen principal</h3>
-            <input
-              type="file"
-              accept="image/*"
-              (change)="onPrincipalImageChange($event)"
-            />
-            @if (principalImageFile(); as file) {
-              <p class="empty-text">Seleccionada: {{ file.name }}</p>
-            } @else {
-              <p class="empty-text">Debes seleccionar una imagen principal.</p>
-            }
           </section>
 
-          <div class="form-grid">
+          <!-- ================= IMAGEN PRINCIPAL ================= -->
+
+          <section class="section-card">
+            <div class="section-header">
+              <div>
+                <h2>Imagen principal</h2>
+                <p>
+                  Será la imagen destacada del producto dentro del catálogo.
+                </p>
+              </div>
+            </div>
+
+            <div class="upload-area">
+              <input
+                type="file"
+                accept="image/*"
+                (change)="onPrincipalImageChange($event)"
+              />
+
+              @if (principalImageFile(); as file) {
+                <div class="file-card">
+                  <div class="file-info">
+                    <strong>{{ file.name }}</strong>
+
+                    <span>Imagen lista para cargar.</span>
+                  </div>
+                </div>
+              } @else {
+                <div class="upload-placeholder">
+                  <mat-icon>image</mat-icon>
+
+                  <span> Selecciona la imagen principal de la vela. </span>
+                </div>
+              }
+            </div>
+          </section>
+
+          <!-- ================= CLASIFICACIÓN ================= -->
+
+          <section class="section-card">
+            <div class="section-header">
+              <div>
+                <h2>Clasificación</h2>
+                <p>Organiza la vela dentro del catálogo de la tienda.</p>
+              </div>
+            </div>
+
+            <div class="form-grid">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Materiales</mat-label>
+
+                <mat-select formControlName="materialEnums" multiple>
+                  @for (item of materials; track item.value) {
+                    <mat-option [value]="item.value">
+                      {{ item.label }}
+                    </mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Categorías</mat-label>
+
+                <mat-select formControlName="categories" multiple>
+                  @for (item of categories; track item.value) {
+                    <mat-option [value]="item.value">
+                      {{ item.label }}
+                    </mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+
             <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Materiales</mat-label>
-              <mat-select formControlName="materialEnums" multiple>
-                @for (item of materials; track item.value) {
+              <mat-label>Características</mat-label>
+
+              <mat-select formControlName="featureEnums" multiple>
+                @for (item of features; track item.value) {
                   <mat-option [value]="item.value">
                     {{ item.label }}
                   </mat-option>
@@ -66,49 +146,44 @@
               </mat-select>
             </mat-form-field>
 
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Categorías</mat-label>
-              <mat-select formControlName="categories" multiple>
-                @for (item of categories; track item.value) {
-                  <mat-option [value]="item.value">
-                    {{ item.label }}
-                  </mat-option>
+            <div class="chip-block">
+              <h3>Selecciones</h3>
+
+              <mat-chip-set>
+                @for (item of form.controls.materialEnums.value; track item) {
+                  <mat-chip>
+                    {{ getLabel(item, materials) }}
+                  </mat-chip>
                 }
-              </mat-select>
-            </mat-form-field>
-          </div>
 
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Características</mat-label>
-            <mat-select formControlName="featureEnums" multiple>
-              @for (item of features; track item.value) {
-                <mat-option [value]="item.value">
-                  {{ item.label }}
-                </mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
+                @for (item of form.controls.categories.value; track item) {
+                  <mat-chip>
+                    {{ getLabel(item, categories) }}
+                  </mat-chip>
+                }
 
-          <div class="chip-block">
-            <h3>Selecciones actuales</h3>
-            <mat-chip-set>
-              @for (item of form.controls.materialEnums.value; track item) {
-                <mat-chip>{{ getLabel(item, materials) }}</mat-chip>
-              }
+                @for (item of form.controls.featureEnums.value; track item) {
+                  <mat-chip>
+                    {{ getLabel(item, features) }}
+                  </mat-chip>
+                }
+              </mat-chip-set>
+            </div>
+          </section>
+          <!-- ================= IMÁGENES ADICIONALES ================= -->
 
-              @for (item of form.controls.categories.value; track item) {
-                <mat-chip>{{ getLabel(item, categories) }}</mat-chip>
-              }
+          <section class="section-card">
+            <div class="section-header">
+              <div>
+                <h2>Imágenes adicionales</h2>
+                <p>
+                  Agrega fotografías complementarias para mostrar mejor el
+                  producto.
+                </p>
+              </div>
+            </div>
 
-              @for (item of form.controls.featureEnums.value; track item) {
-                <mat-chip>{{ getLabel(item, features) }}</mat-chip>
-              }
-            </mat-chip-set>
-          </div>
-
-          <section class="dynamic-section">
-            <h3>Imágenes adicionales</h3>
-            <div class="inline-controls">
+            <div class="upload-area">
               <input
                 type="file"
                 accept="image/*"
@@ -124,7 +199,12 @@
                 let i = $index
               ) {
                 <div class="list-row">
-                  <span>{{ file.name }}</span>
+                  <div class="list-info">
+                    <mat-icon>image</mat-icon>
+
+                    <span>{{ file.name }}</span>
+                  </div>
+
                   <button
                     type="button"
                     mat-icon-button
@@ -135,25 +215,36 @@
                   </button>
                 </div>
               } @empty {
-                <p class="empty-text">Aun no hay imágenes adicionales.</p>
+                <p class="empty-text">
+                  Aún no has agregado imágenes adicionales.
+                </p>
               }
             </div>
           </section>
 
-          <section class="dynamic-section">
-            <h3>Ingredientes</h3>
-            <div
-              class="inline-controls ingredient-grid"
-              [formGroup]="ingredientDraftForm"
-            >
+          <!-- ================= INGREDIENTES ================= -->
+
+          <section class="section-card">
+            <div class="section-header">
+              <div>
+                <h2>Ingredientes</h2>
+                <p>Agrega los materiales necesarios para fabricar la vela.</p>
+              </div>
+            </div>
+
+            <div class="ingredient-grid" [formGroup]="ingredientDraftForm">
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Ingrediente</mat-label>
+
                 <mat-select formControlName="ingredientId">
-                  <mat-option [value]="null">Selecciona</mat-option>
+                  <mat-option [value]="null">
+                    Selecciona un ingrediente
+                  </mat-option>
 
                   @for (item of ingredientOptions(); track item.id) {
                     <mat-option [value]="item.id">
                       {{ item.ingredientName }}
+                      ({{ item.ingredientUnit }})
                     </mat-option>
                   }
                 </mat-select>
@@ -161,6 +252,7 @@
 
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Cantidad</mat-label>
+
                 <input
                   matInput
                   type="number"
@@ -172,44 +264,57 @@
 
               <button
                 type="button"
-                mat-stroked-button
+                mat-raised-button
+                color="primary"
                 (click)="addIngredient()"
               >
                 Agregar
               </button>
             </div>
 
-            <div class="list-wrap" formArrayName="ingredients">
+            <div class="ingredient-list" formArrayName="ingredients">
               @for (
                 item of ingredientsArray.controls;
                 track item;
                 let i = $index
               ) {
-                <div class="list-row">
-                  <span>
-                    {{ ingredientName(item.controls.ingredientId.value) }} -
-                    {{ item.controls.amount.value }}
-                  </span>
+                <div class="ingredient-card">
+                  <div class="ingredient-content">
+                    <div class="ingredient-title">
+                      {{ ingredientName(item.controls.ingredientId.value) }}
+                    </div>
+
+                    <div class="ingredient-subtitle">
+                      Cantidad:
+                      <strong>
+                        {{ item.controls.amount.value }}
+                      </strong>
+                    </div>
+                  </div>
+
                   <button
                     type="button"
                     mat-icon-button
+                    color="warn"
                     (click)="removeIngredient(i)"
                     aria-label="Eliminar ingrediente"
                   >
-                    <mat-icon>delete</mat-icon>
+                    <mat-icon> delete </mat-icon>
                   </button>
                 </div>
               } @empty {
-                <p class="empty-text">Aun no hay ingredientes agregados.</p>
+                <p class="empty-text">Aún no hay ingredientes agregados.</p>
               }
             </div>
           </section>
+
+          <!-- ================= ACCIONES ================= -->
 
           <div class="actions">
             <button
               mat-raised-button
               color="primary"
-              class="full-width"
+              class="submit-button"
               type="submit"
               [disabled]="creating()"
             >

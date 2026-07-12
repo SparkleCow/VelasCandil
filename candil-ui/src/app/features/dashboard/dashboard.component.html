@@ -1,0 +1,147 @@
+<div class="dashboard-page">
+  <header class="dashboard-header">
+    <div>
+      <p class="overline">Administración</p>
+
+      <h1>Panel de control</h1>
+
+      <p>Gestiona productos, inventario, ventas y estadísticas de tu tienda.</p>
+    </div>
+  </header>
+
+  <!-- ================= MÉTRICAS ================= -->
+
+  <section class="stats-grid">
+    <article class="stat-card">
+      <div class="stat-icon">
+        <mat-icon>payments</mat-icon>
+      </div>
+
+      <div>
+        <span> Ventas totales </span>
+
+        <strong> $0 </strong>
+      </div>
+    </article>
+
+    <article class="stat-card">
+      <div class="stat-icon">
+        <mat-icon>inventory_2</mat-icon>
+      </div>
+
+      <div>
+        <span> Velas registradas </span>
+
+        <strong> 0 </strong>
+      </div>
+    </article>
+
+    <article class="stat-card">
+      <div class="stat-icon">
+        <mat-icon>shopping_bag</mat-icon>
+      </div>
+
+      <div>
+        <span> Pedidos </span>
+
+        <strong> 0 </strong>
+      </div>
+    </article>
+
+    <article class="stat-card">
+      <div class="stat-icon">
+        <mat-icon>trending_up</mat-icon>
+      </div>
+
+      <div>
+        <span> Ventas del mes </span>
+
+        <strong> $0 </strong>
+      </div>
+    </article>
+  </section>
+
+  <!-- ================= ACCIONES ================= -->
+
+  <section class="dashboard-section">
+    <div class="section-title">
+      <h2>Acciones rápidas</h2>
+
+      <p>Accede rápidamente a las funciones administrativas.</p>
+    </div>
+
+    <div class="actions-grid">
+      <button class="action-card" type="button" (click)="goCreateCandle()">
+        <mat-icon> add_circle </mat-icon>
+
+        <div>
+          <strong> Crear vela </strong>
+
+          <span> Registrar un nuevo producto. </span>
+        </div>
+      </button>
+
+      <button class="action-card" type="button" (click)="goCandles()">
+        <mat-icon> inventory </mat-icon>
+
+        <div>
+          <strong> Ver velas </strong>
+
+          <span> Editar, eliminar y administrar productos. </span>
+        </div>
+      </button>
+
+      <button class="action-card" type="button" (click)="goIngredientsImport()">
+        <mat-icon> upload_file </mat-icon>
+
+        <div>
+          <strong> Cargar ingredientes </strong>
+
+          <span> Importar catálogo mediante Excel. </span>
+        </div>
+      </button>
+
+      <button class="action-card" type="button" (click)="goExternalSale()">
+        <mat-icon> point_of_sale </mat-icon>
+
+        <div>
+          <strong> Registrar venta externa </strong>
+
+          <span> Agregar ventas realizadas fuera de la app. </span>
+        </div>
+      </button>
+    </div>
+  </section>
+
+  <!-- ================= ESTADÍSTICAS ================= -->
+
+  <section class="dashboard-section">
+    <div class="section-title">
+      <h2>Estadísticas</h2>
+
+      <p>Información general del rendimiento de la tienda.</p>
+    </div>
+
+    <div class="charts-area">
+      <article class="chart-card">
+        <h3>Ventas recientes</h3>
+
+        <div class="empty-chart">
+          <mat-icon> bar_chart </mat-icon>
+
+          <span> Aquí aparecerá la gráfica de ventas. </span>
+        </div>
+      </article>
+
+      <article class="chart-card">
+        <h3>Productos destacados</h3>
+
+        <div class="empty-chart">
+          <mat-icon> star </mat-icon>
+
+          <span> Aquí aparecerán las velas más vendidas. </span>
+        </div>
+      </article>
+    </div>
+  </section>
+</div>
