@@ -2,7 +2,6 @@ package com.velas.candil.entities.ingredient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.velas.candil.entities.candle.Candle;
-import com.velas.candil.models.ingredient.IngredientType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,12 +32,10 @@ public class Ingredient {
     @ManyToOne
     @JoinColumn(name = "candle_id")
     private Candle candle;
-    @Enumerated(EnumType.STRING)
-    private IngredientType ingredientType;
 
-    public Ingredient(IngredientCatalog ingredientCatalog, BigDecimal amount){
+    public Ingredient(IngredientCatalog ingredientCatalog, BigDecimal amount) {
+        this.ingredientCatalog = ingredientCatalog;
         this.amount = amount;
-        this.ingredientType = ingredientCatalog.getType();
         this.pricePerUnit = ingredientCatalog.getPricePerUnit();
         this.price = calculatePrice();
     }

@@ -27,9 +27,9 @@
         <mat-select [formControl]="categoryCtrl">
           <mat-option value="">Todas</mat-option>
 
-          @for (c of categories; track c) {
-            <mat-option [value]="c">
-              {{ formatLabel(c) }}
+          @for (c of categories; track c.value) {
+            <mat-option [value]="c.value">
+              {{ c.label }}
             </mat-option>
           }
         </mat-select>
@@ -41,9 +41,9 @@
         <mat-select [formControl]="materialCtrl">
           <mat-option value="">Todos</mat-option>
 
-          @for (m of materials; track m) {
-            <mat-option [value]="m">
-              {{ formatLabel(m) }}
+          @for (m of materials; track m.value) {
+            <mat-option [value]="m.value">
+              {{ m.label }}
             </mat-option>
           }
         </mat-select>
@@ -55,9 +55,9 @@
         <mat-select [formControl]="featureCtrl">
           <mat-option value="">Todas</mat-option>
 
-          @for (f of features; track f) {
-            <mat-option [value]="f">
-              {{ formatLabel(f) }}
+          @for (f of features; track f.value) {
+            <mat-option [value]="f.value">
+              {{ f.label }}
             </mat-option>
           }
         </mat-select>

@@ -13,6 +13,5 @@ import java.util.List;
 public interface IngredientService extends CrudService<IngredientRequestDto, IngredientResponseDto, IngredientUpdateDto, Long> {
 
     Page<IngredientResponseDto> findAll(Pageable pageable);
-    Page<IngredientResponseDto> findByIngredientType(IngredientType ingredientType, Pageable pageable);
     Page<IngredientResponseDto> findAllById(List<Long> ids);
 }

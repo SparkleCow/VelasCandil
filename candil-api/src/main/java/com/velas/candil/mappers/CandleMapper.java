@@ -1,64 +1,31 @@
 package com.velas.candil.mappers;
 
 import com.velas.candil.entities.candle.Candle;
-import com.velas.candil.entities.ingredient.Ingredient;
 import com.velas.candil.models.candle.CandleRequestDto;
 import com.velas.candil.models.candle.CandleResponseDto;
 import com.velas.candil.models.candle.CandleUpdateDto;
-import com.velas.candil.models.ingredient.IngredientRequestDto;
-import com.velas.candil.models.ingredient.IngredientResponseDto;
-import org.mapstruct.*;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.mapstruct.ReportingPolicy;
 
 @Mapper(
         componentModel = "spring",
-        unmappedTargetPolicy = ReportingPolicy.IGNORE
+        unmappedTargetPolicy = ReportingPolicy.IGNORE,
+        uses = IngredientMapper.class
 )
-public abstract class CandleMapper {
-
-    @Autowired
-    protected IngredientMapper ingredientMapper;
+public interface CandleMapper {
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "ingredients", source = "ingredients", qualifiedByName = "mapDtosToIngredients")
-    public abstract Candle toEntity(CandleRequestDto dto);
+    @Mapping(target = "ingredients", ignore = true)
+    Candle toEntity(CandleRequestDto dto);
 
-    @Mapping(target = "ingredients", source = "ingredients", qualifiedByName = "mapIngredientsToResponse")
-    public abstract CandleResponseDto toResponse(Candle candle);
+    CandleResponseDto toResponse(Candle candle);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "ingredients", ignore = true)
-    public abstract void updateEntityFromDto(CandleUpdateDto dto, @MappingTarget Candle candle);
-
-    @Named("mapDtosToIngredients")
-    protected List<Ingredient> mapDtosToIngredients(List<IngredientRequestDto> dtos) {
-
-        if (dtos == null) return null;
-
-        return dtos.stream()
-                .map(ingredientMapper::toEntity)
-                .toList();
-    }
-
-    @Named("mapIngredientsToResponse")
-    protected List<IngredientResponseDto> mapIngredientsToResponse(List<Ingredient> ingredients) {
-
-        if (ingredients == null) return List.of();
-
-        return ingredients.stream()
-                .map(ingredientMapper::toResponse)
-                .toList();
-    }
-
-    @AfterMapping
-    protected void linkIngredients(@MappingTarget Candle candle) {
-
-        if (candle.getIngredients() != null) {
-            candle.getIngredients()
-                    .forEach(i -> i.setCandle(candle));
-        }
-    }
+    void updateEntityFromDto(CandleUpdateDto dto, @MappingTarget Candle candle);
 }

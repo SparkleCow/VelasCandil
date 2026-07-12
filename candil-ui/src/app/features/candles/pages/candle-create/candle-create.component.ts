@@ -1,6 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -17,20 +24,16 @@ import {
   MATERIALS,
   MaterialEnum,
   FeatureEnum,
-  CandleRequest
+  CandleRequest,
 } from '../../../../shared/models/candle.models';
 
-import {
-  IngredientsEnum,
-  INGREDIENTS_ENUM_LIST,
-  IngredientRequest
-} from '../../../../shared/models/ingredient.models';
+import { IngredientCatalogResponse } from '../../../../shared/models/ingredient.models';
+import { IngredientCatalogService } from '../../../../core/services/ingredient-catalog.service';
 
 import { CandleService } from '../../../../core/services/candle.service';
 
-
 type IngredientFormGroup = FormGroup<{
-  name: FormControl<IngredientsEnum>;
+  ingredientId: FormControl<number>;
   amount: FormControl<number>;
 }>;
 
@@ -48,14 +51,15 @@ type IngredientFormGroup = FormGroup<{
     MatButtonModule,
     MatIconModule,
     MatChipsModule,
-    MatSnackBarModule
+    MatSnackBarModule,
   ],
   templateUrl: './candle-create.component.html',
-  styleUrl: './candle-create.component.css'
+  styleUrl: './candle-create.component.css',
 })
 export class CandleCreateComponent {
   private readonly fb = inject(FormBuilder);
   private readonly candleService = inject(CandleService);
+  private readonly ingredientCatalogService = inject(IngredientCatalogService);
   private readonly snackBar = inject(MatSnackBar);
   private readonly router = inject(Router);
 
@@ -63,30 +67,54 @@ export class CandleCreateComponent {
   readonly materials = MATERIALS;
   readonly features = FEATURES;
 
-  // Mock local to quickly validate UI/UX and payload shape in isolation
-  readonly ingredientOptionsMock: IngredientsEnum[] = INGREDIENTS_ENUM_LIST;
+  readonly ingredientOptions = signal<IngredientCatalogResponse[]>([]);
 
   readonly creating = signal(false);
   readonly principalImageFile = signal<File | null>(null);
   readonly additionalImageFiles = signal<File[]>([]);
 
-  readonly ingredientDraftForm = this.fb.nonNullable.group({
-    name: this.fb.nonNullable.control<IngredientsEnum | ''>('', Validators.required),
-    amount: this.fb.nonNullable.control<number | null>(null, [
+  readonly ingredientDraftForm = this.fb.group({
+    ingredientId: this.fb.control<number | null>(null, Validators.required),
+    amount: this.fb.control<number | null>(null, [
       Validators.required,
-      Validators.min(0.01)
-    ])
+      Validators.min(0.01),
+    ]),
   });
 
   readonly form = this.fb.nonNullable.group({
-    name: this.fb.nonNullable.control('', [Validators.required, Validators.maxLength(120)]),
-    description: this.fb.nonNullable.control('', [Validators.required, Validators.maxLength(900)]),
-    stock: this.fb.nonNullable.control<number | null>(null, [Validators.required, Validators.min(0)]),
-    materialEnums: this.fb.nonNullable.control<MaterialEnum[]>([], [Validators.required]),
-    featureEnums: this.fb.nonNullable.control<FeatureEnum[]>([], [Validators.required]),
-    categories: this.fb.nonNullable.control<CategoryEnum[]>([], [Validators.required]),
-    ingredients: this.fb.array<IngredientFormGroup>([])
+    name: this.fb.nonNullable.control('', [
+      Validators.required,
+      Validators.maxLength(120),
+    ]),
+    description: this.fb.nonNullable.control('', [
+      Validators.required,
+      Validators.maxLength(900),
+    ]),
+    stock: this.fb.nonNullable.control<number | null>(null, [
+      Validators.required,
+      Validators.min(0),
+    ]),
+    materialEnums: this.fb.nonNullable.control<MaterialEnum[]>(
+      [],
+      [Validators.required],
+    ),
+    featureEnums: this.fb.nonNullable.control<FeatureEnum[]>(
+      [],
+      [Validators.required],
+    ),
+    categories: this.fb.nonNullable.control<CategoryEnum[]>(
+      [],
+      [Validators.required],
+    ),
+    ingredients: this.fb.array<IngredientFormGroup>([]),
   });
+
+  constructor() {
+    this.ingredientCatalogService.findAll().subscribe({
+      next: (ingredients) =>
+        this.ingredientOptions.set(ingredients.filter((i) => i.active)),
+    });
+  }
 
   get ingredientsArray(): FormArray<IngredientFormGroup> {
     return this.form.controls.ingredients;
@@ -116,14 +144,12 @@ export class CandleCreateComponent {
       return;
     }
 
-    const { name, amount } = this.ingredientDraftForm.getRawValue();
-    if (!name || amount === null) return;
+    const { ingredientId, amount } = this.ingredientDraftForm.getRawValue();
 
-    this.ingredientsArray.push(this.buildIngredientGroup(name, amount));
-    this.ingredientDraftForm.reset({
-      name: '',
-      amount: null
-    });
+    if (ingredientId === null || amount === null) return;
+
+    this.ingredientsArray.push(this.buildIngredientGroup(ingredientId, amount));
+    this.ingredientDraftForm.reset();
   }
 
   removeIngredient(index: number): void {
@@ -136,7 +162,9 @@ export class CandleCreateComponent {
       return;
     }
     if (!this.principalImageFile()) {
-      this.snackBar.open('La imagen principal es obligatoria.', 'Cerrar', { duration: 3000 });
+      this.snackBar.open('La imagen principal es obligatoria.', 'Cerrar', {
+        duration: 3000,
+      });
       return;
     }
 
@@ -148,31 +176,60 @@ export class CandleCreateComponent {
       ...rawValue,
       principalImage: principalImage.name,
       images: additionalImages.map((file) => file.name),
-      stock: rawValue.stock ?? 0
+      stock: rawValue.stock ?? 0,
     };
 
     this.creating.set(true);
-    this.candleService.create(payload, principalImage, additionalImages).subscribe({
-      next: () => {
-        this.creating.set(false);
-        this.snackBar.open('Vela creada correctamente', 'Cerrar', { duration: 2500 });
-        this.router.navigate(['/candles']);
-      },
-      error: () => {
-        this.creating.set(false);
-        this.snackBar.open('No se pudo crear la vela. Revisa los datos e intenta de nuevo.', 'Cerrar', { duration: 3500 });
-      }
-    });
+    this.candleService
+      .create(payload, principalImage, additionalImages)
+      .subscribe({
+        next: () => {
+          this.creating.set(false);
+          this.snackBar.open('Vela creada correctamente', 'Cerrar', {
+            duration: 2500,
+          });
+          this.router.navigate(['/candles']);
+          console.log(payload);
+        },
+        error: () => {
+          this.creating.set(false);
+          console.log(payload);
+          this.snackBar.open(
+            'No se pudo crear la vela. Revisa los datos e intenta de nuevo.',
+            'Cerrar',
+            { duration: 3500 },
+          );
+        },
+      });
   }
 
   formatLabel(value: string): string {
     return value.replace(/_/g, ' ');
   }
 
-  private buildIngredientGroup(name: IngredientsEnum, amount: number): IngredientFormGroup {
+  private buildIngredientGroup(
+    ingredientId: number,
+    amount: number,
+  ): IngredientFormGroup {
     return this.fb.nonNullable.group({
-      name: this.fb.nonNullable.control<IngredientsEnum>(name, Validators.required),
-      amount: this.fb.nonNullable.control<number>(amount, [Validators.required, Validators.min(0.01)])
+      ingredientId: this.fb.nonNullable.control(
+        ingredientId,
+        Validators.required,
+      ),
+      amount: this.fb.nonNullable.control(amount, [
+        Validators.required,
+        Validators.min(0.01),
+      ]),
     });
+  }
+
+  getLabel(value: string, options: { value: string; label: string }[]): string {
+    return options.find((option) => option.value === value)?.label ?? value;
+  }
+
+  ingredientName(id: number): string {
+    return (
+      this.ingredientOptions().find((i) => i.id === id)?.ingredientName ?? ''
+    );
   }
 }

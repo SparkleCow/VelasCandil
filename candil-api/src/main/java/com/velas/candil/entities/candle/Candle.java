@@ -37,24 +37,28 @@ public class Candle{
     private String principalImage;
     private Integer stock;
 
+    @Builder.Default
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "product_materials", joinColumns = @JoinColumn(name = "product_id"))
     @Column(name = "material")
     @Enumerated(EnumType.STRING)
     private Set<MaterialEnum> materialEnums = new HashSet<>();
 
+    @Builder.Default
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "product_features", joinColumns = @JoinColumn(name = "product_id"))
     @Column(name = "feature")
     @Enumerated(EnumType.STRING)
     private Set<FeatureEnum> featureEnums = new HashSet<>();
 
+    @Builder.Default
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "product_categories", joinColumns = @JoinColumn(name = "product_id"))
     @Column(name = "category")
     @Enumerated(EnumType.STRING)
     private Set<CategoryEnum> categories = new HashSet<>();
 
+    @Builder.Default
     @ElementCollection(fetch = FetchType.LAZY)
     private List<String> images = new ArrayList<>();
 
@@ -66,9 +70,17 @@ public class Candle{
     @Column(nullable = true)
     private LocalDateTime updatedAt;
 
+    @Builder.Default
     @OneToMany(mappedBy = "candle", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Ingredient> ingredients = new ArrayList<>();
 
+    @Column(nullable = false, precision = 12, scale = 2)
+    private BigDecimal manufacturingCost;
+
+    @Column(nullable = false, precision = 12, scale = 2)
+    private BigDecimal profit;
+
+    @Column(nullable = false, precision = 12, scale = 2)
     private BigDecimal price;
 
     public void removeStock(Integer quantity){

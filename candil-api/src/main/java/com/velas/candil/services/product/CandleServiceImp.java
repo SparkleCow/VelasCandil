@@ -2,6 +2,7 @@ package com.velas.candil.services.product;
 
 import com.velas.candil.entities.candle.Candle;
 import com.velas.candil.entities.ingredient.Ingredient;
+import com.velas.candil.entities.ingredient.IngredientCatalog;
 import com.velas.candil.mappers.CandleMapper;
 import com.velas.candil.models.candle.CategoryEnum;
 import com.velas.candil.models.candle.FeatureEnum;
@@ -9,7 +10,11 @@ import com.velas.candil.models.candle.MaterialEnum;
 import com.velas.candil.models.candle.CandleRequestDto;
 import com.velas.candil.models.candle.CandleResponseDto;
 import com.velas.candil.models.candle.CandleUpdateDto;
+import com.velas.candil.models.ingredient.IngredientRequestDto;
 import com.velas.candil.repositories.CandleRepository;
+import com.velas.candil.repositories.IngredientCatalogRepository;
+import com.velas.candil.repositories.IngredientRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +23,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +34,7 @@ public class CandleServiceImp implements CandleService {
 
     private final CandleRepository candleRepository;
     private final CandleMapper candleMapper;
+    private final IngredientCatalogRepository ingredientCatalogRepository;
 
     @Value("${candle.margin.multiplier:1.7}")
     private BigDecimal marginMultiplier;
@@ -76,12 +84,37 @@ public class CandleServiceImp implements CandleService {
 
         Candle candle = candleMapper.toEntity(candleRequestDto);
 
-        BigDecimal cost = candle.getIngredients()
+        List<Ingredient> ingredients = candleRequestDto.ingredients()
                 .stream()
-                .map(Ingredient::calculatePrice)
+                .map(dto -> {
+
+                    IngredientCatalog catalog = ingredientCatalogRepository
+                            .findById(dto.ingredientId())
+                            .orElseThrow(() ->
+                                    new EntityNotFoundException(
+                                            "Ingredient catalog not found: " + dto.ingredientId()));
+
+                    Ingredient ingredient = new Ingredient(catalog, dto.amount());
+                    ingredient.setCandle(candle);
+
+                    return ingredient;
+                })
+                .toList();
+
+        candle.setIngredients(ingredients);
+
+        BigDecimal manufacturingCost = ingredients.stream()
+                .map(Ingredient::getPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        candle.setPrice(cost.multiply(marginMultiplier));
+        candle.setManufacturingCost(manufacturingCost);
+
+        BigDecimal price = calculateCommercialPrice(manufacturingCost);
+
+        candle.setPrice(price);
+
+        candle.setProfit(price.subtract(manufacturingCost));
+
         Candle saved = candleRepository.save(candle);
 
         log.info("Candle created successfully with id: {}", saved.getId());
@@ -149,5 +182,14 @@ public class CandleServiceImp implements CandleService {
         candleRepository.deleteById(id);
 
         log.info("Candle deleted successfully with id: {}", id);
+    }
+
+    private BigDecimal calculateCommercialPrice(BigDecimal manufacturingCost) {
+
+        BigDecimal rawPrice = manufacturingCost.multiply(marginMultiplier);
+
+        return rawPrice
+                .divide(BigDecimal.valueOf(1000), 0, RoundingMode.HALF_UP)
+                .multiply(BigDecimal.valueOf(1000));
     }
 }

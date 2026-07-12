@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Builder;
-import org.springframework.data.annotation.Id;
 
 import java.math.BigDecimal;
 

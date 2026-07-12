@@ -105,26 +105,4 @@ public class IngredientController {
         ingredientService.delete(id);
         return ResponseEntity.ok().build();
     }
-
-    @Operation(
-            summary = "Filter ingredients by type",
-            description = "Returns a paginated list of ingredients filtered by ingredient type."
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Filtered ingredients retrieved successfully")
-    })
-    @GetMapping("/type/{type}")
-    public ResponseEntity<Page<IngredientResponseDto>> findByType(
-            @Parameter(
-                    description = "Ingredient type (e.g., WAX, FRAGRANCE, COLORANT)",
-                    required = true,
-                    in = ParameterIn.PATH
-            )
-            @PathVariable IngredientType type,
-            Pageable pageable
-    ) {
-        return ResponseEntity.ok(
-                ingredientService.findByIngredientType(type, pageable)
-        );
-    }
 }

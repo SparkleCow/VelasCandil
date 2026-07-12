@@ -1,33 +1,66 @@
+import { IngredientRequest } from './ingredient.models';
+
 export type CategoryEnum =
-  | 'AROMATIC' | 'CLASSIC' | 'DECORATIVE'
-  | 'RELIGIOUS' | 'ROMANTIC' | 'OIL_LAMP';
+  | 'AROMATIC'
+  | 'DECORATIVE'
+  | 'RELIGIOUS'
+  | 'WAX_MELT'
+  | 'WAX_WARMER';
 
 export type MaterialEnum =
-  | 'SOY_WAX' | 'BEESWAX' | 'PARAFFIN_WAX'
-  | 'COCONUT_WAX' | 'PALM_WAX' | 'GEL_WAX';
+  | 'SOY_WAX'
+  | 'BEESWAX'
+  | 'PARAFFIN_WAX'
+  | 'COCONUT_WAX'
+  | 'PALM_WAX'
+  | 'GEL_WAX';
 
 export type FeatureEnum =
-  | 'SCENTED' | 'ORGANIC' | 'HANDMADE' | 'VEGAN'
-  | 'ECO_FRIENDLY' | 'LONG_LASTING' | 'CANNABIS_INFUSED'
-  | 'ESSENTIAL_OIL_BASED' | 'RELAXATION_EFFECT'
-  | 'MEDITATION_SUPPORT' | 'THERAPEUTIC_USE';
+  | 'HANDMADE'
+  | 'SCENTED'
+  | 'UNSCENTED'
+  | 'REUSABLE'
+  | 'REFILLABLE'
+  | 'AROMATHERAPY'
+  | 'MEDITATION'
+  | 'RELAXATION'
+  | 'DECORATIVE'
+  | 'GIFTABLE';
 
-export const CATEGORIES: CategoryEnum[] = [
-  'AROMATIC', 'CLASSIC', 'DECORATIVE', 'RELIGIOUS', 'ROMANTIC', 'OIL_LAMP'
-];
-export const MATERIALS: MaterialEnum[] = [
-  'SOY_WAX', 'BEESWAX', 'PARAFFIN_WAX', 'COCONUT_WAX', 'PALM_WAX', 'GEL_WAX'
-];
-export const FEATURES: FeatureEnum[] = [
-  'SCENTED', 'ORGANIC', 'HANDMADE', 'VEGAN', 'ECO_FRIENDLY', 'LONG_LASTING',
-  'CANNABIS_INFUSED', 'ESSENTIAL_OIL_BASED', 'RELAXATION_EFFECT',
-  'MEDITATION_SUPPORT', 'THERAPEUTIC_USE'
-];
-
-export interface IngredientRequest {
-  name: string;
-  amount: number;
+export interface SelectOption<T> {
+  value: T;
+  label: string;
 }
+
+export const CATEGORIES: SelectOption<CategoryEnum>[] = [
+  { value: 'AROMATIC', label: 'Aromática' },
+  { value: 'DECORATIVE', label: 'Decorativa' },
+  { value: 'RELIGIOUS', label: 'Religiosa' },
+  { value: 'WAX_MELT', label: 'Wax Melt' },
+  { value: 'WAX_WARMER', label: 'Quemador de Cera' },
+];
+
+export const MATERIALS: SelectOption<MaterialEnum>[] = [
+  { value: 'SOY_WAX', label: 'Cera de Soya' },
+  { value: 'BEESWAX', label: 'Cera de Abejas' },
+  { value: 'PARAFFIN_WAX', label: 'Parafina' },
+  { value: 'COCONUT_WAX', label: 'Cera de Coco' },
+  { value: 'PALM_WAX', label: 'Cera de Palma' },
+  { value: 'GEL_WAX', label: 'Cera Gel' },
+];
+
+export const FEATURES: SelectOption<FeatureEnum>[] = [
+  { value: 'HANDMADE', label: 'Hecha a Mano' },
+  { value: 'SCENTED', label: 'Aromática' },
+  { value: 'UNSCENTED', label: 'Sin Aroma' },
+  { value: 'REUSABLE', label: 'Reutilizable' },
+  { value: 'REFILLABLE', label: 'Recargable' },
+  { value: 'AROMATHERAPY', label: 'Aromaterapia' },
+  { value: 'MEDITATION', label: 'Meditación' },
+  { value: 'RELAXATION', label: 'Relajación' },
+  { value: 'DECORATIVE', label: 'Decorativa' },
+  { value: 'GIFTABLE', label: 'Ideal para Regalo' },
+];
 
 export interface IngredientResponse {
   name: string;
@@ -47,7 +80,6 @@ export interface CandleRequest {
   ingredients: IngredientRequest[];
 }
 
-// El update no incluye ingredients (el backend no lo acepta en el PUT) Si quieres modificar ingredientes de una vela existente, el backend no lo expone en este endpoint, debo consultar.
 export interface CandleUpdateRequest {
   name: string;
   description: string;

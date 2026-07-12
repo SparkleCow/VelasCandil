@@ -93,17 +93,6 @@ public class IngredientServiceImp implements IngredientService {
     }
 
     @Override
-    public Page<IngredientResponseDto> findByIngredientType(IngredientType ingredientType, Pageable pageable) {
-
-        log.info("Fetching ingredients by type: {}. Page: {}, Size: {}",
-                ingredientType, pageable.getPageNumber(), pageable.getPageSize());
-
-        return ingredientRepository
-                .findByIngredientType(ingredientType, pageable)
-                .map(ingredientMapper::toResponse);
-    }
-
-    @Override
     public Page<IngredientResponseDto> findAllById(List<Long> ids) {
         return null;
     }

@@ -4,26 +4,37 @@
       <mat-card class="auth-card">
         <p class="overline">Inventario</p>
         <h2 class="title">Crear vela</h2>
-        <p class="subtitle">Completa los datos base, imágenes e ingredientes para registrar un nuevo producto.</p>
+        <p class="subtitle">
+          Completa los datos base, imágenes e ingredientes para registrar un
+          nuevo producto.
+        </p>
 
         <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
           <div class="form-grid">
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>Nombre</mat-label>
               <input matInput formControlName="name" />
-              <mat-error *ngIf="form.controls.name.hasError('required')">El nombre es obligatorio.</mat-error>
+              <mat-error *ngIf="form.controls.name.hasError('required')"
+                >El nombre es obligatorio.</mat-error
+              >
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>Stock</mat-label>
               <input matInput type="number" min="0" formControlName="stock" />
-              <mat-error *ngIf="form.controls.stock.hasError('required')">El stock es obligatorio.</mat-error>
+              <mat-error *ngIf="form.controls.stock.hasError('required')"
+                >El stock es obligatorio.</mat-error
+              >
             </mat-form-field>
           </div>
 
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Descripción</mat-label>
-            <textarea matInput rows="4" formControlName="description"></textarea>
+            <textarea
+              matInput
+              rows="4"
+              formControlName="description"
+            ></textarea>
             <mat-error *ngIf="form.controls.description.hasError('required')">
               La descripción es obligatoria.
             </mat-error>
@@ -47,8 +58,10 @@
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>Materiales</mat-label>
               <mat-select formControlName="materialEnums" multiple>
-                @for (item of materials; track item) {
-                  <mat-option [value]="item">{{ formatLabel(item) }}</mat-option>
+                @for (item of materials; track item.value) {
+                  <mat-option [value]="item.value">
+                    {{ item.label }}
+                  </mat-option>
                 }
               </mat-select>
             </mat-form-field>
@@ -56,8 +69,10 @@
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>Categorías</mat-label>
               <mat-select formControlName="categories" multiple>
-                @for (item of categories; track item) {
-                  <mat-option [value]="item">{{ formatLabel(item) }}</mat-option>
+                @for (item of categories; track item.value) {
+                  <mat-option [value]="item.value">
+                    {{ item.label }}
+                  </mat-option>
                 }
               </mat-select>
             </mat-form-field>
@@ -66,8 +81,10 @@
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Características</mat-label>
             <mat-select formControlName="featureEnums" multiple>
-              @for (item of features; track item) {
-                <mat-option [value]="item">{{ formatLabel(item) }}</mat-option>
+              @for (item of features; track item.value) {
+                <mat-option [value]="item.value">
+                  {{ item.label }}
+                </mat-option>
               }
             </mat-select>
           </mat-form-field>
@@ -76,13 +93,15 @@
             <h3>Selecciones actuales</h3>
             <mat-chip-set>
               @for (item of form.controls.materialEnums.value; track item) {
-                <mat-chip>{{ formatLabel(item) }}</mat-chip>
+                <mat-chip>{{ getLabel(item, materials) }}</mat-chip>
               }
+
               @for (item of form.controls.categories.value; track item) {
-                <mat-chip>{{ formatLabel(item) }}</mat-chip>
+                <mat-chip>{{ getLabel(item, categories) }}</mat-chip>
               }
+
               @for (item of form.controls.featureEnums.value; track item) {
-                <mat-chip>{{ formatLabel(item) }}</mat-chip>
+                <mat-chip>{{ getLabel(item, features) }}</mat-chip>
               }
             </mat-chip-set>
           </div>
@@ -99,10 +118,19 @@
             </div>
 
             <div class="list-wrap">
-              @for (file of additionalImageFiles(); track file; let i = $index) {
+              @for (
+                file of additionalImageFiles();
+                track file;
+                let i = $index
+              ) {
                 <div class="list-row">
                   <span>{{ file.name }}</span>
-                  <button type="button" mat-icon-button (click)="removeAdditionalImage(i)" aria-label="Eliminar imagen">
+                  <button
+                    type="button"
+                    mat-icon-button
+                    (click)="removeAdditionalImage(i)"
+                    aria-label="Eliminar imagen"
+                  >
                     <mat-icon>delete</mat-icon>
                   </button>
                 </div>
@@ -114,30 +142,60 @@
 
           <section class="dynamic-section">
             <h3>Ingredientes</h3>
-            <div class="inline-controls ingredient-grid" [formGroup]="ingredientDraftForm">
+            <div
+              class="inline-controls ingredient-grid"
+              [formGroup]="ingredientDraftForm"
+            >
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Ingrediente</mat-label>
-                <mat-select formControlName="name">
-                  <mat-option value="">Selecciona</mat-option>
-                  @for (item of ingredientOptionsMock; track item) {
-                    <mat-option [value]="item">{{ formatLabel(item) }}</mat-option>
+                <mat-select formControlName="ingredientId">
+                  <mat-option [value]="null">Selecciona</mat-option>
+
+                  @for (item of ingredientOptions(); track item.id) {
+                    <mat-option [value]="item.id">
+                      {{ item.ingredientName }}
+                    </mat-option>
                   }
                 </mat-select>
               </mat-form-field>
 
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Cantidad</mat-label>
-                <input matInput type="number" min="0.01" step="0.01" formControlName="amount" />
+                <input
+                  matInput
+                  type="number"
+                  min="0.01"
+                  step="0.01"
+                  formControlName="amount"
+                />
               </mat-form-field>
 
-              <button type="button" mat-stroked-button (click)="addIngredient()">Agregar</button>
+              <button
+                type="button"
+                mat-stroked-button
+                (click)="addIngredient()"
+              >
+                Agregar
+              </button>
             </div>
 
             <div class="list-wrap" formArrayName="ingredients">
-              @for (item of ingredientsArray.controls; track item; let i = $index) {
+              @for (
+                item of ingredientsArray.controls;
+                track item;
+                let i = $index
+              ) {
                 <div class="list-row">
-                  <span>{{ formatLabel(item.controls.name.value) }} - {{ item.controls.amount.value }}</span>
-                  <button type="button" mat-icon-button (click)="removeIngredient(i)" aria-label="Eliminar ingrediente">
+                  <span>
+                    {{ ingredientName(item.controls.ingredientId.value) }} -
+                    {{ item.controls.amount.value }}
+                  </span>
+                  <button
+                    type="button"
+                    mat-icon-button
+                    (click)="removeIngredient(i)"
+                    aria-label="Eliminar ingrediente"
+                  >
                     <mat-icon>delete</mat-icon>
                   </button>
                 </div>
@@ -148,8 +206,14 @@
           </section>
 
           <div class="actions">
-            <button mat-raised-button color="primary" class="full-width" type="submit" [disabled]="creating()">
-              {{ creating() ? 'Creando...' : 'Crear vela' }}
+            <button
+              mat-raised-button
+              color="primary"
+              class="full-width"
+              type="submit"
+              [disabled]="creating()"
+            >
+              {{ creating() ? "Creando..." : "Crear vela" }}
             </button>
           </div>
         </form>

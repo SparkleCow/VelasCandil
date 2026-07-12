@@ -12,7 +12,6 @@ public interface IngredientMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "pricePerUnit", ignore = true)
     @Mapping(target = "price", ignore = true)
-    @Mapping(target = "ingredientType", ignore = true)
     @Mapping(target = "candle", ignore = true)
     Ingredient toEntity(IngredientRequestDto dto);
 
@@ -21,7 +20,6 @@ public interface IngredientMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "pricePerUnit", ignore = true)
     @Mapping(target = "price", ignore = true)
-    @Mapping(target = "ingredientType", ignore = true)
     @Mapping(target = "candle", ignore = true)
     void updateEntityFromDto(IngredientUpdateDto dto, @MappingTarget Ingredient entity);
 
@@ -29,10 +27,6 @@ public interface IngredientMapper {
     default void updateDerivedFields(@MappingTarget Ingredient entity) {
 
         // If name changed, update dependent fields
-        if (entity.getName() != null) {
-            entity.setIngredientType(entity.getName().getType());
-            entity.setPricePerUnit(entity.getName().getPricePerUnit());
-        }
 
         // Recalculate total price
         if (entity.getAmount() != null && entity.getPricePerUnit() != null) {
