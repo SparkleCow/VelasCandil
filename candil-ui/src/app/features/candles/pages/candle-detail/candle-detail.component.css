@@ -21,7 +21,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 64px;
-  align-items: start;
+  align-items: center;
   background: rgb(255 255 255 / 84%);
   border: 1px solid #eadfc8;
   border-radius: 22px;
@@ -37,8 +37,7 @@
 }
 
 .gallery {
-  position: sticky;
-  top: 88px;
+  position: relative;
 }
 
 .main-image {
@@ -94,7 +93,10 @@
   cursor: pointer;
   padding: 0;
   background: #fffdf8;
-  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 
 .thumb:hover {
@@ -262,6 +264,12 @@
 
 .btn-back:hover {
   background: #f9f2e7;
+}
+
+.admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
 }
 
 @media (max-width: 768px) {

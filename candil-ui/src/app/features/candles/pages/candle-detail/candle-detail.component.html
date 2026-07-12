@@ -7,7 +7,8 @@
 
   @if (!loading() && candle()) {
     <div class="detail-layout">
-      <!-- Galería izquierda -->
+      <!-- ========= GALERÍA ========= -->
+
       <div class="gallery">
         <div class="main-image">
           @if (selectedImage()) {
@@ -27,66 +28,113 @@
                 [class.active]="selectedImage() === img"
                 (click)="selectImage(img)"
               >
-                <img [src]="base + img" alt="imagen" [src]="getImageUrl(img)" />
+                <img [src]="getImageUrl(img)" [alt]="candle()!.name" />
               </button>
             }
           </div>
         }
       </div>
 
-      <!-- Info derecha -->
+      <!-- ========= INFORMACIÓN ========= -->
+
       <div class="info">
         <a mat-button routerLink="/candles" class="back-link">
-          <mat-icon>arrow_back</mat-icon> Volver al catálogo
+          <mat-icon>arrow_back</mat-icon>
+          Volver al catálogo
         </a>
 
-        <h1 class="candle-name">{{ candle()!.name }}</h1>
+        <h1 class="candle-name">
+          {{ candle()!.name }}
+        </h1>
 
         <p class="price">${{ candle()!.price | number: "1.0-0" }}</p>
 
-        <p class="description">{{ candle()!.description }}</p>
+        <p class="description">
+          {{ candle()!.description }}
+        </p>
 
         <div class="divider"></div>
 
+        <!-- STOCK -->
+
         <div class="meta-row">
-          <span class="meta-label">Stock</span>
+          <span class="meta-label"> Disponibilidad </span>
+
           <span class="meta-value" [class.out]="candle()!.stock === 0">
             {{
               candle()!.stock > 0
-                ? candle()!.stock + " disponibles"
-                : "Sin stock"
+                ? candle()!.stock + " unidades disponibles"
+                : "Sin existencias"
             }}
           </span>
         </div>
 
+        <!-- CATEGORÍAS -->
+
         <div class="meta-row">
-          <span class="meta-label">Categorías</span>
+          <span class="meta-label"> Categorías </span>
+
           <div class="tags">
             @for (c of candle()!.categories; track c) {
-              <span class="tag tag-category">{{ formatLabel(c) }}</span>
+              <span class="tag tag-category">
+                {{ formatLabel(c) }}
+              </span>
             }
           </div>
         </div>
 
+        <!-- MATERIAL -->
+
         <div class="meta-row">
-          <span class="meta-label">Material</span>
+          <span class="meta-label"> Materiales </span>
+
           <div class="tags">
             @for (m of candle()!.materialEnums; track m) {
-              <span class="tag tag-material">{{ formatLabel(m) }}</span>
+              <span class="tag tag-material">
+                {{ formatLabel(m) }}
+              </span>
             }
           </div>
         </div>
 
+        <!-- CARACTERÍSTICAS -->
+
         <div class="meta-row">
-          <span class="meta-label">Características</span>
+          <span class="meta-label"> Características </span>
+
           <div class="tags">
             @for (f of candle()!.featureEnums; track f) {
-              <span class="tag tag-feature">{{ formatLabel(f) }}</span>
+              <span class="tag tag-feature">
+                {{ formatLabel(f) }}
+              </span>
             }
           </div>
         </div>
 
         <div class="divider"></div>
+
+        <!-- INFORMACIÓN EXTRA -->
+
+        <section class="info-card">
+          <h3>Recomendaciones de uso</h3>
+
+          <ul>
+            <li>
+              Enciende la vela durante al menos 30 a 60 minutos para que la
+              fragancia se distribuya mejor por el ambiente.
+            </li>
+            <br />
+
+            <li>
+              Para un aroma más intenso, procura mantener puertas y ventanas
+              cerradas mientras la vela está encendida.
+            </li>
+          </ul>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- BOTONES CLIENTE -->
 
         <div class="actions">
           <button
@@ -96,11 +144,11 @@
             (click)="addToCart()"
           >
             @if (addingToCart()) {
-              <mat-spinner diameter="20" color="accent"></mat-spinner>
+              <mat-spinner diameter="20"></mat-spinner>
             } @else {
               <ng-container>
                 <mat-icon>shopping_cart</mat-icon>
-                Agregar al carrito
+                <span>Agregar al carrito</span>
               </ng-container>
             }
           </button>
@@ -109,6 +157,34 @@
             Regresar
           </a>
         </div>
+
+        <!-- ========= ADMIN ========= -->
+
+        @if (isAdmin) {
+          <div class="divider"></div>
+
+          <section class="admin-panel">
+            <div class="admin-actions">
+              <button mat-stroked-button color="primary" (click)="editCandle()">
+                <mat-icon> edit </mat-icon>
+
+                Editar información
+              </button>
+
+              <button mat-stroked-button color="accent" (click)="updateStock()">
+                <mat-icon> inventory_2 </mat-icon>
+
+                Actualizar stock
+              </button>
+
+              <button mat-raised-button color="warn" (click)="deleteCandle()">
+                <mat-icon> delete </mat-icon>
+
+                Eliminar vela
+              </button>
+            </div>
+          </section>
+        }
       </div>
     </div>
   }
