@@ -101,3 +101,9 @@ export interface IngredientCatalogResponse {
   supplierContact: string;
   active: boolean;
 }
+
+export interface IngredientResponse {
+  name: IngredientsEnum;
+  amount: number;
+  price: number;
+}

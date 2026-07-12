@@ -9,9 +9,16 @@ import { IngredientCatalogResponse } from '../../shared/models/ingredient.models
 export class IngredientCatalogService {
   private readonly http = inject(HttpClient);
 
-  private readonly api = environment.apiBaseUrl + '/v1/catalog';
+  private readonly api = `${environment.apiBaseUrl}/v1/catalog`;
 
   findAll() {
     return this.http.get<IngredientCatalogResponse[]>(this.api);
+  }
+
+  importIngredients(file: File) {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.http.post<void>(this.api, formData);
   }
 }

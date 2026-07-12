@@ -25,6 +25,13 @@ export const routes: Routes = [
         (m) => m.ProfileComponent,
       ),
   },
+  {
+    path: 'ingredients/import',
+    loadComponent: () =>
+      import('./features/ingredients/ingredients.component').then(
+        (m) => m.IngredientsComponent,
+      ),
+  },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: '**', redirectTo: 'home' },
 ];

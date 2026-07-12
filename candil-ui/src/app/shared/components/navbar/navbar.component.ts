@@ -123,8 +123,8 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['/ordes']);
   }
 
-  createCandle(): void {
-    this.router.navigate(['/candles/create']);
+  dashboard(): void {
+    this.router.navigate(['/dashboard']);
   }
 
   contact(): void {

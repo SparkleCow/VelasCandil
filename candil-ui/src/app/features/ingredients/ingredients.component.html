@@ -1,0 +1,81 @@
+<div class="import-page">
+  <mat-card class="import-card">
+    <div class="header">
+      <p class="overline">Inventario</p>
+
+      <h1>Importar ingredientes</h1>
+
+      <p class="subtitle">
+        Carga un archivo Excel para crear o actualizar el catálogo de
+        ingredientes. Solo se permiten archivos <strong>.xlsx</strong> y
+        <strong>.xls</strong>.
+      </p>
+    </div>
+
+    <section class="upload-section">
+      <mat-icon class="upload-icon"> upload_file </mat-icon>
+
+      <h2>Selecciona un archivo</h2>
+
+      <p>
+        El archivo no se enviará inmediatamente. Después de seleccionarlo,
+        revisa el nombre y pulsa <strong>Importar Excel</strong>.
+      </p>
+
+      <input
+        #fileInput
+        type="file"
+        accept=".xlsx,.xls"
+        (change)="onFileSelected($event)"
+      />
+
+      @if (selectedFile(); as file) {
+        <div class="selected-file">
+          <mat-icon> description </mat-icon>
+
+          <div>
+            <strong> Archivo seleccionado </strong>
+
+            <span>
+              {{ file.name }}
+            </span>
+          </div>
+        </div>
+      } @else {
+        <p class="no-file">Aún no has seleccionado ningún archivo.</p>
+      }
+
+      <button
+        mat-raised-button
+        color="primary"
+        class="import-button"
+        [disabled]="!selectedFile() || importing()"
+        (click)="importIngredient()"
+      >
+        @if (importing()) {
+          Importando...
+        } @else {
+          Importar Excel
+        }
+      </button>
+    </section>
+
+    <section class="help-card">
+      <h3>Recomendaciones</h3>
+
+      <ul>
+        <li>Utiliza la plantilla oficial de ingredientes.</li>
+
+        <li>No cambies el nombre ni el orden de las columnas.</li>
+
+        <li>Si un ingrediente ya existe, podrá actualizarse.</li>
+
+        <li>Los ingredientes nuevos se agregarán automáticamente.</li>
+
+        <li>
+          Verifica que los precios y unidades sean correctos antes de importar.
+        </li>
+      </ul>
+    </section>
+  </mat-card>
+</div>

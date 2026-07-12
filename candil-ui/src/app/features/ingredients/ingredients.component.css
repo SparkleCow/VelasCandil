@@ -1,0 +1,179 @@
+.import-page {
+  min-height: 100vh;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  padding: 2rem;
+
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(190, 160, 105, 0.18),
+      transparent 40%
+    ),
+    linear-gradient(180deg, #fffdf8, #f6efe4);
+}
+
+.import-card {
+  width: min(900px, 100%);
+
+  padding: 2.5rem;
+
+  border-radius: 24px;
+
+  border: 1px solid #eadcc4;
+
+  background: #fffefb;
+
+  box-shadow: 0 18px 40px rgba(76, 56, 30, 0.08);
+}
+
+.overline {
+  margin: 0;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.18em;
+
+  color: #9b7743;
+
+  font-size: 0.75rem;
+
+  font-weight: 700;
+}
+
+.header h1 {
+  margin: 0.4rem 0;
+
+  color: #4b361d;
+}
+
+.subtitle {
+  color: #7b684b;
+
+  line-height: 1.6;
+
+  margin-bottom: 2rem;
+}
+
+.upload-section {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  text-align: center;
+
+  padding: 3rem;
+
+  border: 2px dashed #d8c39f;
+
+  border-radius: 18px;
+
+  background: #fcfaf6;
+
+  transition: 0.25s;
+}
+
+.upload-section:hover {
+  border-color: #a67d45;
+
+  background: #fffdfb;
+}
+
+.upload-icon {
+  font-size: 70px;
+
+  width: 70px;
+
+  height: 70px;
+
+  color: #9c7340;
+
+  margin-bottom: 1rem;
+}
+
+.upload-section h2 {
+  margin: 0;
+
+  color: #4b361c;
+}
+
+.upload-section p {
+  color: #7c6748;
+
+  margin: 0.8rem 0 1.5rem;
+}
+
+.upload-section input {
+  width: 100%;
+
+  max-width: 420px;
+
+  padding: 0.8rem;
+
+  border-radius: 10px;
+
+  border: 1px solid #d8c29f;
+
+  background: white;
+
+  cursor: pointer;
+}
+
+.help-card {
+  margin-top: 2rem;
+
+  padding: 1.5rem;
+
+  border-radius: 16px;
+
+  background: #fdf8ef;
+
+  border: 1px solid #eadbc3;
+}
+
+.help-card h3 {
+  margin-top: 0;
+
+  color: #4b351b;
+}
+
+.help-card ul {
+  margin: 1rem 0 0;
+
+  padding-left: 1.2rem;
+}
+
+.help-card li {
+  margin-bottom: 0.7rem;
+
+  color: #6f5b3d;
+
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .import-card {
+    padding: 1.5rem;
+  }
+
+  .upload-section {
+    padding: 2rem 1rem;
+  }
+
+  .upload-icon {
+    font-size: 55px;
+
+    width: 55px;
+
+    height: 55px;
+  }
+}
