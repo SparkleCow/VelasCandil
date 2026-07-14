@@ -24,8 +24,10 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -143,7 +145,7 @@ public class CandleServiceImp implements CandleService {
     }
 
     @Override
-    public CandleResponseDto update(CandleUpdateDto dto, Long id) {
+    public CandleResponseDto update(CandleUpdateDto candleUpdateDto, Long id) {
 
         log.info("Updating candle with id: {}", id);
 
@@ -153,14 +155,41 @@ public class CandleServiceImp implements CandleService {
                     return new IllegalArgumentException("Candle not found");
                 });
 
-        candleMapper.updateEntityFromDto(dto, candle);
+        candleMapper.updateEntityFromDto(candleUpdateDto, candle);
 
-        BigDecimal cost = candle.getIngredients()
-                .stream()
-                .map(Ingredient::calculatePrice)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        if(candleUpdateDto.ingredients() != null && !candleUpdateDto.ingredients().isEmpty()){
+            List<Ingredient> ingredients = candleUpdateDto.ingredients()
+                    .stream()
+                    .map(dto-> {
 
-        candle.setPrice(cost.multiply(marginMultiplier));
+                        IngredientCatalog catalog = ingredientCatalogRepository
+                                .findById(dto.ingredientId())
+                                .orElseThrow(() ->
+                                        new EntityNotFoundException(
+                                                "Ingredient catalog not found: " + dto.ingredientId()));
+
+                        Ingredient ingredient = new Ingredient(catalog, dto.amount());
+                        ingredient.setCandle(candle);
+
+                        return ingredient;
+                    })
+                    .collect(Collectors.toCollection(ArrayList::new));
+
+            candle.getIngredients().clear();
+            candle.getIngredients().addAll(ingredients);
+
+            BigDecimal manufacturingCost = ingredients.stream()
+                    .map(Ingredient::getPrice)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            candle.setManufacturingCost(manufacturingCost);
+
+            BigDecimal price = calculateCommercialPrice(manufacturingCost);
+
+            candle.setPrice(price);
+
+            candle.setProfit(price.subtract(manufacturingCost));
+        }
 
         Candle updated = candleRepository.save(candle);
 

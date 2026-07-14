@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -109,5 +110,45 @@ public class S3ServiceImp implements S3Service{
                 s3Presigner.presignGetObject(getObjectPresignRequest);
 
         return presignedGetObjectRequest.url().toString();
+    }
+
+    @Override
+    public void deleteFile(String key) {
+
+        if (key == null || key.isBlank()) {
+            return;
+        }
+
+        DeleteObjectRequest request = DeleteObjectRequest.builder()
+                .bucket(awsProperties.getBucket())
+                .key(key)
+                .build();
+
+        s3Client.deleteObject(request);
+    }
+
+    @Override
+    public void deleteFiles(List<String> keys) {
+
+        if (keys == null || keys.isEmpty()) {
+            return;
+        }
+
+        List<ObjectIdentifier> objects = keys.stream()
+                .map(key -> ObjectIdentifier.builder()
+                        .key(key)
+                        .build())
+                .toList();
+
+        Delete delete = Delete.builder()
+                .objects(objects)
+                .build();
+
+        DeleteObjectsRequest request = DeleteObjectsRequest.builder()
+                .bucket(awsProperties.getBucket())
+                .delete(delete)
+                .build();
+
+        s3Client.deleteObjects(request);
     }
 }

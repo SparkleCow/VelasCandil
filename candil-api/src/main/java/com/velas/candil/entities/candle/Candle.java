@@ -70,8 +70,13 @@ public class Candle{
     @Column(nullable = true)
     private LocalDateTime updatedAt;
 
+    @OneToMany(
+            mappedBy = "candle",
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
     @Builder.Default
-    @OneToMany(mappedBy = "candle", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Ingredient> ingredients = new ArrayList<>();
 
     @Column(nullable = false, precision = 12, scale = 2)

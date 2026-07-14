@@ -25,6 +25,7 @@ public class Ingredient {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ingredient_catalog_id")
     private IngredientCatalog ingredientCatalog;
+    private String ingredientName;
     private BigDecimal amount;
     private BigDecimal pricePerUnit;
     private BigDecimal price;
@@ -35,6 +36,7 @@ public class Ingredient {
 
     public Ingredient(IngredientCatalog ingredientCatalog, BigDecimal amount) {
         this.ingredientCatalog = ingredientCatalog;
+        this.ingredientName = ingredientCatalog.getIngredientName();
         this.amount = amount;
         this.pricePerUnit = ingredientCatalog.getPricePerUnit();
         this.price = calculatePrice();

@@ -1,0 +1,91 @@
+server:
+  port: 8080
+  address: 0.0.0.0
+
+spring:
+  application:
+    name: Velas-Candil
+
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:candles}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:123456789}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  mail:
+    host: localhost
+    port: 1025
+    username: velas
+    password: 123456789
+    properties:
+      mail:
+        smtp:
+          trust: "*"
+        auth: true
+        starttls:
+          enable: true
+        connectiontimeout: 5000
+        timeout: 3000
+        writetimeout: 5000
+
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 50MB
+
+  destination:
+    folder: src/main/resources/static/
+
+application:
+  security:
+    jwt:
+      secret_key: "${SECRET_KEY:GRf9FCYUutfWqAuDWHPwdv1dQozLUYCVM0cBOstuEBA}"
+      expiration: 8640000
+  cors:
+    allowed-origins: ${ALLOWED_ORIGINS:http://localhost:4200}
+  mailing:
+    frontend:
+      activation-url: http://localhost:4200/activate-account
+
+candle:
+  margin:
+    multiplier: 1.7
+
+aws:
+  s3:
+    key: ${AWS_KEY}
+    secret: ${AWS_SECRET}
+    region: us-east-2
+    bucket: ${BUCKET_NAME}
+
+logging:
+  level:
+    software:
+      amazon:
+        awssdk: WARN
+
+# ─────────────────────────────────────────────────────────
+#  Mercado Pago Sandbox
+#  Credenciales en .env — nunca hardcodear aqui
+# ─────────────────────────────────────────────────────────
+mercadopago:
+  access-token: ${MP_ACCESS_TOKEN}
+  public-key: ${MP_PUBLIC_KEY:}
+  # Backend recibe el redirect de MP y reenvía al frontend
+  # Así evitamos necesitar dos túneles ngrok en plan gratuito
+  success-url: https://raisin-art-shorthand.ngrok-free.dev/v1/orders/redirect/success
+  failure-url: https://raisin-art-shorthand.ngrok-free.dev/v1/orders/redirect/failure
+  pending-url: https://raisin-art-shorthand.ngrok-free.dev/v1/orders/redirect/pending
+  webhook-url: ${MP_WEBHOOK_URL:https://raisin-art-shorthand.ngrok-free.dev/v1/orders/webhook}

@@ -13,6 +13,9 @@ import { UserService } from '../../../../core/services/user.service';
 import { CandleResponse } from '../../../../shared/models/candle.models';
 import { environment } from '../../../../../environments/environment.development';
 
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
+
 @Component({
   selector: 'app-candle-detail',
   standalone: true,
@@ -33,6 +36,7 @@ export class CandleDetailComponent implements OnInit {
   private readonly candleService = inject(CandleService);
   private readonly cartService = inject(CartService);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly dialog = inject(MatDialog);
 
   readonly userService = inject(UserService);
   readonly isAdmin = this.userService.isAdmin();
@@ -110,7 +114,41 @@ export class CandleDetailComponent implements OnInit {
   }
 
   deleteCandle(): void {
-    // TODO: Implementar eliminación de la vela
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: {
+        title: 'Eliminar vela',
+        message:
+          '¿Estás seguro de que deseas eliminar esta vela? Esta acción no se puede deshacer.',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (!confirmed) return;
+
+      this.candleService.delete(this.candle()!.id).subscribe({
+        next: () => {
+          this.snackBar.open('Vela eliminada correctamente.', 'Cerrar', {
+            duration: 3000,
+            horizontalPosition: 'end',
+            verticalPosition: 'top',
+          });
+
+          this.router.navigate(['/candles']);
+        },
+        error: () => {
+          this.snackBar.open(
+            'Ocurrió un error al eliminar la vela. Inténtalo de nuevo.',
+            'Cerrar',
+            {
+              duration: 3000,
+              horizontalPosition: 'end',
+              verticalPosition: 'top',
+            },
+          );
+        },
+      });
+    });
   }
 
   formatLabel(value: string): string {

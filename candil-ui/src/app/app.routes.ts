@@ -4,6 +4,7 @@ import { CANDLE_ROUTES } from './features/candles/candles.routes';
 import { DASHBOARD_ROUTES } from './features/dashboard/dashboard.routes';
 
 import { authGuard } from './core/guards/auth.guard';
+import { adminGuard } from './core/guards/admin.guard';
 import { ORDER_ROUTES } from './features/orders/orders.routes';
 
 export const routes: Routes = [
@@ -27,6 +28,7 @@ export const routes: Routes = [
   },
   {
     path: 'ingredients/import',
+    canActivate: [adminGuard],
     loadComponent: () =>
       import('./features/ingredients/ingredients.component').then(
         (m) => m.IngredientsComponent,
