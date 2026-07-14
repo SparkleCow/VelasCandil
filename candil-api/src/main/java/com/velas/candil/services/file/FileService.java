@@ -58,4 +58,8 @@ public interface FileService{
      * @return Raw file bytes (exactly as stored).
      */
     byte[] downloadFromS3(String fileUrl);
+
+    void deleteFile(String key);
+
+    void deleteFiles(List<String> keys);
 }

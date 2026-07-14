@@ -89,12 +89,24 @@ public class CandleController {
             @ApiResponse(responseCode = "404", description = "Candle not found", content = @Content),
             @ApiResponse(responseCode = "400", description = "Invalid update data", content = @Content)
     })
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CandleResponseDto> update(
             @PathVariable Long id,
-            @RequestBody CandleUpdateDto updateDto) {
+            @RequestPart("data") CandleUpdateDto updateDto,
+            @RequestPart(value = "principalImage", required = false) MultipartFile principalImage,
+            @RequestPart(value = "images", required = false) List<MultipartFile> images,
+            @AuthenticationPrincipal User user
+    ) throws IOException {
 
-        return ResponseEntity.ok(candleService.update(updateDto, id));
+        CandleResponseDto response = candleFacadeService.update(
+                id,
+                updateDto,
+                principalImage,
+                images,
+                user
+        );
+
+        return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "Delete candle by id")

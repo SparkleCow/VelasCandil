@@ -221,4 +221,14 @@ public class FileServiceImp implements FileService{
     public byte[] downloadFromS3(String fileUrl) {
         return new byte[0];
     }
+
+    @Override
+    public void deleteFile(String key) {
+        s3Service.deleteFile(key);
+    }
+
+    @Override
+    public void deleteFiles(List<String> keys) {
+        s3Service.deleteFiles(keys);
+    }
 }

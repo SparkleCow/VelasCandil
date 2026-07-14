@@ -157,6 +157,18 @@ public class CandleServiceImp implements CandleService {
 
         candleMapper.updateEntityFromDto(candleUpdateDto, candle);
 
+        if (candleUpdateDto.principalImage() != null &&
+                !candleUpdateDto.principalImage().isBlank()) {
+
+            candle.setPrincipalImage(candleUpdateDto.principalImage());
+        }
+
+        if (candleUpdateDto.images() != null &&
+                !candleUpdateDto.images().isEmpty()) {
+
+            candle.setImages(candleUpdateDto.images());
+        }
+
         if(candleUpdateDto.ingredients() != null && !candleUpdateDto.ingredients().isEmpty()){
             List<Ingredient> ingredients = candleUpdateDto.ingredients()
                     .stream()
