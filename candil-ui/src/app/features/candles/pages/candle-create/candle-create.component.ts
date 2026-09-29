@@ -1,5 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  inject,
+  signal,
+} from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -8,14 +13,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
+import { Router } from '@angular/router';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import {
   CATEGORIES,
@@ -32,10 +30,14 @@ import { IngredientCatalogService } from '../../../../core/services/ingredient-c
 
 import { CandleService } from '../../../../core/services/candle.service';
 
+import { RevealOnScrollDirective } from '../../../../shared/directives/reveal-on-scroll.directive';
+
 type IngredientFormGroup = FormGroup<{
   ingredientId: FormControl<number>;
   amount: FormControl<number>;
 }>;
+
+type MenuName = '' | 'categories' | 'features' | 'materials';
 
 @Component({
   selector: 'app-candle-create',
@@ -43,18 +45,15 @@ type IngredientFormGroup = FormGroup<{
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    RouterModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatButtonModule,
-    MatIconModule,
-    MatChipsModule,
     MatSnackBarModule,
+    RevealOnScrollDirective,
   ],
   templateUrl: './candle-create.component.html',
   styleUrl: './candle-create.component.css',
+  host: {
+    '(document:click)': 'closeMenus()',
+    '(document:keydown.escape)': 'closeMenus()',
+  },
 })
 export class CandleCreateComponent {
   private readonly fb = inject(FormBuilder);
@@ -72,6 +71,14 @@ export class CandleCreateComponent {
   readonly creating = signal(false);
   readonly principalImageFile = signal<File | null>(null);
   readonly additionalImageFiles = signal<File[]>([]);
+
+  readonly principalPreview = signal<string | null>(null);
+  readonly additionalPreviews = signal<string[]>([]);
+  readonly dragging = signal(false);
+  readonly openMenu = signal<MenuName>('');
+
+  private principalObjectUrl: string | null = null;
+  private additionalObjectUrls: string[] = [];
 
   readonly ingredientDraftForm = this.fb.group({
     ingredientId: this.fb.control<number | null>(null, Validators.required),
@@ -123,19 +130,23 @@ export class CandleCreateComponent {
   onPrincipalImageChange(event: Event): void {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0] ?? null;
-    this.principalImageFile.set(file);
+    if (file) {
+      this.setPrincipalFile(file);
+    }
   }
 
   onAdditionalImagesChange(event: Event): void {
     const input = event.target as HTMLInputElement;
     const files = Array.from(input.files ?? []);
     this.additionalImageFiles.set(files);
+    this.rebuildAdditionalPreviews(files);
   }
 
   removeAdditionalImage(index: number): void {
     const current = [...this.additionalImageFiles()];
     current.splice(index, 1);
     this.additionalImageFiles.set(current);
+    this.rebuildAdditionalPreviews(current);
   }
 
   addIngredient(): void {
@@ -180,6 +191,7 @@ export class CandleCreateComponent {
     };
 
     this.creating.set(true);
+
     this.candleService
       .create(payload, principalImage, additionalImages)
       .subscribe({
@@ -189,11 +201,9 @@ export class CandleCreateComponent {
             duration: 2500,
           });
           this.router.navigate(['/candles']);
-          console.log(payload);
         },
         error: () => {
           this.creating.set(false);
-          console.log(payload);
           this.snackBar.open(
             'No se pudo crear la vela. Revisa los datos e intenta de nuevo.',
             'Cerrar',
@@ -203,8 +213,108 @@ export class CandleCreateComponent {
       });
   }
 
+  cancel(): void {
+    this.router.navigate(['/candles']);
+  }
+
   formatLabel(value: string): string {
     return value.replace(/_/g, ' ');
+  }
+
+  getLabel(value: string, options: { value: string; label: string }[]): string {
+    return options.find((option) => option.value === value)?.label ?? value;
+  }
+
+  ingredientName(id: number): string {
+    return (
+      this.ingredientOptions().find((i) => i.id === id)?.ingredientName ?? ''
+    );
+  }
+
+  /* ── Custom multi-select (binds to the existing controls) ── */
+
+  isSelected(control: { value: readonly string[] }, value: string): boolean {
+    return control.value.includes(value);
+  }
+
+  toggleMenu(name: Exclude<MenuName, ''>): void {
+    this.openMenu.set(this.openMenu() === name ? '' : name);
+  }
+
+  closeMenus(): void {
+    this.openMenu.set('');
+  }
+
+  toggleCategory(value: CategoryEnum): void {
+    this.toggleInArray(this.form.controls.categories, value);
+  }
+
+  toggleMaterial(value: MaterialEnum): void {
+    this.toggleInArray(this.form.controls.materialEnums, value);
+  }
+
+  toggleFeature(value: FeatureEnum): void {
+    this.toggleInArray(this.form.controls.featureEnums, value);
+  }
+
+  private toggleInArray<T extends string>(
+    control: FormControl<T[]>,
+    value: T,
+  ): void {
+    const current = control.value;
+    control.setValue(
+      current.includes(value)
+        ? current.filter((item) => item !== value)
+        : [...current, value],
+    );
+  }
+
+  /* ── Dropzone & previews ── */
+
+  onDragOver(event: DragEvent): void {
+    event.preventDefault();
+    this.dragging.set(true);
+  }
+
+  onDragLeave(event: DragEvent): void {
+    event.preventDefault();
+    this.dragging.set(false);
+  }
+
+  onPrincipalDrop(event: DragEvent): void {
+    event.preventDefault();
+    this.dragging.set(false);
+
+    const file = event.dataTransfer?.files?.[0];
+    if (file && file.type.startsWith('image/')) {
+      this.setPrincipalFile(file);
+    }
+  }
+
+  clearPrincipalImage(): void {
+    this.releasePrincipalUrl();
+    this.principalImageFile.set(null);
+    this.principalPreview.set(null);
+  }
+
+  private setPrincipalFile(file: File): void {
+    this.releasePrincipalUrl();
+    this.principalObjectUrl = URL.createObjectURL(file);
+    this.principalImageFile.set(file);
+    this.principalPreview.set(this.principalObjectUrl);
+  }
+
+  private releasePrincipalUrl(): void {
+    if (this.principalObjectUrl) {
+      URL.revokeObjectURL(this.principalObjectUrl);
+      this.principalObjectUrl = null;
+    }
+  }
+
+  private rebuildAdditionalPreviews(files: File[]): void {
+    this.additionalObjectUrls.forEach((url) => URL.revokeObjectURL(url));
+    this.additionalObjectUrls = files.map((file) => URL.createObjectURL(file));
+    this.additionalPreviews.set([...this.additionalObjectUrls]);
   }
 
   private buildIngredientGroup(
@@ -221,15 +331,5 @@ export class CandleCreateComponent {
         Validators.min(0.01),
       ]),
     });
-  }
-
-  getLabel(value: string, options: { value: string; label: string }[]): string {
-    return options.find((option) => option.value === value)?.label ?? value;
-  }
-
-  ingredientName(id: number): string {
-    return (
-      this.ingredientOptions().find((i) => i.id === id)?.ingredientName ?? ''
-    );
   }
 }

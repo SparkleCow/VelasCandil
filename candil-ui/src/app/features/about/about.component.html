@@ -1,54 +1,53 @@
-<div class="about">
-  <!-- HERO -->
-  <div class="about__hero" #aboutRef>
-    <div class="about__text-side">
-      <span class="about__eyebrow">Nuestra historia</span>
-      <h1 class="about__title">Luz que nació de un <em>sueño</em></h1>
-      <p class="about__desc">
-        Velas Candil nació en Bogotá en 2020, de las manos de una familia
-        apasionada por los aromas y el bienestar. Lo que comenzó como un hobby
-        en la cocina de casa se convirtió en una marca que hoy ilumina hogares
-        en todo el país.
-      </p>
-      <p class="about__desc">
-        Cada vela que hacemos lleva el mismo cuidado de los primeros días:
-        ingredientes seleccionados, fragancias diseñadas con intención y un
-        proceso artesanal que garantiza calidad en cada pieza.
-      </p>
-      <button class="about__cta">Ver catálogo</button>
-    </div>
-
-    <div class="about__image-side">
+<section class="story" id="nuestra-historia">
+  <div class="story__grid" appRevealOnScroll>
+    <div class="story__media">
+      <span class="story__frame" aria-hidden="true"></span>
       <img
-        class="about__img-main"
-        src="https://www.mujerde10.com/wp-content/uploads/2025/01/bienestar-velas-aromaticas-para-reducir-estres.jpg"
-        alt="Taller Velas Candil"
+        class="story__img"
+        src="https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=1200&q=80"
+        alt="Velas artesanales de cera de soya encendidas en el taller de Velas Candil"
+        loading="lazy"
       />
-      <div class="about__img-badge">
-        <span class="about__img-badge-num">+5</span>
-        <span class="about__img-badge-label">años iluminando</span>
+      <div class="story__badge">
+        <span class="story__badge-num">+5</span>
+        <span class="story__badge-label">años iluminando hogares</span>
       </div>
+    </div>
+
+    <div class="story__text">
+      <span class="story__eyebrow">Nuestra historia</span>
+      <h2 class="story__title">
+        Luz que nació de un <em>sueño</em> en familia
+      </h2>
+      <span class="story__divider" aria-hidden="true"></span>
+
+      <p class="story__desc">
+        Velas Candil nació en Bogotá en 2020, en la cocina de una casa donde
+        los aromas eran parte de cada reunión. Lo que comenzó como un hobby
+        entre cera, esencias y mechas, hoy ilumina rincones de todo el país.
+      </p>
+      <p class="story__desc story__desc--soft">
+        Seguimos vertiendo cada vela a mano, en pequeños lotes: cera de soya
+        pura, fragancias elegidas con intención y el mismo cuidado del primer
+        día. Porque una llama no solo decora un espacio: lo convierte en hogar.
+      </p>
+
+      <button class="story__cta" type="button" (click)="goToCatalog()">
+        Ver catálogo
+        <mat-icon>arrow_forward</mat-icon>
+      </button>
     </div>
   </div>
 
-  <!-- STATS -->
-  <div class="about__stats" #aboutRef>
-    <div class="about__stats-inner">
-      <div class="stat-item">
-        <span class="stat-num">1<em>k</em>+</span>
-        <span class="stat-label">Clientes felices</span>
-        <p class="stat-desc">Hogares que ya disfrutan nuestras velas</p>
-      </div>
-      <div class="stat-item">
-        <span class="stat-num">30<em>+</em></span>
-        <span class="stat-label">Fragancias</span>
-        <p class="stat-desc">Aromas únicos</p>
-      </div>
-      <div class="stat-item">
-        <span class="stat-num">100<em>%</em></span>
-        <span class="stat-label">Artesanal</span>
-        <p class="stat-desc">Cada vela hecha a mano con cuidado</p>
-      </div>
-    </div>
+  <div class="story__stats" appRevealOnScroll [revealDelay]="120">
+    @for (stat of stats; track stat.label) {
+      <article class="stat-item">
+        <span class="stat-num">
+          {{ stat.value }}<em>{{ stat.highlight }}</em>
+        </span>
+        <span class="stat-label">{{ stat.label }}</span>
+        <p class="stat-desc">{{ stat.description }}</p>
+      </article>
+    }
   </div>
-</div>
+</section>

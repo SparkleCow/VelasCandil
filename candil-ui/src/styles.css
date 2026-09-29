@@ -1,8 +1,108 @@
-html,
-body {
-  height: 100%;
+/* ══════════════════════════════════════════════════════════
+   VELAS CANDIL — Design Tokens & Global Styles
+   Warm, artisanal palette: amber · vanilla cream · terracotta
+   gold accents · deep charcoal text
+   ══════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Palette ── */
+  --candil-charcoal: #2a2018;
+  --candil-charcoal-soft: #4a3d2f;
+  --candil-amber: #a07840;
+  --candil-amber-deep: #7d5c2e;
+  --candil-gold: #d4a24e;
+  --candil-terracotta: #b85c38;
+  --candil-cream: #fffdf9;
+  --candil-vanilla: #f6efe3;
+  --candil-sand: #e9dfd0;
+  --candil-sand-dark: #d8c6ad;
+  --candil-muted: #8a7a66;
+  --candil-canvas: #f7f1e5;
+  --candil-surface: #fffefb;
+
+  /* ── Elevation ── */
+  --shadow-sm: 0 2px 10px rgba(42, 32, 24, 0.06);
+  --shadow-md: 0 8px 28px rgba(42, 32, 24, 0.1);
+  --shadow-lg: 0 18px 48px rgba(42, 32, 24, 0.16);
+  --shadow-amber: 0 14px 36px rgba(160, 120, 64, 0.22);
+
+  /* ── Type ── */
+  --font-display: 'DM Serif Display', Georgia, serif;
+  --font-body: 'Jost', Roboto, 'Helvetica Neue', sans-serif;
+
+  /* ── Layout ── */
+  --section-y: clamp(72px, 9vw, 128px);
+  --container: min(1160px, 92%);
 }
+
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: var(--font-body);
+  color: var(--candil-charcoal);
+  background: var(--candil-cream);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ── Shared scroll-reveal (used with appRevealOnScroll) ── */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  will-change: opacity, transform;
+}
+
+.reveal.is-visible {
+  animation: candil-fade-up 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
+
+@keyframes candil-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes candil-flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  42% {
+    opacity: 0.82;
+  }
+  58% {
+    opacity: 0.94;
+  }
+  74% {
+    opacity: 0.78;
+  }
+}
+
+/* ── Accessibility: honor reduced-motion preferences ── */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
 }

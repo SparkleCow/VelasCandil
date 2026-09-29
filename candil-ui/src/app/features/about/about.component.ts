@@ -1,33 +1,47 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  QueryList,
-  ViewChildren,
-} from '@angular/core';
-import { MatIcon } from '@angular/material/icon';
+import { Component, inject } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
+import { Router } from '@angular/router';
+import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
+
+interface BrandStat {
+  value: string;
+  highlight?: string;
+  label: string;
+  description: string;
+}
 
 @Component({
   selector: 'app-about',
-  imports: [],
+  standalone: true,
+  imports: [MatIconModule, RevealOnScrollDirective],
   templateUrl: './about.component.html',
   styleUrl: './about.component.css',
 })
-export class AboutComponent implements AfterViewInit {
-  @ViewChildren('aboutRef') about!: QueryList<ElementRef>;
+export class AboutComponent {
+  private readonly router = inject(Router);
 
-  ngAfterViewInit() {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('animate');
-          }
-        });
-      },
-      { threshold: 0.2 },
-    );
+  readonly stats: BrandStat[] = [
+    {
+      value: '1',
+      highlight: 'k+',
+      label: 'Clientes felices',
+      description: 'Hogares que ya iluminan con Candil',
+    },
+    {
+      value: '30',
+      highlight: '+',
+      label: 'Fragancias',
+      description: 'Aromas únicos creados con intención',
+    },
+    {
+      value: '100',
+      highlight: '%',
+      label: 'Artesanal',
+      description: 'Vertida a mano, una por una',
+    },
+  ];
 
-    this.about.forEach((section) => observer.observe(section.nativeElement));
+  goToCatalog(): void {
+    this.router.navigate(['/candles']);
   }
 }

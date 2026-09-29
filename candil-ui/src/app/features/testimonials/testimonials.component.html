@@ -1,239 +1,37 @@
-<section class="testimonios">
-  <div class="testimonios__header">
-    <span class="testimonios__eyebrow">Lo que dicen nuestros clientes</span>
-    <h2 class="testimonios__title">Experiencias que iluminan</h2>
-  </div>
+<section class="testimonials">
+  <header class="testimonials__header" appRevealOnScroll>
+    <span class="testimonials__eyebrow">Lo que dicen nuestros clientes</span>
+    <h2 class="testimonials__title">Experiencias que <em>iluminan</em></h2>
 
-  <div class="carrusel-wrapper">
-    <div class="carrusel-track">
-      <!-- TARJETAS ORIGINALES -->
-      <div class="card" #cardRef>
-        <div class="card__stars">
-          <span class="star"></span><span class="star"></span
-          ><span class="star"></span> <span class="star"></span
-          ><span class="star"></span>
-        </div>
-        <p class="card__text">
-          "El aroma de lavanda llenó toda mi sala. Una experiencia completamente
-          relajante."
-        </p>
-        <div class="card__author">
-          <div class="card__avatar">AM</div>
-          <div>
-            <p class="card__name">Ana Martínez</p>
-            <p class="card__location">Bogotá</p>
-          </div>
-        </div>
-      </div>
+    <div class="testimonials__rating" aria-label="Calificación promedio: 5 de 5 estrellas">
+      @for (star of [1, 2, 3, 4, 5]; track star) {
+        <mat-icon class="testimonials__star">star</mat-icon>
+      }
+      <span class="testimonials__rating-note">4.9 / 5 · +1.000 hogares</span>
+    </div>
+  </header>
 
-      <div class="card" #cardRef>
-        <div class="card__stars">
-          <span class="star"></span><span class="star"></span
-          ><span class="star"></span> <span class="star"></span
-          ><span class="star"></span>
-        </div>
-        <p class="card__text">
-          "La vela de vainilla es increíble. La enciendo cada noche y dura
-          muchísimo."
-        </p>
-        <div class="card__author">
-          <div class="card__avatar">CR</div>
-          <div>
-            <p class="card__name">Camila Rodríguez</p>
-            <p class="card__location">Medellín</p>
+  <div class="marquee" role="list">
+    <div class="marquee__track">
+      @for (item of testimonials; track $index) {
+        <article class="card" role="listitem">
+          <div class="card__stars" aria-hidden="true">
+            @for (star of [1, 2, 3, 4, 5]; track star) {
+              <mat-icon class="card__star">star</mat-icon>
+            }
           </div>
-        </div>
-      </div>
 
-      <div class="card" #cardRef>
-        <div class="card__stars">
-          <span class="star"></span><span class="star"></span
-          ><span class="star"></span> <span class="star"></span
-          ><span class="star"></span>
-        </div>
-        <p class="card__text">
-          "Las regalé en un cumpleaños y todos quedaron encantados. El empaque
-          es hermoso."
-        </p>
-        <div class="card__author">
-          <div class="card__avatar">LP</div>
-          <div>
-            <p class="card__name">Laura Pérez</p>
-            <p class="card__location">Cali</p>
-          </div>
-        </div>
-      </div>
+          <p class="card__text">“{{ item.text }}”</p>
 
-      <div class="card" #cardRef>
-        <div class="card__stars">
-          <span class="star"></span><span class="star"></span
-          ><span class="star"></span> <span class="star"></span
-          ><span class="star"></span>
-        </div>
-        <p class="card__text">
-          "Compré la de sándalo y me transportó. Nunca había sentido algo así
-          con una vela."
-        </p>
-        <div class="card__author">
-          <div class="card__avatar">JS</div>
-          <div>
-            <p class="card__name">Juliana Soto</p>
-            <p class="card__location">Bucaramanga</p>
+          <div class="card__author">
+            <div class="card__avatar">{{ item.initials }}</div>
+            <div>
+              <p class="card__name">{{ item.name }}</p>
+              <p class="card__location">{{ item.location }}</p>
+            </div>
           </div>
-        </div>
-      </div>
-
-      <div class="card" #cardRef>
-        <div class="card__stars">
-          <span class="star"></span><span class="star"></span
-          ><span class="star"></span> <span class="star"></span
-          ><span class="star"></span>
-        </div>
-        <p class="card__text">
-          "Producto artesanal de verdad. Se nota el cuidado en cada detalle.
-          Volveré a comprar."
-        </p>
-        <div class="card__author">
-          <div class="card__avatar">MG</div>
-          <div>
-            <p class="card__name">María Gómez</p>
-            <p class="card__location">Barranquilla</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="card" #cardRef>
-        <div class="card__stars">
-          <span class="star"></span><span class="star"></span
-          ><span class="star"></span> <span class="star"></span
-          ><span class="star"></span>
-        </div>
-        <p class="card__text">
-          "El envío llegó súper rápido y bien protegido. La vela de jazmín es mi
-          favorita."
-        </p>
-        <div class="card__author">
-          <div class="card__avatar">VT</div>
-          <div>
-            <p class="card__name">Valeria Torres</p>
-            <p class="card__location">Cartagena</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="card" #cardRef>
-        <div class="card__stars">
-          <span class="star"></span><span class="star"></span
-          ><span class="star"></span> <span class="star"></span
-          ><span class="star"></span>
-        </div>
-        <p class="card__text">
-          "El aroma de lavanda llenó toda mi sala. Una experiencia completamente
-          relajante."
-        </p>
-        <div class="card__author">
-          <div class="card__avatar">AM</div>
-          <div>
-            <p class="card__name">Ana Martínez</p>
-            <p class="card__location">Bogotá</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="card" #cardRef>
-        <div class="card__stars">
-          <span class="star"></span><span class="star"></span
-          ><span class="star"></span> <span class="star"></span
-          ><span class="star"></span>
-        </div>
-        <p class="card__text">
-          "La vela de vainilla es increíble. La enciendo cada noche y dura
-          muchísimo."
-        </p>
-        <div class="card__author">
-          <div class="card__avatar">CR</div>
-          <div>
-            <p class="card__name">Camila Rodríguez</p>
-            <p class="card__location">Medellín</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="card" #cardRef>
-        <div class="card__stars">
-          <span class="star"></span><span class="star"></span
-          ><span class="star"></span> <span class="star"></span
-          ><span class="star"></span>
-        </div>
-        <p class="card__text">
-          "Las regalé en un cumpleaños y todos quedaron encantados. El empaque
-          es hermoso."
-        </p>
-        <div class="card__author">
-          <div class="card__avatar">LP</div>
-          <div>
-            <p class="card__name">Laura Pérez</p>
-            <p class="card__location">Cali</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="card" #cardRef>
-        <div class="card__stars">
-          <span class="star"></span><span class="star"></span
-          ><span class="star"></span> <span class="star"></span
-          ><span class="star"></span>
-        </div>
-        <p class="card__text">
-          "Compré la de sándalo y me transportó. Nunca había sentido algo así
-          con una vela."
-        </p>
-        <div class="card__author">
-          <div class="card__avatar">JS</div>
-          <div>
-            <p class="card__name">Juliana Soto</p>
-            <p class="card__location">Bucaramanga</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="card" #cardRef>
-        <div class="card__stars">
-          <span class="star"></span><span class="star"></span
-          ><span class="star"></span> <span class="star"></span
-          ><span class="star"></span>
-        </div>
-        <p class="card__text">
-          "Producto artesanal de verdad. Se nota el cuidado en cada detalle.
-          Volveré a comprar."
-        </p>
-        <div class="card__author">
-          <div class="card__avatar">MG</div>
-          <div>
-            <p class="card__name">María Gómez</p>
-            <p class="card__location">Barranquilla</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="card" #cardRef>
-        <div class="card__stars">
-          <span class="star"></span><span class="star"></span
-          ><span class="star"></span> <span class="star"></span
-          ><span class="star"></span>
-        </div>
-        <p class="card__text">
-          "El envío llegó súper rápido y bien protegido. La vela de jazmín es mi
-          favorita."
-        </p>
-        <div class="card__author">
-          <div class="card__avatar">VT</div>
-          <div>
-            <p class="card__name">Valeria Torres</p>
-            <p class="card__location">Cartagena</p>
-          </div>
-        </div>
-      </div>
+        </article>
+      }
     </div>
   </div>
 </section>

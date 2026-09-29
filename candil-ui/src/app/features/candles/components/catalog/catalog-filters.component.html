@@ -1,0 +1,154 @@
+<aside class="filters" [class.filters--open]="open()">
+  <div class="filters__backdrop" (click)="closed.emit()" aria-hidden="true"></div>
+
+  <div class="filters__panel" role="dialog" aria-label="Filtros del catálogo">
+    <header class="filters__head">
+      <h2 class="filters__title">
+        <mat-icon>tune</mat-icon>
+        Filtros
+        @if (activeCount() > 0) {
+          <span class="filters__count-chip">{{ activeCount() }}</span>
+        }
+      </h2>
+      <button
+        class="filters__close"
+        type="button"
+        (click)="closed.emit()"
+        aria-label="Cerrar filtros"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </header>
+
+    <form [formGroup]="filtersForm()" class="filters__body">
+      <section class="filter-block">
+        <label class="filter-search">
+          <mat-icon>search</mat-icon>
+          <input
+            type="search"
+            formControlName="search"
+            placeholder="Buscar vela o aroma…"
+            aria-label="Buscar velas"
+          />
+          <button
+            *ngIf="filtersForm().controls.search.value"
+            type="button"
+            class="filter-search__clear"
+            (click)="filtersForm().controls.search.setValue('')"
+            aria-label="Limpiar búsqueda"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+        </label>
+      </section>
+
+      <section class="filter-block">
+        <h3 class="filter-block__title">Categoría</h3>
+        <div class="chip-row">
+          <button
+            type="button"
+            class="chip"
+            [class.chip--active]="!filtersForm().controls.category.value"
+            (click)="filtersForm().controls.category.setValue('')"
+          >
+            Todas
+          </button>
+          @for (category of categories; track category.value) {
+            <button
+              type="button"
+              class="chip"
+              [class.chip--active]="filtersForm().controls.category.value === category.value"
+              (click)="toggleCategory(category.value)"
+            >
+              {{ category.label }}
+            </button>
+          }
+        </div>
+      </section>
+
+      <section class="filter-block">
+        <h3 class="filter-block__title">Familia aromática</h3>
+        <div class="scent-list">
+          @for (family of scentFamilies; track family.value) {
+            <button
+              type="button"
+              class="scent-option"
+              [class.scent-option--active]="filtersForm().controls.scentFamily.value === family.value"
+              (click)="toggleScentFamily(family.value)"
+            >
+              <mat-icon>{{ family.icon }}</mat-icon>
+              {{ family.label }}
+              @if (filtersForm().controls.scentFamily.value === family.value) {
+                <mat-icon class="scent-option__check">check_circle</mat-icon>
+              }
+            </button>
+          }
+        </div>
+      </section>
+
+      <section class="filter-block">
+        <h3 class="filter-block__title">Precio máximo</h3>
+
+        <input
+          type="range"
+          class="price-slider"
+          formControlName="maxPrice"
+          [min]="10000"
+          [max]="priceMax"
+          step="5000"
+        />
+
+        <p class="price-slider__hint">
+          @if (filtersForm().controls.maxPrice.value) {
+            Hasta ${{ filtersForm().controls.maxPrice.value | number: '1.0-0' }}
+          } @else {
+            Cualquier precio
+          }
+        </p>
+      </section>
+
+      <section class="filter-block">
+        <h3 class="filter-block__title">Material</h3>
+        <div class="chip-row">
+          @for (material of materials; track material.value) {
+            <button
+              type="button"
+              class="chip chip--ghost"
+              [class.chip--active]="filtersForm().controls.material.value === material.value"
+              (click)="filtersForm().controls.material.setValue(
+                filtersForm().controls.material.value === material.value ? '' : material.value)"
+            >
+              {{ material.label }}
+            </button>
+          }
+        </div>
+      </section>
+
+      <section class="filter-block">
+        <h3 class="filter-block__title">Característica</h3>
+        <div class="chip-row">
+          @for (feature of features; track feature.value) {
+            <button
+              type="button"
+              class="chip chip--ghost"
+              [class.chip--active]="filtersForm().controls.feature.value === feature.value"
+              (click)="filtersForm().controls.feature.setValue(
+                filtersForm().controls.feature.value === feature.value ? '' : feature.value)"
+            >
+              {{ feature.label }}
+            </button>
+          }
+        </div>
+      </section>
+    </form>
+
+    <footer class="filters__foot">
+      <button class="filters__clear" type="button" (click)="clearAll()">
+        Limpiar todo
+      </button>
+      <button class="filters__apply" type="button" (click)="closed.emit()">
+        Ver {{ activeCount() > 0 ? 'resultados' : 'todo' }}
+      </button>
+    </footer>
+  </div>
+</aside>

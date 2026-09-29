@@ -1,0 +1,23 @@
+<section class="values">
+  <header class="values__header" appRevealOnScroll>
+    <span class="values__eyebrow">Por qué Velas Candil</span>
+    <h2 class="values__title">El lujo de lo <em>hecho a mano</em></h2>
+    <p class="values__lead">
+      No fabricamos velas en serie: creamos pequeñas piezas de luz pensadas
+      para transformar tu hogar en un santuario de aromas y calidez.
+    </p>
+  </header>
+
+  <div class="values__grid">
+    @for (pillar of pillars; track pillar.title; let i = $index) {
+      <article class="value-card" appRevealOnScroll [revealDelay]="i * 110">
+        <div class="value-card__icon-wrap">
+          <mat-icon class="value-card__icon">{{ pillar.icon }}</mat-icon>
+        </div>
+        <h3 class="value-card__title">{{ pillar.title }}</h3>
+        <p class="value-card__desc">{{ pillar.description }}</p>
+        <span class="value-card__glow" aria-hidden="true"></span>
+      </article>
+    }
+  </div>
+</section>

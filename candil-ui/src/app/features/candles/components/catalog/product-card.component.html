@@ -1,0 +1,106 @@
+<article
+  class="card"
+  [routerLink]="['/candles', candle().id]"
+  [style.--stagger-index]="index()"
+  aria-label="Ver {{ candle().name }}"
+>
+  <div class="card__media">
+    @if (imageUrl()) {
+      <img
+        class="card__img"
+        [src]="imageUrl()"
+        [alt]="'Vela artesanal ' + candle().name"
+        loading="lazy"
+      />
+    } @else {
+      <div class="card__no-image">
+        <mat-icon>local_fire_department</mat-icon>
+      </div>
+    }
+
+    <div class="card__badges">
+      @for (badge of badges(); track badge.label) {
+        <span class="badge badge--{{ badge.tone }}">
+          <mat-icon>{{ badge.icon }}</mat-icon>
+          {{ badge.label }}
+        </span>
+      }
+    </div>
+
+    <button
+      class="wishlist-btn"
+      type="button"
+      [class.wishlist-btn--active]="wishlisted()"
+      (click)="onWishlistToggle(); $event.stopPropagation()"
+      [attr.aria-pressed]="wishlisted()"
+      [attr.aria-label]="
+        wishlisted() ? 'Quitar de favoritos' : 'Agregar a favoritos'
+      "
+    >
+      <mat-icon>{{ wishlisted() ? 'favorite' : 'favorite_border' }}</mat-icon>
+    </button>
+
+    <span class="card__view-hint">
+      Ver detalle
+      <mat-icon>visibility</mat-icon>
+    </span>
+  </div>
+
+  <div class="card__body">
+    @if (scentNote()) {
+      <span class="scent-note">
+        <span class="scent-note__dot" aria-hidden="true"></span>
+        Nota: {{ scentNote() }}
+      </span>
+    }
+
+    <h3 class="card__name">{{ candle().name }}</h3>
+
+    @if (categoryLabel() || materialLabel()) {
+      <div class="card__specs">
+        @if (categoryLabel()) {
+          <span class="spec-tag">{{ categoryLabel() }}</span>
+        }
+        @if (materialLabel()) {
+          <span class="spec-tag spec-tag--wax">
+            <mat-icon>eco</mat-icon>
+            {{ materialLabel() }}
+          </span>
+        }
+      </div>
+    }
+
+    <p class="card__desc">{{ candle().description }}</p>
+
+    <div class="card__footer">
+      <div class="card__price-wrap">
+        <span class="card__price">${{ candle().price | number: '1.0-0' }}</span>
+        <span class="card__price-note">IVA incluido</span>
+      </div>
+
+      <button
+        class="add-btn"
+        type="button"
+        [disabled]="soldOut() || adding()"
+        [class.add-btn--success]="adding()"
+        (click)="addToCart.emit(); $event.stopPropagation()"
+        [attr.aria-label]="
+          soldOut()
+            ? candle().name + ' agotada'
+            : 'Agregar ' + candle().name + ' al carrito'
+        "
+      >
+        @if (adding()) {
+          <mat-icon>check</mat-icon>
+          <span>Agregada</span>
+        } @else if (soldOut()) {
+          <mat-icon>block</mat-icon>
+          <span>Agotada</span>
+        } @else {
+          <mat-icon>add_shopping_cart</mat-icon>
+          <span>Agregar</span>
+        }
+      </button>
+    </div>
+  </div>
+</article>

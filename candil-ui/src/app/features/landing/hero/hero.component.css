@@ -1,0 +1,296 @@
+.hero {
+  position: relative;
+  min-height: calc(100svh - 82px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* ── Backdrop image with slow cinematic zoom ── */
+.hero__backdrop {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(
+      to bottom,
+      rgba(26, 18, 10, 0.62),
+      rgba(42, 32, 24, 0.45) 45%,
+      rgba(26, 18, 10, 0.78)
+    ),
+    url('/banner.jpg');
+  background-size: cover;
+  background-position: center;
+  animation: hero-zoom 22s ease-in-out infinite alternate;
+  z-index: -2;
+}
+
+@keyframes hero-zoom {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.08);
+  }
+}
+
+/* ── Floating warm light orbs ── */
+.hero__glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.5;
+  z-index: -1;
+  animation: glow-drift 9s ease-in-out infinite alternate;
+}
+
+.hero__glow--one {
+  width: 420px;
+  height: 420px;
+  left: -120px;
+  bottom: -140px;
+  background: radial-gradient(circle, rgba(212, 162, 78, 0.55), transparent 70%);
+}
+
+.hero__glow--two {
+  width: 320px;
+  height: 320px;
+  right: -80px;
+  top: 10%;
+  background: radial-gradient(circle, rgba(184, 92, 56, 0.4), transparent 70%);
+  animation-delay: -4s;
+}
+
+@keyframes glow-drift {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(30px, -24px, 0) scale(1.12);
+  }
+}
+
+/* ── Content ── */
+.hero__content {
+  position: relative;
+  width: min(760px, 90%);
+  text-align: center;
+  padding: clamp(96px, 14vh, 160px) 0 120px;
+  color: var(--candil-cream);
+}
+
+.hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.72rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--candil-gold);
+  border: 1px solid rgba(212, 162, 78, 0.35);
+  border-radius: 999px;
+  padding: 0.55rem 1.2rem;
+  backdrop-filter: blur(6px);
+  background: rgba(42, 32, 24, 0.25);
+  animation: rise-in 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+.hero__flame {
+  width: 8px;
+  height: 12px;
+  border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%;
+  background: radial-gradient(circle at 50% 30%, #ffd98a, #d4a24e 70%);
+  box-shadow: 0 0 12px 3px rgba(212, 162, 78, 0.65);
+  animation: candil-flicker 2.4s ease-in-out infinite;
+}
+
+.hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(2.6rem, 6.4vw, 4.6rem);
+  font-weight: 400;
+  line-height: 1.08;
+  margin: 1.4rem 0 1.2rem;
+  text-shadow: 0 6px 32px rgba(0, 0, 0, 0.45);
+  animation: rise-in 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.12s both;
+}
+
+.hero__title em {
+  font-style: italic;
+  color: var(--candil-gold);
+}
+
+.hero__subtitle {
+  max-width: 34rem;
+  margin: 0 auto 2.4rem;
+  font-size: clamp(0.95rem, 1.6vw, 1.08rem);
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  line-height: 1.85;
+  color: rgba(255, 253, 249, 0.86);
+  animation: rise-in 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.24s both;
+}
+
+/* ── CTAs ── */
+.hero__actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  animation: rise-in 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.36s both;
+}
+
+.hero__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.85rem 2rem;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease;
+}
+
+.hero__cta mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  transition: transform 0.25s ease;
+}
+
+.hero__cta--primary {
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--candil-amber), var(--candil-terracotta));
+  color: #fff;
+  box-shadow: var(--shadow-amber);
+}
+
+.hero__cta--primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 44px rgba(184, 92, 56, 0.4);
+}
+
+.hero__cta--primary:hover mat-icon {
+  transform: translateX(4px);
+}
+
+.hero__cta--ghost {
+  border: 1px solid rgba(255, 253, 249, 0.45);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--candil-cream);
+}
+
+.hero__cta--ghost:hover {
+  background: rgba(255, 253, 249, 0.12);
+  border-color: rgba(255, 253, 249, 0.8);
+  transform: translateY(-2px);
+}
+
+/* ── Trust chips ── */
+.hero__trust {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px 28px;
+  margin: 2.6rem auto 0;
+  padding: 0;
+  animation: rise-in 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.48s both;
+}
+
+.hero__trust li {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.76rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 253, 249, 0.75);
+}
+
+.hero__trust mat-icon {
+  font-size: 17px;
+  width: 17px;
+  height: 17px;
+  color: var(--candil-gold);
+}
+
+/* ── Scroll indicator ── */
+.hero__scroll {
+  position: absolute;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%);
+  cursor: pointer;
+}
+
+.hero__scroll-line {
+  display: block;
+  width: 1px;
+  height: 52px;
+  background: linear-gradient(to bottom, transparent, rgba(255, 253, 249, 0.85));
+  overflow: hidden;
+  position: relative;
+}
+
+.hero__scroll-line::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent, var(--candil-gold));
+  animation: scroll-hint 2.2s ease-in-out infinite;
+}
+
+@keyframes scroll-hint {
+  0% {
+    transform: translateY(-100%);
+  }
+  55%,
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(26px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .hero {
+    min-height: calc(100svh - 140px);
+  }
+
+  .hero__content {
+    padding-bottom: 96px;
+  }
+
+  .hero__eyebrow {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+  }
+
+  .hero__trust {
+    gap: 8px 18px;
+  }
+
+  .hero__scroll {
+    display: none;
+  }
+}

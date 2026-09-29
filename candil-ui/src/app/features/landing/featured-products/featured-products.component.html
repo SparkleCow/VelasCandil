@@ -1,0 +1,64 @@
+<section class="featured">
+  <header class="featured__header" appRevealOnScroll>
+    <span class="featured__eyebrow">Colección destacada</span>
+    <h2 class="featured__title">Aromas que se <em>convierten en hogar</em></h2>
+    <p class="featured__lead">
+      Nuestras velas más queridas: vertidas a mano, perfumadas con
+      aromaterapia de grado premium y listas para encender tu momento.
+    </p>
+  </header>
+
+  <div class="featured__grid">
+    @for (product of products(); track product.name; let i = $index) {
+      <article
+        class="product-card"
+        appRevealOnScroll
+        [revealDelay]="i * 110"
+        (click)="openDetail(product)"
+      >
+        <div class="product-card__media">
+          <img
+            class="product-card__img"
+            [src]="product.image"
+            [alt]="'Vela artesanal ' + product.name"
+            loading="lazy"
+          />
+          @if (product.id === undefined) {
+            <span class="product-card__badge">Edición firma</span>
+          }
+        </div>
+
+        <div class="product-card__body">
+          <h3 class="product-card__name">{{ product.name }}</h3>
+
+          @if (product.description) {
+            <p class="product-card__desc">{{ product.description }}</p>
+          }
+
+          <div class="product-card__footer">
+            @if (product.price !== null) {
+              <span class="product-card__price">
+                {{ product.price | currency: 'COP' : 'symbol' : '1.0-0' }}
+              </span>
+            } @else {
+              <span class="product-card__price">Desde $38.900</span>
+            }
+            <button
+              class="product-card__cta"
+              type="button"
+              [attr.aria-label]="'Ver ' + product.name"
+              (click)="openDetail(product); $event.stopPropagation()"
+            >
+              Ver detalle
+              <mat-icon>arrow_forward</mat-icon>
+            </button>
+          </div>
+        </div>
+      </article>
+    }
+  </div>
+
+  <footer class="featured__footer" appRevealOnScroll>
+    <a routerLink="/candles" class="featured__all-btn">Explorar todo el catálogo</a>
+  </footer>
+</section>

@@ -1,0 +1,62 @@
+<header class="catalog-header" appRevealOnScroll>
+  <span class="catalog-header__eyebrow">Nuestra colección</span>
+
+  <div class="catalog-header__row">
+    <div class="catalog-header__intro">
+      <h1 class="catalog-header__title">
+        Catálogo de <em>velas</em>
+      </h1>
+      <p class="catalog-header__subtitle">
+        Cada llama cuenta una historia. Encuentra la tuya entre aromas
+        vertidos a mano.
+      </p>
+    </div>
+
+    <div class="catalog-header__controls">
+      @if (total() > 0) {
+        <p class="catalog-header__count">
+          Mostrando
+          <strong>{{ shown() }}</strong> de
+          <strong>{{ total() }}</strong> velas
+        </p>
+      }
+
+      <div class="catalog-header__tools">
+        <label class="sorter">
+          <mat-icon class="sorter__icon">swap_vert</mat-icon>
+          <span class="sorter__label">Ordenar</span>
+          <select
+            class="sorter__select"
+            [value]="sort()"
+            (change)="onSortChange($event)"
+            aria-label="Ordenar productos"
+          >
+            @for (option of sortOptions; track option.value) {
+              <option [value]="option.value">{{ option.label }}</option>
+            }
+          </select>
+          <mat-icon class="sorter__chevron">expand_more</mat-icon>
+        </label>
+
+        <div class="density-toggle" role="group" aria-label="Densidad de la cuadrícula">
+          <button
+            class="density-toggle__btn"
+            [class.active]="density() === 'comfy'"
+            (click)="densityChange.emit('comfy')"
+            aria-label="Vista amplia"
+          >
+            <mat-icon>grid_view</mat-icon>
+          </button>
+          <button
+            class="density-toggle__btn"
+            [class.active]="density() === 'cozy'"
+            (click)="densityChange.emit('cozy')"
+            aria-label="Vista compacta"
+          >
+            <mat-icon>view_comfy</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>

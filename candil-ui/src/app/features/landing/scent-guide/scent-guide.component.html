@@ -1,0 +1,34 @@
+<section class="scents">
+  <header class="scents__header" appRevealOnScroll>
+    <span class="scents__eyebrow">Guía de aromas</span>
+    <h2 class="scents__title">Un aroma para cada <em>emoción</em></h2>
+    <p class="scents__lead">
+      Seis familias olfativas, seis formas de habitar tu espacio. Pasa el
+      cursor y descubre cuál es la tuya.
+    </p>
+  </header>
+
+  <div class="scents__grid">
+    @for (scent of scents; track scent.name; let i = $index) {
+      <article
+        class="scent-card"
+        appRevealOnScroll
+        [revealDelay]="i * 90"
+        [style.--scent-accent]="scent.accent"
+      >
+        <div class="scent-card__halo" aria-hidden="true"></div>
+        <mat-icon class="scent-card__icon">{{ scent.icon }}</mat-icon>
+        <h3 class="scent-card__name">{{ scent.name }}</h3>
+        <p class="scent-card__notes">{{ scent.notes }}</p>
+        <p class="scent-card__mood">{{ scent.mood }}</p>
+      </article>
+    }
+  </div>
+
+  <footer class="scents__footer" appRevealOnScroll>
+    <button class="scents__cta" type="button" (click)="explore()">
+      Encuentra tu aroma
+      <mat-icon>arrow_forward</mat-icon>
+    </button>
+  </footer>
+</section>

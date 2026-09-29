@@ -1,328 +1,527 @@
 <div class="create-page">
-  <div class="auth-layout">
-    <section class="auth-form-panel">
-      <mat-card class="auth-card">
-        <header class="page-header">
-          <p class="overline">Inventario</p>
+  <div class="create-card" appRevealOnScroll>
+    <header class="create-header">
+      <p class="create-header__eyebrow">Inventario &middot; Taller Candil</p>
+      <h1 class="create-header__title">Crear Nueva Vela Artesanal</h1>
+      <p class="create-header__subtitle">
+        Define la identidad sensorial, la composición y la imagen de tu próxima
+        pieza.
+      </p>
+    </header>
 
-          <h1 class="title">Crear vela</h1>
-
-          <p class="subtitle">
-            Registra un nuevo producto para la tienda completando la
-            información, imágenes e ingredientes.
-          </p>
-        </header>
-
-        <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
-          <!-- ================= DATOS GENERALES ================= -->
-
-          <section class="section-card">
-            <div class="section-header">
-              <div>
-                <h2>Información general</h2>
-                <p>Información básica del producto.</p>
-              </div>
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <div class="sections">
+        <!-- 01 · Información básica -->
+        <section class="section">
+          <header class="section__header">
+            <span class="section__num">01</span>
+            <div>
+              <h2 class="section__title">Información Básica</h2>
+              <p class="section__desc">Nombre comercial e inventario inicial.</p>
             </div>
+          </header>
 
-            <div class="form-grid">
-              <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Nombre</mat-label>
-
-                <input matInput formControlName="name" />
-
-                <mat-error *ngIf="form.controls.name.hasError('required')">
-                  El nombre es obligatorio.
-                </mat-error>
-              </mat-form-field>
-
-              <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Stock</mat-label>
-
-                <input matInput type="number" min="0" formControlName="stock" />
-
-                <mat-error *ngIf="form.controls.stock.hasError('required')">
-                  El stock es obligatorio.
-                </mat-error>
-              </mat-form-field>
-            </div>
-
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Descripción</mat-label>
-
-              <textarea
-                matInput
-                rows="5"
-                formControlName="description"
-              ></textarea>
-
-              <mat-error *ngIf="form.controls.description.hasError('required')">
-                La descripción es obligatoria.
-              </mat-error>
-            </mat-form-field>
-          </section>
-
-          <!-- ================= IMAGEN PRINCIPAL ================= -->
-
-          <section class="section-card">
-            <div class="section-header">
-              <div>
-                <h2>Imagen principal</h2>
-                <p>
-                  Será la imagen destacada del producto dentro del catálogo.
-                </p>
-              </div>
-            </div>
-
-            <div class="upload-area">
+          <div class="field-row">
+            <div class="field">
+              <label class="field__label" for="candle-name">Nombre</label>
               <input
-                type="file"
-                accept="image/*"
-                (change)="onPrincipalImageChange($event)"
+                id="candle-name"
+                class="field__input"
+                type="text"
+                formControlName="name"
+                placeholder="Ej. Vainilla &amp; Ámbar"
               />
-
-              @if (principalImageFile(); as file) {
-                <div class="file-card">
-                  <div class="file-info">
-                    <strong>{{ file.name }}</strong>
-
-                    <span>Imagen lista para cargar.</span>
-                  </div>
-                </div>
-              } @else {
-                <div class="upload-placeholder">
-                  <mat-icon>image</mat-icon>
-
-                  <span> Selecciona la imagen principal de la vela. </span>
-                </div>
+              @if (
+                form.controls.name.touched && form.controls.name.hasError('required')
+              ) {
+                <p class="field__error">El nombre es obligatorio.</p>
+              } @else if (
+                form.controls.name.touched && form.controls.name.hasError('maxlength')
+              ) {
+                <p class="field__error">Máximo 120 caracteres.</p>
               }
             </div>
-          </section>
 
-          <!-- ================= CLASIFICACIÓN ================= -->
-
-          <section class="section-card">
-            <div class="section-header">
-              <div>
-                <h2>Clasificación</h2>
-                <p>Organiza la vela dentro del catálogo de la tienda.</p>
-              </div>
-            </div>
-
-            <div class="form-grid">
-              <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Materiales</mat-label>
-
-                <mat-select formControlName="materialEnums" multiple>
-                  @for (item of materials; track item.value) {
-                    <mat-option [value]="item.value">
-                      {{ item.label }}
-                    </mat-option>
-                  }
-                </mat-select>
-              </mat-form-field>
-
-              <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Categorías</mat-label>
-
-                <mat-select formControlName="categories" multiple>
-                  @for (item of categories; track item.value) {
-                    <mat-option [value]="item.value">
-                      {{ item.label }}
-                    </mat-option>
-                  }
-                </mat-select>
-              </mat-form-field>
-            </div>
-
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Características</mat-label>
-
-              <mat-select formControlName="featureEnums" multiple>
-                @for (item of features; track item.value) {
-                  <mat-option [value]="item.value">
-                    {{ item.label }}
-                  </mat-option>
-                }
-              </mat-select>
-            </mat-form-field>
-
-            <div class="chip-block">
-              <h3>Selecciones</h3>
-
-              <mat-chip-set>
-                @for (item of form.controls.materialEnums.value; track item) {
-                  <mat-chip>
-                    {{ getLabel(item, materials) }}
-                  </mat-chip>
-                }
-
-                @for (item of form.controls.categories.value; track item) {
-                  <mat-chip>
-                    {{ getLabel(item, categories) }}
-                  </mat-chip>
-                }
-
-                @for (item of form.controls.featureEnums.value; track item) {
-                  <mat-chip>
-                    {{ getLabel(item, features) }}
-                  </mat-chip>
-                }
-              </mat-chip-set>
-            </div>
-          </section>
-          <!-- ================= IMÁGENES ADICIONALES ================= -->
-
-          <section class="section-card">
-            <div class="section-header">
-              <div>
-                <h2>Imágenes adicionales</h2>
-                <p>
-                  Agrega fotografías complementarias para mostrar mejor el
-                  producto.
-                </p>
-              </div>
-            </div>
-
-            <div class="upload-area">
+            <div class="field">
+              <label class="field__label" for="candle-stock">Stock Inicial</label>
               <input
-                type="file"
-                accept="image/*"
-                multiple
-                (change)="onAdditionalImagesChange($event)"
+                id="candle-stock"
+                class="field__input"
+                type="number"
+                formControlName="stock"
+                min="0"
+                step="1"
+                placeholder="0"
               />
-            </div>
-
-            <div class="list-wrap">
-              @for (
-                file of additionalImageFiles();
-                track file;
-                let i = $index
+              @if (
+                form.controls.stock.touched && form.controls.stock.hasError('required')
               ) {
-                <div class="list-row">
-                  <div class="list-info">
-                    <mat-icon>image</mat-icon>
+                <p class="field__error">Define el stock inicial.</p>
+              } @else if (
+                form.controls.stock.touched && form.controls.stock.hasError('min')
+              ) {
+                <p class="field__error">No puede ser negativo.</p>
+              }
+            </div>
+          </div>
+        </section>
 
-                    <span>{{ file.name }}</span>
-                  </div>
+        <!-- 02 · Sensorial & categorización -->
+        <section class="section">
+          <header class="section__header">
+            <span class="section__num">02</span>
+            <div>
+              <h2 class="section__title">Experiencia Sensorial</h2>
+              <p class="section__desc">
+                Descripción, familia aromática y materiales.
+              </p>
+            </div>
+          </header>
 
+          <div class="field field--full">
+            <div class="field__label-row">
+              <label class="field__label" for="candle-description">Descripción</label>
+              <span class="field__counter">
+                {{ form.controls.description.value.length }}/900
+              </span>
+            </div>
+            <textarea
+              id="candle-description"
+              class="field__input field__textarea"
+              rows="4"
+              formControlName="description"
+              maxlength="900"
+              placeholder="Cuenta la historia de esta vela: sus notas, su luz, el momento que acompaña…"
+            ></textarea>
+            @if (
+              form.controls.description.touched &&
+              form.controls.description.hasError('required')
+            ) {
+              <p class="field__error">La descripción es obligatoria.</p>
+            }
+          </div>
+
+          <!-- Categorías -->
+          <div class="msel" (click)="$event.stopPropagation()">
+            <span class="field__label">Categorías</span>
+            <button
+              type="button"
+              class="msel__trigger"
+              [class.msel__trigger--open]="openMenu() === 'categories'"
+              [class.msel__trigger--invalid]="
+                form.controls.categories.touched &&
+                form.controls.categories.hasError('required')
+              "
+              (click)="toggleMenu('categories')"
+            >
+              <span>{{
+                form.controls.categories.value.length
+                  ? form.controls.categories.value.length + ' seleccionadas'
+                  : 'Selecciona una o más'
+              }}</span>
+              <span class="material-icons msel__chevron">expand_more</span>
+            </button>
+
+            @if (openMenu() === 'categories') {
+              <div class="msel__panel">
+                @for (item of categories; track item.value) {
                   <button
                     type="button"
-                    mat-icon-button
-                    (click)="removeAdditionalImage(i)"
-                    aria-label="Eliminar imagen"
+                    class="msel__option"
+                    [class.msel__option--active]="
+                      isSelected(form.controls.categories, item.value)
+                    "
+                    (click)="toggleCategory(item.value)"
                   >
-                    <mat-icon>delete</mat-icon>
+                    <span class="msel__checkbox">
+                      <span class="material-icons">check</span>
+                    </span>
+                    {{ item.label }}
                   </button>
-                </div>
-              } @empty {
-                <p class="empty-text">
-                  Aún no has agregado imágenes adicionales.
-                </p>
+                }
+              </div>
+            }
+
+            @if (
+              form.controls.categories.touched &&
+              form.controls.categories.hasError('required')
+            ) {
+              <p class="field__error">Elige al menos una categoría.</p>
+            }
+
+            @if (form.controls.categories.value.length) {
+              <div class="pill-row">
+                @for (item of form.controls.categories.value; track item) {
+                  <span class="pill">
+                    {{ getLabel(item, categories) }}
+                    <button
+                      type="button"
+                      class="pill__remove"
+                      aria-label="Quitar categoría"
+                      (click)="toggleCategory(item)"
+                    >
+                      &times;
+                    </button>
+                  </span>
+                }
+              </div>
+            }
+          </div>
+
+          <!-- Familia sensorial -->
+          <div class="msel" (click)="$event.stopPropagation()">
+            <span class="field__label">Familia Sensorial</span>
+            <button
+              type="button"
+              class="msel__trigger"
+              [class.msel__trigger--open]="openMenu() === 'features'"
+              [class.msel__trigger--invalid]="
+                form.controls.featureEnums.touched &&
+                form.controls.featureEnums.hasError('required')
+              "
+              (click)="toggleMenu('features')"
+            >
+              <span>{{
+                form.controls.featureEnums.value.length
+                  ? form.controls.featureEnums.value.length + ' seleccionadas'
+                  : 'Aromaterapia, relajación…'
+              }}</span>
+              <span class="material-icons msel__chevron">expand_more</span>
+            </button>
+
+            @if (openMenu() === 'features') {
+              <div class="msel__panel">
+                @for (item of features; track item.value) {
+                  <button
+                    type="button"
+                    class="msel__option"
+                    [class.msel__option--active]="
+                      isSelected(form.controls.featureEnums, item.value)
+                    "
+                    (click)="toggleFeature(item.value)"
+                  >
+                    <span class="msel__checkbox">
+                      <span class="material-icons">check</span>
+                    </span>
+                    {{ item.label }}
+                  </button>
+                }
+              </div>
+            }
+
+            @if (
+              form.controls.featureEnums.touched &&
+              form.controls.featureEnums.hasError('required')
+            ) {
+              <p class="field__error">Elige al menos una característica.</p>
+            }
+
+            @if (form.controls.featureEnums.value.length) {
+              <div class="pill-row">
+                @for (item of form.controls.featureEnums.value; track item) {
+                  <span class="pill">
+                    {{ getLabel(item, features) }}
+                    <button
+                      type="button"
+                      class="pill__remove"
+                      aria-label="Quitar característica"
+                      (click)="toggleFeature(item)"
+                    >
+                      &times;
+                    </button>
+                  </span>
+                }
+              </div>
+            }
+          </div>
+
+          <!-- Materiales -->
+          <div class="msel" (click)="$event.stopPropagation()">
+            <span class="field__label">Materiales / Cera</span>
+            <button
+              type="button"
+              class="msel__trigger"
+              [class.msel__trigger--open]="openMenu() === 'materials'"
+              [class.msel__trigger--invalid]="
+                form.controls.materialEnums.touched &&
+                form.controls.materialEnums.hasError('required')
+              "
+              (click)="toggleMenu('materials')"
+            >
+              <span>{{
+                form.controls.materialEnums.value.length
+                  ? form.controls.materialEnums.value.length + ' seleccionados'
+                  : 'Cera de soya, esencias…'
+              }}</span>
+              <span class="material-icons msel__chevron">expand_more</span>
+            </button>
+
+            @if (openMenu() === 'materials') {
+              <div class="msel__panel">
+                @for (item of materials; track item.value) {
+                  <button
+                    type="button"
+                    class="msel__option"
+                    [class.msel__option--active]="
+                      isSelected(form.controls.materialEnums, item.value)
+                    "
+                    (click)="toggleMaterial(item.value)"
+                  >
+                    <span class="msel__checkbox">
+                      <span class="material-icons">check</span>
+                    </span>
+                    {{ item.label }}
+                  </button>
+                }
+              </div>
+            }
+
+            @if (
+              form.controls.materialEnums.touched &&
+              form.controls.materialEnums.hasError('required')
+            ) {
+              <p class="field__error">Elige al menos un material.</p>
+            }
+
+            @if (form.controls.materialEnums.value.length) {
+              <div class="pill-row">
+                @for (item of form.controls.materialEnums.value; track item) {
+                  <span class="pill">
+                    {{ getLabel(item, materials) }}
+                    <button
+                      type="button"
+                      class="pill__remove"
+                      aria-label="Quitar material"
+                      (click)="toggleMaterial(item)"
+                    >
+                      &times;
+                    </button>
+                  </span>
+                }
+              </div>
+            }
+          </div>
+        </section>
+
+        <!-- 03 · Composición -->
+        <section class="section">
+          <header class="section__header">
+            <span class="section__num">03</span>
+            <div>
+              <h2 class="section__title">Composición &amp; Producción</h2>
+              <p class="section__desc">
+                Ingredientes del taller con su cantidad por unidad.
+              </p>
+            </div>
+          </header>
+
+          <div class="ing-draft" [formGroup]="ingredientDraftForm">
+            <div class="field ing-draft__select-field">
+              <label class="field__label" for="draft-ingredient">Ingrediente</label>
+              <div class="select-wrap">
+                <select
+                  id="draft-ingredient"
+                  class="field__input field__input--select"
+                  formControlName="ingredientId"
+                >
+                  <option [ngValue]="null">Selecciona un ingrediente…</option>
+                  @for (opt of ingredientOptions(); track opt.id) {
+                    <option [ngValue]="opt.id">
+                      {{ opt.ingredientName }} &middot; {{ opt.ingredientUnit }}
+                    </option>
+                  }
+                </select>
+                <span class="material-icons select-wrap__chevron">expand_more</span>
+              </div>
+              @if (
+                ingredientDraftForm.controls.ingredientId.touched &&
+                ingredientDraftForm.controls.ingredientId.invalid
+              ) {
+                <p class="field__error">Selecciona un ingrediente.</p>
               }
             </div>
-          </section>
 
-          <!-- ================= INGREDIENTES ================= -->
-
-          <section class="section-card">
-            <div class="section-header">
-              <div>
-                <h2>Ingredientes</h2>
-                <p>Agrega los materiales necesarios para fabricar la vela.</p>
-              </div>
+            <div class="field ing-draft__amount-field">
+              <label class="field__label" for="draft-amount">Cantidad</label>
+              <input
+                id="draft-amount"
+                class="field__input"
+                type="number"
+                formControlName="amount"
+                min="0.01"
+                step="0.01"
+                placeholder="0.00"
+              />
+              @if (
+                ingredientDraftForm.controls.amount.touched &&
+                ingredientDraftForm.controls.amount.invalid
+              ) {
+                <p class="field__error">Cantidad mayor a 0.</p>
+              }
             </div>
 
-            <div class="ingredient-grid" [formGroup]="ingredientDraftForm">
-              <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Ingrediente</mat-label>
+            <button
+              type="button"
+              class="btn btn--soft ing-draft__add"
+              (click)="addIngredient()"
+            >
+              <span class="material-icons btn__icon">add</span>
+              Agregar
+            </button>
+          </div>
 
-                <mat-select formControlName="ingredientId">
-                  <mat-option [value]="null">
-                    Selecciona un ingrediente
-                  </mat-option>
+          @if (ingredientsArray.length) {
+            <ul class="ing-list">
+              @for (ing of ingredientsArray.controls; track $index) {
+                <li class="ing-item">
+                  <span class="material-icons ing-item__icon">spa</span>
+                  <span class="ing-item__name">{{ ingredientName(ing.getRawValue().ingredientId) }}</span>
+                  <span class="ing-item__amount">{{ ing.getRawValue().amount }}</span>
+                  <button
+                    type="button"
+                    class="ing-item__remove"
+                    aria-label="Quitar ingrediente"
+                    (click)="removeIngredient($index)"
+                  >
+                    <span class="material-icons">close</span>
+                  </button>
+                </li>
+              }
+            </ul>
+          } @else {
+            <p class="empty-hint">
+              Aún no hay ingredientes. Agrega ceras, esencias o contenedores para
+              calcular la producción.
+            </p>
+          }
+        </section>
 
-                  @for (item of ingredientOptions(); track item.id) {
-                    <mat-option [value]="item.id">
-                      {{ item.ingredientName }}
-                      ({{ item.ingredientUnit }})
-                    </mat-option>
-                  }
-                </mat-select>
-              </mat-form-field>
+        <!-- 04 · Imagen -->
+        <section class="section">
+          <header class="section__header">
+            <span class="section__num">04</span>
+            <div>
+              <h2 class="section__title">Imagen del Producto</h2>
+              <p class="section__desc">
+                Una buena fotografía vende la calidez antes de encenderla.
+              </p>
+            </div>
+          </header>
 
-              <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Cantidad</mat-label>
+          <input
+            #principalInput
+            type="file"
+            accept="image/*"
+            hidden
+            (change)="onPrincipalImageChange($event)"
+          />
 
-                <input
-                  matInput
-                  type="number"
-                  min="0.01"
-                  step="0.01"
-                  formControlName="amount"
-                />
-              </mat-form-field>
+          @if (principalPreview(); as src) {
+            <figure class="preview">
+              <img [src]="src" alt="Vista previa de la imagen principal" />
+              <figcaption class="preview__meta">
+                <strong class="preview__name">{{ principalImageFile()?.name }}</strong>
+                <span class="preview__status">Imagen principal lista</span>
+              </figcaption>
+              <div class="preview__actions">
+                <button
+                  type="button"
+                  class="preview__change"
+                  (click)="principalInput.click()"
+                >
+                  Cambiar
+                </button>
+                <button
+                  type="button"
+                  class="preview__remove"
+                  aria-label="Quitar imagen"
+                  (click)="clearPrincipalImage()"
+                >
+                  <span class="material-icons">delete_outline</span>
+                </button>
+              </div>
+            </figure>
+          } @else {
+            <div
+              class="dropzone"
+              role="button"
+              tabindex="0"
+              [class.dropzone--drag]="dragging()"
+              (click)="principalInput.click()"
+              (keydown.enter)="principalInput.click()"
+              (dragover)="onDragOver($event)"
+              (dragleave)="onDragLeave($event)"
+              (drop)="onPrincipalDrop($event)"
+            >
+              <span class="dropzone__glow"></span>
+              <span class="material-icons dropzone__icon">cloud_upload</span>
+              <p class="dropzone__title">Arrastra tu imagen aquí</p>
+              <p class="dropzone__hint">o haz clic para explorar &middot; JPG, PNG o WebP</p>
+              <span class="dropzone__cta">Seleccionar archivo</span>
+            </div>
+          }
 
+          <div class="extra-images">
+            <div class="extra-images__head">
+              <span class="field__label">Fotografías adicionales</span>
               <button
                 type="button"
-                mat-raised-button
-                color="primary"
-                (click)="addIngredient()"
+                class="link-btn"
+                (click)="additionalInput.click()"
               >
-                Agregar
+                <span class="material-icons link-btn__icon">add_photo_alternate</span>
+                Añadir
               </button>
             </div>
 
-            <div class="ingredient-list" formArrayName="ingredients">
-              @for (
-                item of ingredientsArray.controls;
-                track item;
-                let i = $index
-              ) {
-                <div class="ingredient-card">
-                  <div class="ingredient-content">
-                    <div class="ingredient-title">
-                      {{ ingredientName(item.controls.ingredientId.value) }}
-                    </div>
+            <input
+              #additionalInput
+              type="file"
+              accept="image/*"
+              multiple
+              hidden
+              (change)="onAdditionalImagesChange($event)"
+            />
 
-                    <div class="ingredient-subtitle">
-                      Cantidad:
-                      <strong>
-                        {{ item.controls.amount.value }}
-                      </strong>
-                    </div>
-                  </div>
-
-                  <button
-                    type="button"
-                    mat-icon-button
-                    color="warn"
-                    (click)="removeIngredient(i)"
-                    aria-label="Eliminar ingrediente"
-                  >
-                    <mat-icon> delete </mat-icon>
-                  </button>
-                </div>
-              } @empty {
-                <p class="empty-text">Aún no hay ingredientes agregados.</p>
-              }
-            </div>
-          </section>
-
-          <!-- ================= ACCIONES ================= -->
-
-          <div class="actions">
-            <button
-              mat-raised-button
-              color="primary"
-              class="submit-button"
-              type="submit"
-              [disabled]="creating()"
-            >
-              {{ creating() ? "Creando..." : "Crear vela" }}
-            </button>
+            @if (additionalPreviews().length) {
+              <div class="thumb-grid">
+                @for (url of additionalPreviews(); track $index) {
+                  <figure class="thumb">
+                    <img [src]="url" alt="Fotografía adicional {{ $index + 1 }}" />
+                    <button
+                      type="button"
+                      class="thumb__remove"
+                      aria-label="Quitar fotografía"
+                      (click)="removeAdditionalImage($index)"
+                    >
+                      <span class="material-icons">close</span>
+                    </button>
+                  </figure>
+                }
+              </div>
+            } @else {
+              <p class="empty-hint empty-hint--compact">
+                Opcional: hasta 5 fotos de detalle, textura o empaque.
+              </p>
+            }
           </div>
-        </form>
-      </mat-card>
-    </section>
+        </section>
+      </div>
+
+      <footer class="actions">
+        <button type="button" class="btn btn--ghost" (click)="cancel()">
+          Cancelar
+        </button>
+        <button type="submit" class="btn btn--primary" [disabled]="creating()">
+          @if (creating()) {
+            <span class="spinner"></span>
+            Guardando…
+          } @else {
+            <span class="material-icons btn__icon">local_fire_department</span>
+            Guardar Vela
+          }
+        </button>
+      </footer>
+    </form>
   </div>
 </div>

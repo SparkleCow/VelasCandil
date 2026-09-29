@@ -1,0 +1,206 @@
+.scents {
+  background:
+    radial-gradient(ellipse 60% 50% at 80% 10%, rgba(160, 120, 64, 0.16), transparent),
+    radial-gradient(ellipse 50% 40% at 12% 90%, rgba(184, 92, 56, 0.1), transparent),
+    var(--candil-charcoal);
+  padding: var(--section-y) 0;
+}
+
+.scents__header {
+  width: var(--container);
+  text-align: center;
+  max-width: 620px;
+  margin: 0 auto clamp(40px, 6vw, 64px);
+}
+
+.scents__eyebrow {
+  display: block;
+  font-size: 0.68rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--candil-gold);
+  margin-bottom: 14px;
+}
+
+.scents__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 3.8vw, 2.6rem);
+  font-weight: 400;
+  line-height: 1.15;
+  color: #f4ecdd;
+  margin: 0 0 18px;
+}
+
+.scents__title em {
+  font-style: italic;
+  color: var(--candil-gold);
+}
+
+.scents__lead {
+  font-size: 0.94rem;
+  font-weight: 300;
+  line-height: 1.85;
+  color: rgba(244, 236, 221, 0.62);
+  margin: 0;
+}
+
+/* ── Grid ── */
+.scents__grid {
+  width: var(--container);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+/* ── Scent card ── */
+.scent-card {
+  --scent-accent: var(--candil-gold);
+
+  position: relative;
+  overflow: hidden;
+  padding: 34px 26px 30px;
+  border: 1px solid rgba(212, 162, 78, 0.16);
+  border-radius: 12px;
+  background: rgba(255, 253, 249, 0.035);
+  backdrop-filter: blur(4px);
+  transition:
+    transform 0.4s cubic-bezier(0.22, 0.61, 0.36, 1),
+    background 0.35s ease,
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+.scent-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--scent-accent);
+  background: rgba(255, 253, 249, 0.06);
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.35);
+}
+
+.scent-card__halo {
+  position: absolute;
+  top: -70px;
+  right: -70px;
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--scent-accent), transparent 72%);
+  opacity: 0.12;
+  filter: blur(28px);
+  transition: opacity 0.4s ease, transform 0.5s ease;
+}
+
+.scent-card:hover .scent-card__halo {
+  opacity: 0.32;
+  transform: scale(1.25);
+}
+
+.scent-card__icon {
+  position: relative;
+  font-size: 30px !important;
+  width: 30px !important;
+  height: 30px !important;
+  color: var(--scent-accent);
+  margin-bottom: 18px;
+  filter: drop-shadow(0 0 10px color-mix(in srgb, var(--scent-accent) 55%, transparent));
+  transition: transform 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.scent-card:hover .scent-card__icon {
+  transform: translateY(-3px) scale(1.08);
+}
+
+.scent-card__name {
+  position: relative;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.22rem;
+  color: #f4ecdd;
+  margin: 0 0 8px;
+}
+
+.scent-card__notes {
+  position: relative;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(212, 162, 78, 0.85);
+  margin: 0 0 14px;
+}
+
+/* Mood reveals with a soft rise on hover */
+.scent-card__mood {
+  position: relative;
+  font-size: 0.82rem;
+  font-weight: 300;
+  line-height: 1.7;
+  color: rgba(244, 236, 221, 0.58);
+  margin: 0;
+  opacity: 0.75;
+  transform: translateY(4px);
+  transition:
+    opacity 0.4s ease,
+    transform 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.scent-card:hover .scent-card__mood {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── CTA ── */
+.scents__footer {
+  text-align: center;
+  margin-top: clamp(40px, 5vw, 60px);
+}
+
+.scents__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0.9rem 2.4rem;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--candil-amber), var(--candil-terracotta));
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 0.76rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 12px 30px rgba(160, 120, 64, 0.35);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.scents__cta mat-icon {
+  font-size: 17px;
+  width: 17px;
+  height: 17px;
+  transition: transform 0.3s ease;
+}
+
+.scents__cta:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 44px rgba(184, 92, 56, 0.45);
+}
+
+.scents__cta:hover mat-icon {
+  transform: translateX(4px);
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .scents__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .scents__grid {
+    grid-template-columns: 1fr;
+  }
+}

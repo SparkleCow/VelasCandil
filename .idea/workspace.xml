@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="26196209-976d-46ef-afc3-1b42d1d5129b" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/candil-ui/angular.json" beforeDir="false" afterPath="$PROJECT_DIR$/candil-ui/angular.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/candil-ui/src/app/features/about/about.component.css" beforeDir="false" afterPath="$PROJECT_DIR$/candil-ui/src/app/features/about/about.component.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/candil-ui/src/app/features/about/about.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/candil-ui/src/app/features/about/about.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/candil-ui/src/app/features/about/about.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/candil-ui/src/app/features/about/about.component.spec.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/candil-ui/src/app/features/about/about.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/candil-ui/src/app/features/about/about.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/candil-ui/src/app/features/candles/pages/candle-create/candle-create.component.css" beforeDir="false" afterPath="$PROJECT_DIR$/candil-ui/src/app/features/candles/pages/candle-create/candle-create.component.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/candil-ui/src/app/features/candles/pages/candle-create/candle-create.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/candil-ui/src/app/features/candles/pages/candle-create/candle-create.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/candil-ui/src/app/features/candles/pages/candle-create/candle-create.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/candil-ui/src/app/features/candles/pages/candle-create/candle-create.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/candil-ui/src/app/features/candles/pages/candle-list/candle-list.component.css" beforeDir="false" afterPath="$PROJECT_DIR$/candil-ui/src/app/features/candles/pages/candle-list/candle-list.component.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/candil-ui/src/app/features/candles/pages/candle-list/candle-list.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/candil-ui/src/app/features/candles/pages/candle-list/candle-list.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/candil-ui/src/app/features/candles/pages/candle-list/candle-list.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/candil-ui/src/app/features/candles/pages/candle-list/candle-list.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/candil-ui/src/app/features/candles/pages/home/home.component.css" beforeDir="false" afterPath="$PROJECT_DIR$/candil-ui/src/app/features/candles/pages/home/home.component.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/candil-ui/src/app/features/candles/pages/home/home.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/candil-ui/src/app/features/candles/pages/home/home.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/candil-ui/src/app/features/candles/pages/home/home.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/candil-ui/src/app/features/candles/pages/home/home.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/candil-ui/src/app/features/testimonials/testimonials.component.css" beforeDir="false" afterPath="$PROJECT_DIR$/candil-ui/src/app/features/testimonials/testimonials.component.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/candil-ui/src/app/features/testimonials/testimonials.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/candil-ui/src/app/features/testimonials/testimonials.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/candil-ui/src/app/features/testimonials/testimonials.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/candil-ui/src/app/features/testimonials/testimonials.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/candil-ui/src/app/shared/components/footer/footer.component.css" beforeDir="false" afterPath="$PROJECT_DIR$/candil-ui/src/app/shared/components/footer/footer.component.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/candil-ui/src/app/shared/components/footer/footer.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/candil-ui/src/app/shared/components/footer/footer.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/candil-ui/src/app/shared/components/footer/footer.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/candil-ui/src/app/shared/components/footer/footer.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/candil-ui/src/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/candil-ui/src/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/candil-ui/src/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/candil-ui/src/styles.css" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DBNavigator.Project.Workspace.Settings">
+    <assistant-settings>
+      <credential-settings>
+        <credentials />
+      </credential-settings>
+      <profile-settings>
+        <profiles />
+      </profile-settings>
+      <mcp-server-settings>
+        <workspace-integration value="false" />
+        <mcp-servers />
+        <mcp-tool-approvals />
+      </mcp-server-settings>
+    </assistant-settings>
+  </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="22462" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 2,
+  "fromUser": false
+}]]></component>
+  <component name="ProjectId" id="3IFbIHfiQtYm4ntne4Z6ClDauha" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "main",
+    "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/sparklecow/Documentos/VelasCandilADSO",
+    "to.speed.mode.migration.done": "true"
+  }
+}]]></component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="26196209-976d-46ef-afc3-1b42d1d5129b" name="Changes" comment="" />
+      <created>1787363182960</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1787363182960</updated>
+    </task>
+    <servers />
+  </component>
+</project>

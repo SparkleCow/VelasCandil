@@ -1,0 +1,51 @@
+<section class="hero" id="inicio">
+  <div class="hero__backdrop" aria-hidden="true"></div>
+  <div class="hero__glow hero__glow--one" aria-hidden="true"></div>
+  <div class="hero__glow hero__glow--two" aria-hidden="true"></div>
+
+  <div class="hero__content">
+    <span class="hero__eyebrow">
+      <span class="hero__flame" aria-hidden="true"></span>
+      Artesanal · Cera de soya 100% ecológica
+    </span>
+
+    <h1 class="hero__title">
+      Ilumina tu hogar,<br />
+      despierta tus <em>sentidos</em>
+    </h1>
+
+    <p class="hero__subtitle">
+      Velas vertidas a mano en pequeños lotes, con fragancias de aromaterapia
+      que convierten cada rincón en un refugio de calidez y calma.
+    </p>
+
+    <div class="hero__actions">
+      <button class="hero__cta hero__cta--primary" (click)="goToCatalog()">
+        Descubrir la colección
+        <mat-icon>arrow_forward</mat-icon>
+      </button>
+      <button class="hero__cta hero__cta--ghost" (click)="scrollToStory()">
+        Nuestra historia
+      </button>
+    </div>
+
+    <ul class="hero__trust">
+      <li>
+        <mat-icon>eco</mat-icon>
+        Soya sostenible
+      </li>
+      <li>
+        <mat-icon>local_fire_department</mat-icon>
+        +40 h de luz
+      </li>
+      <li>
+        <mat-icon>volunteer_activism</mat-icon>
+        Hecha a mano en Bogotá
+      </li>
+    </ul>
+  </div>
+
+  <a class="hero__scroll" (click)="scrollToStory()" aria-label="Desplázate para conocer más">
+    <span class="hero__scroll-line" aria-hidden="true"></span>
+  </a>
+</section>

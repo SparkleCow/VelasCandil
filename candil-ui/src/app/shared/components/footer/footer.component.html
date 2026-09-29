@@ -1,54 +1,68 @@
-<div class="features-section">
-  <div class="feature-card">
-    <div class="feature-icon-wrap">
-      <mat-icon class="feature-icon">local_florist</mat-icon>
+<footer class="footer">
+  <div class="footer__grid">
+    <div class="footer__column footer__column--brand">
+      <p class="footer__brand">
+        Velas Candil
+        <span class="footer__brand-flame" aria-hidden="true"></span>
+      </p>
+      <p class="footer__about">
+        Creamos velas artesanales de cera de soya, vertidas a mano en Bogotá,
+        pensadas para transformar espacios y momentos cotidianos en
+        experiencias cálidas y memorables.
+      </p>
+      <div class="footer__social">
+        <a
+          class="footer__social-btn"
+          href="#"
+          aria-label="Instagram de Velas Candil"
+          (click)="$event.preventDefault()"
+        >
+          <mat-icon>photo_camera</mat-icon>
+        </a>
+        <a
+          class="footer__social-btn"
+          href="#"
+          aria-label="Facebook de Velas Candil"
+          (click)="$event.preventDefault()"
+        >
+          <mat-icon>thumb_up</mat-icon>
+        </a>
+        <a
+          class="footer__social-btn"
+          href="https://wa.me/573000000000"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="WhatsApp de Velas Candil"
+        >
+          <mat-icon>chat</mat-icon>
+        </a>
+      </div>
     </div>
-    <h3>Materiales seleccionados</h3>
-    <p>
-      Trabajamos con mezclas de cera de alta calidad, logrando velas duraderas y
-      con excelente difusión de aroma.
-    </p>
-  </div>
 
-  <div class="feature-card">
-    <div class="feature-icon-wrap">
-      <mat-icon class="feature-icon">handyman</mat-icon>
-    </div>
-    <h3>Hechas a mano</h3>
-    <p>
-      Cada vela es elaborada artesanalmente, cuidando cada detalle para un
-      acabado limpio, estético y consistente.
-    </p>
-  </div>
-
-  <div class="feature-card">
-    <div class="feature-icon-wrap">
-      <mat-icon class="feature-icon">auto_awesome</mat-icon>
-    </div>
-    <h3>Aromas envolventes</h3>
-    <p>
-      Fragancias que transforman espacios: desde ambientes relajantes hasta
-      notas cálidas para tu día a día.
-    </p>
-  </div>
-</div>
-
-<div class="info-footer">
-  <div class="footer-grid">
-    <div class="footer-column">
-      <p class="footer-brand">Velas Candil</p>
+    <div class="footer__column">
+      <h3>Contacto</h3>
       <p>
-        Creamos velas artesanales pensadas para transformar espacios y momentos
-        cotidianos en experiencias cálidas y memorables.
+        <mat-icon class="footer__mini-icon">mail</mat-icon>
+        contacto&#64;velascandil.com
+      </p>
+      <p>
+        <mat-icon class="footer__mini-icon">call</mat-icon>
+        +57 300 000 0000
+      </p>
+      <p>
+        <mat-icon class="footer__mini-icon">location_on</mat-icon>
+        Bogotá, Colombia
       </p>
     </div>
-    <div class="footer-column">
-      <h3>Contacto</h3>
-      <p>contacto&#64;velascandil.com</p>
-      <p>+57 300 000 0000</p>
-      <p>Bogotá, Colombia</p>
+
+    <div class="footer__column">
+      <h3>Tienda</h3>
+      <p>Catálogo completo</p>
+      <p>Velas personalizadas</p>
+      <p>Tarjetas de regalo</p>
     </div>
-    <div class="footer-column">
+
+    <div class="footer__column">
       <h3>Legal</h3>
       <p>Términos y condiciones</p>
       <p>Política de privacidad</p>
@@ -56,10 +70,13 @@
     </div>
   </div>
 
-  <hr class="footer-sep" />
+  <hr class="footer__sep" />
 
-  <div class="footer-bottom">
-    <p>© 2026 Velas Candil. Todos los derechos reservados.</p>
-    <span class="footer-note">Hecho con amor artesanal</span>
+  <div class="footer__bottom">
+    <p>© {{ year }} Velas Candil. Todos los derechos reservados.</p>
+    <span class="footer__note">
+      Hecho a mano con amor artesanal
+      <span class="footer__heart" aria-hidden="true"></span>
+    </span>
   </div>
-</div>
+</footer>
